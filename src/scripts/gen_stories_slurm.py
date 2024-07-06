@@ -37,19 +37,25 @@ def main(
         dst_file_path: str,
 ):
     rank, world_size = get_rank(), get_world_size()
+    print(f"[rank {rank}]\tprocess started with world size {world_size}")
     if rank == 0:
+        print(f'[rank {rank}]\t creating target dir')
         Path(dst_file_path).mkdir(exist_ok=True, parents=True)
     else:
+        print(f'[rank {rank}]\t waiting for root process to create target dir if necessary')
         # This is just to avoid weird behavior in the rare case that root is behind other nodes
         sleep(1)
     if stories_per_src_shard > stories_per_target_shard:
         warnings.warn(f"Not all samples per shard are processed due to stories_per_src_shard ({stories_per_target_shard}) > stories_per_target_shard ({stories_per_target_shard})")
 
     # get the llm pipeline
+    print(f'[rank {rank}]\t instantiating pipeline')
     llm = get_llm(model_name=model_name, tokenizer_name=tokenizer_name)
-
+    print(f'[rank {rank}]\t pipeline assembled')
     # download the dataset
-    download_dataset(src_file, src_file_url)
+    download_dataset(path=src_file, url=src_file_url, rank=rank)
+    print(f'[rank {rank}]\t dataset setup complete')
+
 
     # split the dataset into manageable chunks (if we are root) if not allready done so
     shards = get_splits(path=src_file, rank=rank, world_size=world_size, samples_per_shard=stories_per_src_shard)
