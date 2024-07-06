@@ -12,13 +12,13 @@
 
 source ../../miniconda3/bin/activate
 
-srun PYTHONPATH python ./src/scripts/gen_stories_slurm.py \
+srun PYTHONPATH='.' python ./src/scripts/gen_stories_slurm.py \
   --batch-size 64 \
   --stories-per-src-shard 1000 \
   --stories-per-target-shard 1000 \
   --model-name "UCLA-AGI/Gemma-2-9B-It-SPPO-Iter3" \
   --tokenizer-name "UCLA-AGI/Gemma-2-9B-It-SPPO-Iter3" \
-  --src-file ../datasets/atomic_stories/atomic_stories.jsonl \
+  --src-file ../synthetic_datasets/atomic_stories/atomic_stories.jsonl \
   --src-file-url https://huggingface.co/datasets/ontocord/atomic_2024/resolve/main/data/atomic_stories.jsonl \
   --prompts-template-name default \
-  --dst-file-path ../datasets/atomic_stories/processed
+  --dst-file-path ../synthetic_datasets/atomic_stories/processed
