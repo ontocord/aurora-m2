@@ -59,6 +59,7 @@ def main(
 
     # split the dataset into manageable chunks (if we are root) if not allready done so
     shards = get_splits(path=src_file, rank=rank, world_size=world_size, samples_per_shard=stories_per_src_shard)
+    print(f'[rank {rank}]\t got assigned {len(shards)} shards: {shards}')
 
     # get the prompts
     prompts = PROMPT_REGISTRY[prompts_template_name]
@@ -68,6 +69,7 @@ def main(
 
         # if the marker file exists, we know the shard has been processed and we skip it
         if check_done(target_path):
+            print(f'[rank {rank}]\t shard {shard_path} is done already, skipping...')
             continue
 
 
