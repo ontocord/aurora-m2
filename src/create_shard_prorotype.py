@@ -8,7 +8,7 @@ from transformers import pipeline, Pipeline
 
 from torch.utils.data import DataLoader
 
-from utils import postprocess_results
+from src.utils import postprocess_results
 
 
 def process_request(text, prompts):
