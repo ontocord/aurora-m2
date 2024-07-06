@@ -2,6 +2,7 @@
 from transformers import pipeline
 
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import tokenization_utils_base
 try:
   if tokenizer is None: assert False
 except:
@@ -9,6 +10,7 @@ except:
   model = AutoModelForCausalLM.from_pretrained("UCLA-AGI/Gemma-2-9B-It-SPPO-Iter3").half().cuda()
 
   pipe = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0)
+from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
 
 
 prompts = ["""Revise this story to make it compelling and more logical and detailed. Keep as much of the feelings and actions as possible, but remove anything that doesn't make sense. Make the story at least 10 paragraphs. Start with a title. %(warning)s The story should unfold through the characters interactions, decisions, and the consequences of their actions. Aim to weave in common sense lessons and social cues. The narrative should cater to a diverse age group, including at least one dialogue and presenting both positive and negative outcomes. Do not start with classic sentences like "Once upon a time", be creative:""",
@@ -28,10 +30,10 @@ Do not start with classic sentences like "Once upon a time", "The sun hung low i
 import wget, json, random, os
 
 url = 'https://huggingface.co/datasets/ontocord/atomic_2024/resolve/main/data/atomic_stories.jsonl'
-if not os.path.exists("atomic_stories.jsonl"):
+if not os.path.exists("scripts/atomic_stories.jsonl"):
   wget.download(url)
-with open("generated_atomic_stories.jsonl", "w") as outfile:
-  with open("atomic_stories.jsonl") as infile:
+with open("scripts/generated_atomic_stories.jsonl", "w") as outfile:
+  with open("scripts/atomic_stories.jsonl") as infile:
     for l in infile:
       dat = json.loads(l)
       text = dat['text']
