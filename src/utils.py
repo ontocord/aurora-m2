@@ -109,8 +109,9 @@ def get_splits(path, rank: int, world_size: int, samples_per_shard: int):
 
 def download_dataset(path, url, rank):
     if not os.path.exists(path):
-        if rank ==0:
+        if rank == 0:
             print("downloading dataset")
+            Path(path).parent.mkdir(exist_ok=True, parents=True)
             wget.download(url)
         else:
             print("no file detecting, downloading with root")
