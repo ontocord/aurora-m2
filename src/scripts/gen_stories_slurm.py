@@ -62,7 +62,7 @@ def main(
 
         # if the marker file exists, we know the shard has been processed and we skip it
         if check_done(target_path):
-            pass
+            continue
 
 
         # this is where the (llm) magic happens
