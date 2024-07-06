@@ -4,7 +4,7 @@ import random
 from multiprocessing import Value
 from typing import List
 
-from datasets import load_dataset, Features, Value
+from datasets import load_dataset, Features, Value, tqdm
 from transformers import pipeline, Pipeline
 
 from torch.utils.data import DataLoader
@@ -33,12 +33,18 @@ def process_requests(texts, metatadata, prompts):
 
 def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_path: str, prompts: List[str], batch_size: int) -> None:
     print(src_file)
-    dataset = load_dataset('json', data_files=src_file)['train']
-    loader = DataLoader(dataset, shuffle=True, batch_size=batch_size, num_workers=4)
+    # FIXME: This breaks on leonardo for some reason, would be faster to do it this way though
+    #dataset = load_dataset('json', data_files=src_file)['train']
+    #loader = DataLoader(dataset, shuffle=True, batch_size=batch_size, num_workers=4)
+    with open(src_file, "r") as fp:
+        json_files = [(json.loads(x)['text'], json.loads(x)['metadata']) for x in tqdm(fp, 'loading_samples')]
+        all_text, all_metadata = [x[0] for x in json_files], [x[1] for x in json_files]
     with open(shard_path, "w") as outfile:
         total_stories: bool = 0
         while total_stories < stories_per_shard:
-            for texts, metadatas in loader:
+            for i in range(0, len(all_text), batch_size):
+                texts = all_text[i:min(i+batch_size, len(all_text))]
+                metadatas = all_metadata[i:min(i+batch_size, len(all_metadata))]
                 if total_stories >= stories_per_shard:
                     break
                 total_stories += len(texts)
