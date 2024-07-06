@@ -102,9 +102,9 @@ def get_splits(path, rank: int, world_size: int, samples_per_shard: int):
         else:
             sleep(60)
             return get_splits(path, rank, samples_per_shard)
-    else:
-        sorted_shards = sort_files_by_number(path.with_suffix(""))
-        return filter_splits(sorted_shards, rank, world_size)
+
+    sorted_shards = sort_files_by_number(path.with_suffix(""))
+    return filter_splits(sorted_shards, rank, world_size)
 
 
 def download_dataset(path, url, rank):
