@@ -36,9 +36,13 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
     # FIXME: This breaks on leonardo for some reason, would be faster to do it this way though
     #dataset = load_dataset('json', data_files=src_file)['train']
     #loader = DataLoader(dataset, shuffle=True, batch_size=batch_size, num_workers=4)
+    print("Loading datapoints")
     with open(src_file, "r") as fp:
-        json_files = [(json.loads(x)['text'], json.loads(x)['metadata']) for x in tqdm(fp, 'loading_samples')]
+        rows = list(fp)
+        json_files = [(json.loads(x)['text'], json.loads(x)['metadata']) for x in tqdm(rows, 'loading_samples')]
+        print("Loading completed, extracting metadata")
         all_text, all_metadata = [x[0] for x in json_files], [x[1] for x in json_files]
+        print("write file")
     with open(shard_path, "w") as outfile:
         total_stories: bool = 0
         while total_stories < stories_per_shard:
