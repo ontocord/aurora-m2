@@ -12,7 +12,7 @@ from create_shard_prorotype import create_shard
 from pipeline import get_llm
 from slurm_utils import get_rank, get_world_size
 from src.prompts import PROMPT_REGISTRY
-from utils import download_dataset, get_splits, get_target_path, check_done
+from utils import download_dataset, get_splits, get_target_path, check_done, mark_done
 
 
 @click.command()
@@ -40,19 +40,40 @@ def main(
     if rank == 0:
         Path(dst_file_path).mkdir(exist_ok=True, parents=True)
     else:
+        # This is just to avoid weird behavior in the rare case that root is behind other nodes
         sleep(1)
     if stories_per_src_shard > stories_per_target_shard:
         warnings.warn(f"Not all samples per shard are processed due to stories_per_src_shard ({stories_per_target_shard}) > stories_per_target_shard ({stories_per_target_shard})")
+
+    # get the llm pipeline
     llm = get_llm(model_name=model_name, tokenizer_name=tokenizer_name)
+
+    # download the dataset
     download_dataset(src_file, src_file_url)
+
+    # split the dataset into manageable chunks (if we are root) if not allready done so
     shards = get_splits(path=src_file, rank=rank, world_size=world_size, samples_per_shard=stories_per_src_shard)
+
+    # get the prompts
+    prompts = PROMPT_REGISTRY[prompts_template_name]
     for shard_path in tqdm(shards, desc=f"Processing shard shards rank: {rank}"):
+        # generate a target path for our shard
         target_path = get_target_path(shard_path, Path(dst_file_path))
+
+        # if the marker file exists, we know the shard has been processed and we skip it
         if check_done(target_path):
             pass
-        prompts = PROMPT_REGISTRY[prompts_template_name]
-        create_shard(llm=llm, stories_per_shard=stories_per_target_shard, src_file=src_file, shard_path=shard_path, prompts=prompts, batch_size=batch_size)
 
+
+        # this is where the (llm) magic happens
+        create_shard(
+            llm=llm, stories_per_shard=stories_per_target_shard,
+            src_file=src_file, shard_path=str(target_path),
+            prompts=prompts, batch_size=batch_size
+        )
+
+        # create a market file to show that this shard was processed correctly and completely
+        mark_done(target_path)
 
 if __name__ == '__main__':
     main()
