@@ -107,9 +107,15 @@ def get_splits(path, rank: int, world_size: int, samples_per_shard: int):
         return filter_splits(sorted_shards, rank, world_size)
 
 
-def download_dataset(path, url):
+def download_dataset(path, url, rank):
     if not os.path.exists(path):
-        wget.download(url)
+        if rank ==0:
+            print("downloading dataset")
+            wget.download(url)
+        else:
+            print("no file detecting, downloading with root")
+            sleep(600)
+
 
 
 def postprocess_results(result: List[Dict[str, List[Dict[str, str]]]], result_key: str = "generated_text", txt_key: str = "content") -> List[str]:
