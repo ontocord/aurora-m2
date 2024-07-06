@@ -1,6 +1,7 @@
 transformers
 datasets
-vllm
+torch
+torchvision
 tqdm
 numpy
 scipy
