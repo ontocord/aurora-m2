@@ -12,7 +12,7 @@
 
 source ../../miniconda3/bin/activate
 
-srun PYTHONPATH='.' python ./src/scripts/gen_stories_slurm.py \
+PYTHONPATH='.' srun  python ./src/scripts/gen_stories_slurm.py \
   --batch-size 64 \
   --stories-per-src-shard 1000 \
   --stories-per-target-shard 1000 \
