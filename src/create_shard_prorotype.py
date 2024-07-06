@@ -23,10 +23,10 @@ def process_request(text, prompts):
 
 
 def process_requests(texts, metatadata, prompts):
-    p_texts, prompts = [], []
+    p_texts, used_prompts = [], []
     for txt, meta in zip(texts, metatadata):
         p_text, prompt = process_request(text=txt, prompts=prompts)
-        p_texts.append(p_text), prompts.append(prompt)
+        p_texts.append(p_text), used_prompts.append(prompt)
     return p_texts, metatadata
 
 
