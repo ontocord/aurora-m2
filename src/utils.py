@@ -6,8 +6,19 @@ from pathlib import Path
 from tqdm import tqdm
 
 
-def output_file(input_filename: Path, shard_n: int) -> Path:
+def get_target_path(shard_path: Path, dst_file_path: Path) -> Path:
+    filename = shard_path.name
+    return dst_file_path / filename
+
+
+def mark_done(filepath: Path):
+    with open(filepath.with_suffix('.done'), "w") as fp:
+        pass
     return
+
+
+def check_done(filepath: Path):
+    return filepath.with_suffix('.done').exists()
 
 
 def get_sublist(elements, rank, world_size):
