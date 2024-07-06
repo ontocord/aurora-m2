@@ -2,14 +2,9 @@
 import json
 import os
 import random
-from multiprocessing import Value
 from typing import List
-
-from datasets import load_dataset, Features, Value, tqdm
-from transformers import pipeline, Pipeline
-
-from torch.utils.data import DataLoader
-
+from tqdm import tqdm
+from transformers import Pipeline
 from src.utils import postprocess_results
 
 
@@ -38,8 +33,10 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
     #dataset = load_dataset('json', data_files=src_file)['train']
     #loader = DataLoader(dataset, shuffle=True, batch_size=batch_size, num_workers=4)
     print("Loading datapoints")
+    # FIXME: This line is broken right now
     with open(src_file, "r", os.O_NONBLOCK | os.O_RDONLY) as fp:
         rows = list(fp)
+        print(rows)
         json_files = [(json.loads(x)['text'], json.loads(x)['metadata']) for x in tqdm(rows, 'loading_samples')]
         print("Loading completed, extracting metadata")
         all_text, all_metadata = [x[0] for x in json_files], [x[1] for x in json_files]
