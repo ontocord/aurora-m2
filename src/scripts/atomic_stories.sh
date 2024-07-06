@@ -10,7 +10,7 @@
 #SBATCH --job-name=atomic_stories
 #SBATCH --output=atomic-stories-%j-%t.out
 
-source ../../miniconda3/bin/activate
+source ~/miniconda3/bin/activate
 
 PYTHONPATH='.' srun  python ./src/scripts/gen_stories_slurm.py \
   --batch-size 64 \
