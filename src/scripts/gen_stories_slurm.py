@@ -8,11 +8,11 @@ from tqdm import tqdm
 import click
 
 # Importing functions from other modules as per your original script
-from create_shard_prorotype import create_shard
-from pipeline import get_llm
-from slurm_utils import get_rank, get_world_size
+from src.create_shard_prorotype import create_shard
+from src.pipeline import get_llm
+from src.slurm_utils import get_rank, get_world_size
 from src.prompts import PROMPT_REGISTRY
-from utils import download_dataset, get_splits, get_target_path, check_done, mark_done
+from src.utils import download_dataset, get_splits, get_target_path, check_done, mark_done
 
 
 @click.command()
