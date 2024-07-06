@@ -105,9 +105,10 @@ def postprocess_results(result: List[Dict[str, List[Dict[str, str]]]], result_ke
     return [r[0][result_key][1][txt_key] for r in result]
 
 
-#if __name__ == '__main__':
-#    get_splits('./scripts/atomic_stories.jsonl', 0, 10000)
-
+if __name__ == '__main__':
+    split = get_splits('./scripts/atomic_stories.jsonl', 0, 2, 10000)
+    print(split)
+    print(len(split))
 
 
 
