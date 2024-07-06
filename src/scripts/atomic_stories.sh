@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -A <account_name>
+#SBATCH --account EUHPC_E03_068
 #SBATCH -p boost_usr_prod
 #SBATCH --time 00:10:00     # format: HH:MM:SS
 #SBATCH -N 1                # 1 node
