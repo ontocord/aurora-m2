@@ -76,7 +76,7 @@ def main(
         # this is where the (llm) magic happens
         create_shard(
             llm=llm, stories_per_shard=stories_per_target_shard,
-            src_file=src_file, shard_path=str(target_path),
+            src_file=str(target_path), shard_path=str(target_path),
             prompts=prompts, batch_size=batch_size
         )
 
