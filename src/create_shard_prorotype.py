@@ -1,5 +1,6 @@
 # make sure you have the latest version of transfomers and install wget
 import json
+import os
 import random
 from multiprocessing import Value
 from typing import List
@@ -37,13 +38,13 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
     #dataset = load_dataset('json', data_files=src_file)['train']
     #loader = DataLoader(dataset, shuffle=True, batch_size=batch_size, num_workers=4)
     print("Loading datapoints")
-    with open(src_file, "r") as fp:
+    with open(src_file, "r", os.O_NONBLOCK | os.O_RDONLY) as fp:
         rows = list(fp)
         json_files = [(json.loads(x)['text'], json.loads(x)['metadata']) for x in tqdm(rows, 'loading_samples')]
         print("Loading completed, extracting metadata")
         all_text, all_metadata = [x[0] for x in json_files], [x[1] for x in json_files]
         print("write file")
-    with open(shard_path, "w") as outfile:
+    with open(shard_path, "w", os.O_NONBLOCK | os.O_RDONLY) as outfile:
         total_stories: bool = 0
         while total_stories < stories_per_shard:
             for i in range(0, len(all_text), batch_size):
