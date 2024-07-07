@@ -35,7 +35,10 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
     print("Loading datapoints")
     # FIXME: This line is broken right now
     with open(src_file, "r", os.O_NONBLOCK | os.O_RDONLY) as fp:
-        rows = list(fp)
+        rows = []
+        for row in fp:
+            print(row)
+            rows.append(row)
         print(rows)
         json_files = [(json.loads(x)['text'], json.loads(x)['metadata']) for x in tqdm(rows, 'loading_samples')]
         print("Loading completed, extracting metadata")
