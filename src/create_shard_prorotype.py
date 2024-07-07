@@ -19,7 +19,7 @@ def process_request(text, prompts):
     else:
         warning = ""
     prompt = prompt % {'warning': warning}
-    text = {"role": "user", "content": f"{prompt}\n\n{text}"}
+    text = [{"role": "user", "content": f"{prompt}\n\n{text}"}]
     return text, prompt
 
 
