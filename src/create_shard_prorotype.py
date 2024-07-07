@@ -28,7 +28,7 @@ def process_requests(texts, metatadata, prompts):
     for txt, meta in zip(texts, metatadata):
         p_text, prompt = process_request(text=txt, prompts=prompts)
         p_texts.append(p_text), used_prompts.append(prompt)
-    return p_texts, metatadata
+    return p_texts, used_prompts
 
 
 def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_path: str, prompts: List[str], batch_size: int) -> None:
@@ -42,16 +42,15 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
                 if total_stories >= stories_per_shard:
                     break
                 total_stories += len(texts)
-                messages = process_requests(texts=texts, metatadata=metadatas, prompts=prompts)
-                prompt = random.choice(prompts)
+                messages, used_prompts = process_requests(texts=texts, metatadata=metadatas, prompts=prompts)
                 output = llm(messages, max_length=2048, min_length=512, use_cache=True)
                 output_texts = postprocess_results(output)
-                for output_text, metadata in zip(output_texts, metadatas):
+                for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
                     outfile.write(
                         json.dumps(
                             {
                                 'text': output_text,
-                                'prompt': prompt,
+                                'prompt': used_prompt,
                                 'input': output_text,
                                 'metadata': metadata
                             }) + "\n"

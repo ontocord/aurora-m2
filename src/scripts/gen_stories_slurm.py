@@ -37,7 +37,7 @@ def main(
         dst_file_path: str,
 ):
     rank, world_size = get_rank(), get_world_size()
-    print(f"[rank {rank}]\tprocess started with world size {world_size}")
+    print(f"[rank {rank}]\t process started with world size {world_size}")
     if rank == 0:
         print(f'[rank {rank}]\t creating target dir')
         Path(dst_file_path).mkdir(exist_ok=True, parents=True)
