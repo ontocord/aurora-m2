@@ -50,7 +50,7 @@ def main(
 
     # get the llm pipeline
     print(f'[rank {rank}]\t instantiating pipeline')
-    llm = get_llm(model_name=model_name, tokenizer_name=tokenizer_name)
+    llm = get_llm(model_name=model_name, tokenizer_name=tokenizer_name, batch_size=batch_size)
     print(f'[rank {rank}]\t pipeline assembled')
     # download the dataset
     download_dataset(path=src_file, url=src_file_url, rank=rank)
