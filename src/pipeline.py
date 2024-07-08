@@ -1,11 +1,11 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline, Pipeline
 
-def get_llm(model_name: str, tokenizer_name: str, batch_size: int, huggingface_or_vllm: str="huggingface"):
+def get_llm(model_name: str, tokenizer_name: str, batch_size: int = None, huggingface_or_vllm: str="huggingface"):
     if huggingface_or_vllm == "huggingface":
-        get_hf_llm(model_name, tokenizer_name, batch_size)
+        return get_hf_llm(model_name, tokenizer_name, batch_size)
     elif huggingface_or_vllm == "vllm":
-        get_vllm_llm(model_name, tokenizer_name, batch_size)
+        return get_vllm_llm(model_name, tokenizer_name, batch_size)
     raise ValueError("huggingface_or_vllm must be either 'huggingface' or 'vllm'")
 
 
@@ -15,14 +15,17 @@ def get_hf_llm(model_name: str, tokenizer_name: str, batch_size: int) -> Pipelin
     model = AutoModelForCausalLM.from_pretrained(model_name).half().cuda()
     # Set up text generation pipeline
     pipe = pipeline("text-generation", model=model, tokenizer=tokenizer, device_map="auto", batch_size=batch_size)
-    return lambda x: pipe(x, max_length=2048, min_length=512, use_cache=True)
+    return lambda x: pipe(x, max_length=2048, min_length=512, use_cache=True, return_full_text=True)
 
 def get_vllm_llm(model_name: str, tokenizer_name: str, batch_size: int) -> Pipeline:
+
     try:
         from vllm import LLM, SamplingParams
     except:
         raise ImportError("vllm must be installed to use vllm models")
-    
+    assert tokenizer_name == model_name, "vllm will ignore the tokenizer_name and use the same as model_name"
+    assert batch_size is None, "vllm does not need the batch_size parameters as it adjusts it dinamically"
+
     params = SamplingParams(
         max_tokens=2048,
         min_tokens=512,
@@ -43,15 +46,58 @@ def get_vllm_llm(model_name: str, tokenizer_name: str, batch_size: int) -> Pipel
         tokenizer_mode="slow",
         tensor_parallel_size=tensor_parallel_size)
     
-    return lambda x: llm.generate(x, sampling_params=params)
+    def generate(messages, llm):
+        tokenizer = llm.get_tokenizer()
+        prompts = tokenizer.apply_chat_template(
+            messages, truncation=None, padding=False,
+            add_generation_prompt=True)
+
+        prompts = tokenizer.batch_decode(prompts)
+        print(prompts)
+        return llm.generate(messages, sampling_params=params)
+    
+    return lambda x: generate(x, llm)
 
 if __name__ == '__main__':
-    llm = get_llm("facebook/opt-125m", "facebook/opt-125m")
-    messages = ['tell me a pirate joke', 'tell me a joke prate']
-    messages = [[{"role": "user", "content": f"tell me a pirate joke"}]]*2
-    output_text = llm(messages, max_length=64, min_length=32, use_cache=True)
-    print(len(output_text))
-    print(output_text)
-    from src.utils import postprocess_results
-    pp_out = postprocess_results(output_text)
-    print(pp_out)
+    def main():
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        sep = "-"*10
+        raw_messages = ['tell me a pirate joke', 'tell me a pirate joke']
+        messages = [[{"role": "user", "content": f"tell me a pirate joke"}]]*2
+
+        print(sep, "HF Test")
+        # llm = get_hf_llm("facebook/opt-125m", "facebook/opt-125m", 1)
+        model_name = "/leonardo_scratch/large/userexternal/gpuccett/models/hf_gemma/Gemma-2-9B-It-SPPO-Iter3"
+        tokenizer_name = "/leonardo_scratch/large/userexternal/gpuccett/models/hf_gemma/Gemma-2-9B-It-SPPO-Iter3"
+        llm = get_llm(model_name, tokenizer_name, 1, "huggingface")
+    
+        output_text = llm(messages)
+        print(sep, len(output_text))
+        print(sep, output_text)
+        from src.utils import postprocess_results
+        hf_out = postprocess_results(output_text)
+        print(hf_out)
+        print(sep, output_text[0][0]["generated_text"][0])
+
+        del llm
+        del output_text
+    
+        print("VLLM Test")
+        # llm = get_vllm_llm("facebook/opt-125m", "facebook/opt-125m")
+        llm = get_llm(model_name, tokenizer_name, None, "vllm")
+        output_text = llm(raw_messages)
+        print(sep, len(output_text))
+        print(sep, output_text)
+        prompts = []
+        for output in output_text:
+            prompt = output.prompt
+            prompts.append(prompt)
+            generated_text = output.outputs[0].text
+            print(sep, f"Prompt: {prompt!r}")
+            print(sep, f"Generated text: {generated_text!r}")
+        vllm_out = postprocess_results(output_text)
+        print(sep, vllm_out)
+        print("HUGGINGFACE", [i[:100] for i in hf_out])
+        print("VLLM", [p + i[:100] for p, i in zip(prompts, vllm_out)])
+
+    main()
