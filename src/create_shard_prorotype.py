@@ -43,7 +43,7 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
                     break
                 total_stories += len(texts)
                 messages, used_prompts = process_requests(texts=texts, metatadata=metadatas, prompts=prompts)
-                output = llm(messages, max_length=2048, min_length=512, use_cache=True)
+                output = llm(messages)
                 output_texts = postprocess_results(output)
                 for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
                     outfile.write(
