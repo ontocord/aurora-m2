@@ -13,7 +13,7 @@
 source ~/miniconda3/bin/activate
 
 PYTHONPATH='.' srun  python ./src/scripts/gen_stories_slurm.py \
-  --batch-size 64 \
+  --batch-size 1 \
   --stories-per-src-shard 1000 \
   --stories-per-target-shard 1000 \
   --model-name "UCLA-AGI/Llama-3-Instruct-8B-SPPO-Iter3" \
