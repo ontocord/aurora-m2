@@ -43,7 +43,7 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
         total_stories: bool = 0
         while total_stories < stories_per_shard:
             #for x in loader:
-            for x in dataset
+            for x in dataset:
                 texts, metadatas = [x["text"]], [x["metadata"]]
                 if total_stories >= stories_per_shard:
                     break
