@@ -35,7 +35,9 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
     print(src_file)
     dataset = load_dataset('json', data_files=src_file)['train']
     loader = DataLoader(dataset, shuffle=True, batch_size=batch_size, num_workers=4)
+    print("created dataloader with", len(dataset), 'samples')
     with open(shard_path, "w") as outfile:
+        print('starting dataset building')
         total_stories: bool = 0
         while total_stories < stories_per_shard:
             for texts, metadatas in loader:
