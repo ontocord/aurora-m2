@@ -34,13 +34,14 @@ def process_requests(texts, metatadata, prompts):
 def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_path: str, prompts: List[str], batch_size: int) -> None:
     print(src_file)
     dataset = load_dataset('json', data_files=src_file)['train']
-    loader = DataLoader(dataset, shuffle=True, batch_size=batch_size, num_workers=4)
+    loader = DataLoader(dataset.with_format("torch"), shuffle=True, batch_size=batch_size, num_workers=4)
     print("created dataloader with", len(dataset), 'samples')
     with open(shard_path, "w") as outfile:
         print('starting dataset building')
         total_stories: bool = 0
         while total_stories < stories_per_shard:
-            for texts, metadatas in loader:
+            for x in loader:
+                texts, metadatas = x["text"], x["metadata"]
                 if total_stories >= stories_per_shard:
                     break
                 total_stories += len(texts)
