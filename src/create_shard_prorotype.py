@@ -56,13 +56,14 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
                 print('inference done')
                 output_texts = postprocess_results(output)
                 for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
-                    print('write results to', shard_path)
-                    outfile.write(
-                        json.dumps(
+                    json_line = json.dumps(
                             {
                                 'text': output_text,
                                 'prompt': used_prompt,
                                 'input': output_text,
                                 'metadata': metadata
                             }) + "\n"
-                    )
+                    print("result", json_line)
+                    print(output_text)
+                    print('write results to', shard_path)
+                    outfile.write(json_line)
