@@ -38,31 +38,34 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
     infile = open(src_file, "r")
     dataset = [json.loads(line) for line in tqdm(infile, f"reading file {src_file}")]
     print("created dataloader with", len(dataset), 'samples')
+    total_stories: bool = 0
+    # clear file
     with open(shard_path, "w") as outfile:
-        total_stories: bool = 0
-        print('opened outfile')
-        while total_stories < stories_per_shard:
-            #for x in loader:
-            for x in dataset:
-                texts, metadatas = [x["text"]], [x["metadata"]]
-                print(texts)
-                print(metadatas)
-                if total_stories >= stories_per_shard:
-                    break
-                total_stories += len(texts)
-                print('starting inference')
-                messages, used_prompts = process_requests(texts=texts, metatadata=metadatas, prompts=prompts)
-                output = llm(messages, max_length=2048, min_length=512, use_cache=True)
-                print('inference done')
-                output_texts = postprocess_results(output)
-                for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
-                    json_line = json.dumps(
-                            {
-                                'text': output_text,
-                                'prompt': used_prompt,
-                                'input': output_text,
-                                'metadata': metadata
-                            }) + "\n"
-                    print("this is the json-line", json_line)
-                    print('write results to', shard_path)
+        pass
+    print('opened outfile')
+    while total_stories < stories_per_shard:
+        #for x in loader:
+        for x in dataset:
+            texts, metadatas = [x["text"]], [x["metadata"]]
+            print(texts)
+            print(metadatas)
+            if total_stories >= stories_per_shard:
+                break
+            total_stories += len(texts)
+            print('starting inference')
+            messages, used_prompts = process_requests(texts=texts, metatadata=metadatas, prompts=prompts)
+            output = llm(messages, max_length=2048, min_length=512, use_cache=True)
+            print('inference done')
+            output_texts = postprocess_results(output)
+            for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
+                json_line = json.dumps(
+                        {
+                            'text': output_text,
+                            'prompt': used_prompt,
+                            'input': output_text,
+                            'metadata': metadata
+                        }) + "\n"
+                print("this is the json-line", json_line)
+                print('write results to', shard_path)
+                with open(shard_path, "a+") as outfile:
                     outfile.write(json_line)
