@@ -53,11 +53,13 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
                 break
                  
             total_stories += len(texts)
+            print('number of texts', len(texts))
             messages, used_prompts = process_requests(texts=texts, metatadata=metadatas, prompts=prompts)
             output = llm(messages)
+            print('number of outputs', len(output))
             output_texts = postprocess_results(output)
             with open(shard_path, "a") as outfile:
-                for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
+                for output_text, used_prompt, metadata in tqdm(zip(output_texts, used_prompts, metadatas), 'saving'):
                     outfile.write(
                         json.dumps(
                             {
