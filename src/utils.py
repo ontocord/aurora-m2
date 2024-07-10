@@ -5,6 +5,11 @@ import wget
 from pathlib import Path
 from tqdm import tqdm
 
+try:
+    from vllm import RequestOutput
+except:
+    pass
+
 
 def get_target_path(shard_path: Path, dst_file_path: Path) -> Path:
     filename = shard_path.name
@@ -101,7 +106,7 @@ def get_splits(path, rank: int, world_size: int, samples_per_shard: int):
                 pass
         else:
             sleep(60)
-            return get_splits(path, rank, samples_per_shard)
+            return get_splits(path, rank, world_size, samples_per_shard)
 
     sorted_shards = sort_files_by_number(path.with_suffix(""))
     return filter_splits(sorted_shards, rank, world_size)
@@ -119,9 +124,17 @@ def download_dataset(path, url, rank):
 
 
 
-def postprocess_results(result: List[Dict[str, List[Dict[str, str]]]], result_key: str = "generated_text", txt_key: str = "content") -> List[str]:
+def postprocess_hf_results(result: List[Dict[str, List[Dict[str, str]]]], result_key: str = "generated_text", txt_key: str = "content") -> List[str]:
     return [r[0][result_key][1][txt_key] for r in result]
 
+def postprocess_vllm_results(results):
+    return [i.outputs[0].text for i in results]
+
+def postprocess_results(results):
+    if isinstance(results[0], RequestOutput):
+        return postprocess_vllm_results(results)
+    else:
+        return postprocess_hf_results(results)
 
 if __name__ == '__main__':
     split = get_splits('./scripts/atomic_stories.jsonl', 0, 2, 10000)

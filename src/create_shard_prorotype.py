@@ -25,7 +25,7 @@ def process_request(text, prompts):
 
 def process_requests(texts, metatadata, prompts):
     p_texts, used_prompts = [], []
-    for txt, meta in zip(texts, metatadata):
+    for txt in texts:
         p_text, prompt = process_request(text=txt, prompts=prompts)
         p_texts.append(p_text), used_prompts.append(prompt)
     return p_texts, used_prompts
@@ -33,39 +33,35 @@ def process_requests(texts, metatadata, prompts):
 
 def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_path: str, prompts: List[str], batch_size: int) -> None:
     print(src_file)
-    #dataset = load_dataset('json', data_files=src_file)['train']
-    #loader = DataLoader(dataset.with_format("torch"), shuffle=True, batch_size=batch_size, num_workers=4)
-    infile = open(src_file, "r")
-    dataset = [json.loads(line) for line in tqdm(infile, f"reading file {src_file}")]
+    dataset = load_dataset('json', data_files=src_file)['train']
+    loader = DataLoader(dataset.with_format("torch"), shuffle=True, batch_size=batch_size, num_workers=4)
+    # infile = open(src_file, "r")
+    # dataset = [json.loads(line) for line in tqdm(infile, f"reading file {src_file}")]
     print("created dataloader with", len(dataset), 'samples')
-    total_stories: bool = 0
+    total_stories: int = 0
     # clear file
     with open(shard_path, "w") as outfile:
-        pass
-    print('opened outfile')
-    while total_stories < stories_per_shard:
-        #for x in loader:
-        for x in dataset:
-            texts, metadatas = [x["text"]], [x["metadata"]]
-            print(texts)
-            print(metadatas)
-            if total_stories >= stories_per_shard:
-                break
-            total_stories += len(texts)
-            print('starting inference')
-            messages, used_prompts = process_requests(texts=texts, metatadata=metadatas, prompts=prompts)
-            output = llm(messages, max_length=2048, min_length=512, use_cache=True)
-            print('inference done')
-            output_texts = postprocess_results(output)
-            for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
-                json_line = json.dumps(
-                        {
-                            'text': output_text,
-                            'prompt': used_prompt,
-                            'input': output_text,
-                            'metadata': metadata
-                        }) + "\n"
-                print("this is the json-line", json_line)
-                print('write results to', shard_path)
-                with open(shard_path, "a+") as outfile:
-                    outfile.write(json_line)
+        total_stories: int = 0
+        while total_stories < stories_per_shard:
+            # for x in dataset:
+            for x in loader:
+                texts, metadatas = x["text"], x["metadata"]
+                # print(texts)
+                # print(metadatas)
+                if total_stories >= stories_per_shard:
+                    break
+                 
+                total_stories += len(texts)
+                messages, used_prompts = process_requests(texts=texts, metatadata=metadatas, prompts=prompts)
+                output = llm(messages)
+                output_texts = postprocess_results(output)
+                for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
+                    outfile.write(
+                        json.dumps(
+                            {
+                                'text': output_text,
+                                'prompt': used_prompt,
+                                'input': output_text,
+                                'metadata': metadata
+                            }) + "\n"
+                    )
