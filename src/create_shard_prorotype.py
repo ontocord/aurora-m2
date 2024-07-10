@@ -56,8 +56,8 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
             messages, used_prompts = process_requests(texts=texts, metatadata=metadatas, prompts=prompts)
             output = llm(messages)
             output_texts = postprocess_results(output)
-            for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
-                with open(shard_path, "a") as outfile:
+            with open(shard_path, "a") as outfile:
+                for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
                     outfile.write(
                         json.dumps(
                             {
