@@ -25,6 +25,7 @@ from src.utils import download_dataset, get_splits, get_target_path, check_done,
 @click.option('--src-file-url', type=str, default=None, help='URL to download the source file if not present locally.')
 @click.option('--prompts-template-name', type=str, help='Name of the prompts template.')
 @click.option('--dst-file-path', type=str, help='Destination path to save processed shards.')
+@click.option('--huggingface-or-vllm', type=str, default='vllm')
 def main(
         batch_size: int,
         stories_per_src_shard: int,
@@ -35,6 +36,7 @@ def main(
         src_file_url: Optional[str],
         prompts_template_name: str,
         dst_file_path: str,
+        huggingface_or_vllm: str
 ):
     rank, world_size = get_rank(), get_world_size()
     print(f"[rank {rank}]\t process started with world size {world_size}")
@@ -50,7 +52,7 @@ def main(
 
     # get the llm pipeline
     print(f'[rank {rank}]\t instantiating pipeline')
-    llm = get_llm(model_name=model_name, tokenizer_name=tokenizer_name, batch_size=batch_size)
+    llm = get_llm(model_name=model_name, tokenizer_name=tokenizer_name, batch_size=batch_size, huggingface_or_vllm=huggingface_or_vllm)
     print(f'[rank {rank}]\t pipeline assembled')
     # download the dataset
     download_dataset(path=src_file, url=src_file_url, rank=rank)
