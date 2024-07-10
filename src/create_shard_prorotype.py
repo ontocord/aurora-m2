@@ -25,7 +25,7 @@ def process_request(text, prompts):
 
 def process_requests(texts, metatadata, prompts):
     p_texts, used_prompts = [], []
-    for txt, meta in zip(texts, metatadata):
+    for txt in texts:
         p_text, prompt = process_request(text=txt, prompts=prompts)
         p_texts.append(p_text), used_prompts.append(prompt)
     return p_texts, used_prompts
@@ -33,19 +33,24 @@ def process_requests(texts, metatadata, prompts):
 
 def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_path: str, prompts: List[str], batch_size: int) -> None:
     print(src_file)
-    #dataset = load_dataset('json', data_files=src_file)['train']
-    #loader = DataLoader(dataset.with_format("torch"), shuffle=True, batch_size=batch_size, num_workers=4)
-    infile = open(src_file, "r")
-    dataset = [json.loads(line) for line in tqdm(infile, f"reading file {src_file}")]
+    dataset = load_dataset('json', data_files=src_file)['train']
+    loader = DataLoader(dataset.with_format("torch"), shuffle=True, batch_size=batch_size, num_workers=4)
+    # infile = open(src_file, "r")
+    # dataset = [json.loads(line) for line in tqdm(infile, f"reading file {src_file}")]
     print("created dataloader with", len(dataset), 'samples')
     total_stories: bool = 0
     # clear file
     with open(shard_path, "w") as outfile:
         total_stories: bool = 0
         while total_stories < stories_per_shard:
-            for texts, metadatas in loader:
+            # for x in dataset:
+            for x in loader:
+                texts, metadatas = x["text"], x["metadata"]
+                # print(texts)
+                # print(metadatas)
                 if total_stories >= stories_per_shard:
                     break
+                 
                 total_stories += len(texts)
                 messages, used_prompts = process_requests(texts=texts, metatadata=metadatas, prompts=prompts)
                 output = llm(messages)

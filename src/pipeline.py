@@ -23,8 +23,10 @@ def get_vllm_llm(model_name: str, tokenizer_name: str, batch_size: int) -> Pipel
         from vllm import LLM, SamplingParams
     except:
         raise ImportError("vllm must be installed to use vllm models")
-    assert tokenizer_name == model_name, "vllm will ignore the tokenizer_name and use the same as model_name"
-    assert batch_size is None, "vllm does not need the batch_size parameters as it adjusts it dinamically"
+    if tokenizer_name == model_name:
+        print("vllm will ignore the tokenizer_name and use the same as model_name")
+    if batch_size is None:
+        print("vllm does not need the batch_size parameters as it adjusts it dinamically")
 
     params = SamplingParams(
         max_tokens=2048,
@@ -53,8 +55,8 @@ def get_vllm_llm(model_name: str, tokenizer_name: str, batch_size: int) -> Pipel
             add_generation_prompt=True)
 
         prompts = tokenizer.batch_decode(prompts)
-        print(prompts)
-        return llm.generate(messages, sampling_params=params)
+        # print(prompts)
+        return llm.generate(prompts, sampling_params=params)
     
     return lambda x: generate(x, llm)
 
