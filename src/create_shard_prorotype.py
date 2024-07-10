@@ -37,7 +37,7 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
     loader = DataLoader(dataset.with_format("torch"), shuffle=True, batch_size=batch_size, num_workers=4)
     # infile = open(src_file, "r")
     # dataset = [json.loads(line) for line in tqdm(infile, f"reading file {src_file}")]
-    print("created dataloader with", len(dataset), 'samples')
+    print("created dataloader with", len(dataset), 'samples with batch size', batch_size)
     total_stories: int = 0
     # clear file
     total_stories: int = 0
