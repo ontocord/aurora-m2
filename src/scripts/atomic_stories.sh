@@ -21,4 +21,4 @@ PYTHONPATH='.' srun  python ./src/scripts/gen_stories_slurm.py \
   --src-file /leonardo_work/EUHPC_E03_068/synthetic_datasets/atomic_stories/atomic_stories.jsonl \
   --src-file-url https://huggingface.co/datasets/ontocord/atomic_2024/resolve/main/data/atomic_stories.jsonl \
   --prompts-template-name default \
-  --dst-file-path ../synthetic_datasets/atomic_stories/processed
+  --dst-file-path /leonardo_work/EUHPC_E03_068/synthetic_datasets/atomic_stories/processed
