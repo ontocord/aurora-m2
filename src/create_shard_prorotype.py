@@ -38,10 +38,10 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
     # infile = open(src_file, "r")
     # dataset = [json.loads(line) for line in tqdm(infile, f"reading file {src_file}")]
     print("created dataloader with", len(dataset), 'samples')
-    total_stories: bool = 0
+    total_stories: int = 0
     # clear file
     with open(shard_path, "w") as outfile:
-        total_stories: bool = 0
+        total_stories: int = 0
         while total_stories < stories_per_shard:
             # for x in dataset:
             for x in loader:
