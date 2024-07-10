@@ -41,6 +41,8 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
     total_stories: int = 0
     # clear file
     total_stories: int = 0
+    with open(shard_path, "w") as outfile:
+        pass
     while total_stories < stories_per_shard:
         # for x in dataset:
         for x in tqdm(loader, f'processing shard {src_file}'):
@@ -55,7 +57,7 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
             output = llm(messages)
             output_texts = postprocess_results(output)
             for output_text, used_prompt, metadata in zip(output_texts, used_prompts, metadatas):
-                with open(shard_path, "w") as outfile:
+                with open(shard_path, "a") as outfile:
                     outfile.write(
                         json.dumps(
                             {
