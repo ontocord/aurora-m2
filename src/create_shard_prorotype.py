@@ -63,7 +63,6 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
                                 'input': output_text,
                                 'metadata': metadata
                             }) + "\n"
-                    print("result", json_line)
-                    print(output_text)
+                    print("this is the json-line", json_line)
                     print('write results to', shard_path)
                     outfile.write(json_line)
