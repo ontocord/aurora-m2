@@ -18,7 +18,7 @@ PYTHONPATH='.' srun  python ./src/scripts/gen_stories_slurm.py \
   --stories-per-target-shard 1000 \
   --model-name "UCLA-AGI/Llama-3-Instruct-8B-SPPO-Iter3" \
   --tokenizer-name "UCLA-AGI/Llama-3-Instruct-8B-SPPO-Iter3" \
-  --src-file ../synthetic_datasets/atomic_stories/atomic_stories.jsonl \
+  --src-file /leonardo_work/EUHPC_E03_068/synthetic_datasets/atomic_stories/atomic_stories.jsonl \
   --src-file-url https://huggingface.co/datasets/ontocord/atomic_2024/resolve/main/data/atomic_stories.jsonl \
   --prompts-template-name default \
   --dst-file-path ../synthetic_datasets/atomic_stories/processed
