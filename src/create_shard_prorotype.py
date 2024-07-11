@@ -4,7 +4,7 @@ import random
 from multiprocessing import Value
 from typing import List
 
-from datasets import load_dataset, Features, Value, tqdm
+from datasets import load_dataset, Features, Value, tqdm, Dataset
 from transformers import pipeline, Pipeline
 
 from torch.utils.data import DataLoader
@@ -33,11 +33,16 @@ def process_requests(texts, metatadata, prompts):
 
 def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_path: str, prompts: List[str], batch_size: int) -> None:
     print(src_file)
-    dataset = load_dataset('json', data_files=src_file)['train']
-    loader = DataLoader(dataset.with_format("torch"), shuffle=True, batch_size=batch_size, num_workers=4)
+    infile = open(src_file, "r")
+    #dataset = load_dataset('json', data_files=src_file)['train']
+    datapoints = [json.loads(line) for line in tqdm(infile, f"reading file {src_file}")]
+    ts = [x["text"] for x in datapoints]
+    ms = [x["metadata"] for x in datapoints]
+    #dataset = Dataset.from_dict({"text": ts, "metadata": ms}).with_format("torch")
+    #loader = DataLoader(dataset.with_format("torch"), shuffle=True, batch_size=batch_size, num_workers=4)
     # infile = open(src_file, "r")
     # dataset = [json.loads(line) for line in tqdm(infile, f"reading file {src_file}")]
-    print("created dataloader with", len(dataset), 'samples with batch size', batch_size)
+    print("created dataloader with", len(ts), 'samples with batch size', batch_size)
     total_stories: int = 0
     # clear file
     total_stories: int = 0
@@ -45,8 +50,9 @@ def create_shard(llm: Pipeline, stories_per_shard: int, src_file: str, shard_pat
         pass
     while total_stories < stories_per_shard:
         # for x in dataset:
-        for x in tqdm(loader, f'processing shard {src_file}'):
-            texts, metadatas = x["text"], x["metadata"]
+        for i in range(0, len(ts), batch_size):
+            # Determine the indices for the current batch
+            texts, metadatas = ts[i: min(i + batch_size, len(ts))], ms[i: min(i + batch_size, len(ts))]
             # print(texts)
             # print(metadatas)
             if total_stories >= stories_per_shard:
