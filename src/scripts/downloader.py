@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import click
 import pandas as pd
 from selenium import webdriver
@@ -27,9 +29,9 @@ chrome_options.add_argument("--start-maximized")
 chrome_options.add_argument("--window-size=1920,1080")
 
 
-@click.command()
-@click.option('--paraquet-file', type=str, help='Input file.')
-def main(paraquet_file: str):
+
+
+def process_paquet_file(paraquet_file: str, out_folder: str):
     # Load the parquet file
     df = pd.read_parquet(paraquet_file)
 
@@ -159,8 +161,8 @@ def main(paraquet_file: str):
             save_progress()
         return index
 
-    def save_progress():
-        df.to_parquet(paraquet_file, index=False)
+    def save_progress(dest_file: Path):
+        df.to_parquet(dest_file, index=False)
         print("Progress saved")
 
     # Ensure the 'author' column exists
@@ -182,8 +184,16 @@ def main(paraquet_file: str):
                 progress_bar.update(1)
 
     # Save the final DataFrame
-    save_progress()
+    dst_file = Path(out_folder) / Path(paraquet_file).name
+    save_progress(dst_file)
     print("Final progress saved")
+
+
+@click.command()
+@click.option('--paraquet-file', type=str, help='Input file.')
+@click.option('--output-folder', type=str, help='Output file.')
+def main(parquet_file: str, output_folder: str):
+    process_paquet_file(parquet_file, output_folder)
 
 
 if __name__ == '__main__':
