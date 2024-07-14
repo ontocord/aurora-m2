@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --account EUHPC_E03_068
-#SBATCH -p dcgp
+#SBATCH -p dcgp_usr_prod
 #SBATCH --time 01:00:00     # format: HH:MM:SS
 #SBATCH -N 2                # 1 node
 #SBATCH --ntasks-per-node=8 # 4 tasks out of 32
