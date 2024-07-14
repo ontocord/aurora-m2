@@ -14,7 +14,7 @@ def fetch_shards(path: Path, rank: int, world_size):
 
 @click.command()
 @click.option('--in-folder', type=str, help='Input folder containing shards.')
-@click.option('--out-folder', type=int, help='output folder.')
+@click.option('--out-folder', type=str, help='output folder.')
 def main(in_folder: str, out_folder):
     path = Path(in_folder)
     rank = get_rank()
