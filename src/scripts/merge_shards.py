@@ -1,3 +1,4 @@
+import click
 import pyarrow.parquet as pq
 import pyarrow as pyr
 import os
@@ -26,18 +27,6 @@ def merge_parquet_files(input_directory, output_file):
     print(f"Merged Parquet file written to {output_file}")
 
 
-# Example usage:
-input_directory = "dataset"
-output_file = "merged_output.parquet"
-original_file = "dataset.parquet"
-
-merge_parquet_files(input_directory, output_file)
-
-
-table = pq.read_table(original_file)
-tabl2 = pq.read_table(output_file)
-
-
 def check_parquet_files_equal(file1, file2):
     # Read Parquet files into pandas DataFrames
     df1 = pq.read_table(file1).to_pandas()
@@ -54,5 +43,14 @@ def check_parquet_files_equal(file1, file2):
     else:
         print(f"The Parquet files {file1} and {file2} do not have the same content.")
 
+# Example usage:
+input_directory = "dataset"
+output_file = "merged_output.parquet"
+original_file = "dataset.parquet"
 
-check_parquet_files_equal(original_file, output_file)
+
+@click.command()
+@click.option('--input-directory', type=str, help='Input file.')
+@click.option('--output-file', type=int, help='num shards.')
+def main(input_directory: str, output_file: str):
+    merge_parquet_files(input_directory, output_file)
