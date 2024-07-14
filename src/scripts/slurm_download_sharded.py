@@ -1,7 +1,7 @@
 import click
 from tqdm import tqdm
 
-from src.scripts.downloader import process_paquet_file
+from src.scripts.flickr_metadata import process_paquet_file
 from src.slurm_utils import get_rank, get_world_size
 from src.utils import sort_files_by_number, filter_splits
 from pathlib import Path

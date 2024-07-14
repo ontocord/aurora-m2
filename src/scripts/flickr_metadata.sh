@@ -11,4 +11,4 @@
 
 # source ~/miniconda3/bin/activate
 
-PYTHONPATH='.' srun python ./src/scripts/slurm_download_sharded.py --in-folder $1 --out-folder $2
+PYTHONPATH='.' srun python ./src/scripts/flickr_metadata.py --in-folder $1 --out-folder $2
