@@ -20,21 +20,20 @@ def shard_parquet_file(input_file, output_directory, num_shards):
     rows_per_shard = num_rows // num_shards
 
     # Create shards
+    total_rows = 0
     for i in tqdm(range(num_shards), 'processing shards'):
-        # Determine rows for this shard
-        if i < num_shards - 1:
-            rows_to_take = rows_per_shard
-        else:
-            rows_to_take = num_rows - (rows_per_shard * (num_shards - 1))
+        rows_to_take = rows_per_shard if num_rows >= total_rows-rows_per_shard else total_rows-rows_per_shard
 
         # Write shard to file
-        start_row = i * rows_per_shard
+        start_row = total_rows
         end_row = start_row + rows_to_take
+        sliced = table.slice(start_row, rows_to_take)
 
         shard_filename = os.path.join(output_directory, f"{i}_{Path(input_file).name}")
-        pq.write_table(table.slice(start_row, end_row), shard_filename)
+        pq.write_table(sliced, shard_filename)
 
-        print(f"Shard {i}: rows {start_row} to {end_row} written to {shard_filename}")
+        print(f"Shard {i}: rows {start_row} to {end_row} ({len(sliced)} rows {end_row - start_row}) written to {shard_filename}")
+        total_rows = total_rows + rows_to_take
 
 
 

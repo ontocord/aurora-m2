@@ -22,7 +22,7 @@ def merge_parquet_files(input_directory, output_file):
     merged_table = pyr.concat_tables(tables)
 
     # Write the merged table to a single Parquet file
-    pq.write_table(merged_table, output_file)
+    
 
     print(f"Merged Parquet file written to {output_file}")
 
@@ -54,3 +54,4 @@ original_file = "dataset.parquet"
 @click.option('--output-file', type=int, help='num shards.')
 def main(input_directory: str, output_file: str):
     merge_parquet_files(input_directory, output_file)
+    pq.write_table(merged_table, output_file)

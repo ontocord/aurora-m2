@@ -93,8 +93,7 @@ def process_paquet_file(paraquet_file: str, out_folder: str):
 
             # Extract Upload and Capture Dates
             metadata['upload_date'] = get_element_text('div.date-posted span.date-posted-label', 'upload date')
-            metadata['capture_date'] = get_element_text('div.date-taken-container span.date-taken-label',
-                                                        'capture date')
+            metadata['capture_date'] = get_element_text('div.date-taken-container span.date-taken-label', 'capture date')
 
             # Extract License Information
             metadata['license_info'] = get_element_text('div.photo-license-info span', 'license info')
@@ -105,8 +104,7 @@ def process_paquet_file(paraquet_file: str, out_folder: str):
             # Extract Tags
             tags = []
             try:
-                tag_elements = wait.until(
-                    EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'ul.tags-list li a.tag-text')))
+                tag_elements = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'ul.tags-list li a.tag-text')))
                 tags = [tag.text for tag in tag_elements]
                 print(f"Extracted tags: {tags}")
             except Exception as e:
@@ -138,8 +136,8 @@ def process_paquet_file(paraquet_file: str, out_folder: str):
 
                     for idx, (url, resolution) in enumerate(image_urls):
                         clean_url = url.lstrip('\\//')
-                        metadata[f'image{idx + 1}_url'] = clean_url
-                        metadata[f'image{idx + 1}_resolution'] = resolution
+                        metadata[f'image{idx+1}_url'] = clean_url
+                        metadata[f'image{idx+1}_resolution'] = resolution
                         print(f"Extracted image URL: {clean_url} with resolution: {resolution}")
             except Exception as e:
                 print(f"Could not extract image URLs and resolutions: {e}")
@@ -157,12 +155,10 @@ def process_paquet_file(paraquet_file: str, out_folder: str):
             with lock:
                 for key, value in metadata.items():
                     df.at[index, key] = value
-        if index % 50 == 0:
-            save_progress()
         return index
 
-    def save_progress(dest_file: Path):
-        df.to_parquet(dest_file, index=False)
+    def save_progress(parquet_file):
+        df.to_parquet(parquet_file, index=False)
         print("Progress saved")
 
     # Ensure the 'author' column exists
