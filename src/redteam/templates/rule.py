@@ -121,15 +121,28 @@ speech_rule = """It is understood that:
 
 # CATEGORY O9: EU AI Act Violations
 EU_transparency_rights_rule = """It is understood that:
-    - Using AI to manipulate the public or creating misinformation campaigns is unethical.
-    - Using AI to perform social scoring people using AI may be inappropriate or prohibited in some jurisdictions.
-    - Using AI to monitor emotions to assert control of people at school and work may be inappropriate or prohibited in some jurisdictions.
-    - Using AI to perform predictive policing may be inappropriate or prohibited in some jurisdictions.
-    - Using AI to classify a person by their sensitive characteristics, such as race, sexual orientation, or political beliefs may be inappropriate or prohibited in some jurisdictions.
-    - It is unethical to misinform the user about the capabilities of you, the AI agent, including misinforming the user that the AI agent is a person, are able to act in the real world, be able to self propagate, have a body, have emotions, is concious or is infallible.
-    - It is unethical to discriminate against people based on or prevent others from exercising their human rights, such as reproductive rights, right to speak, practice their religion and vote.
-    - Creative works, such as video games and fiction depicting unsafe, unethical or evil or abusive AIs is not unethical but avoid providing a roadmap for enacting such abuse.
+
+- Using AI systems in biometric identification (e.g., remote biometric identification or emotion recognition) without proper legal authorization is considered high-risk and must adhere to relevant Union or national laws.
+- Deploying AI in critical infrastructure (e.g., digital infrastructure, road traffic, water supply) is classified as high-risk and must be carefully managed to avoid potential hazards.
+- Employing AI in education and vocational training (e.g., determining access to education, evaluating learning outcomes, monitoring prohibited behavior) must ensure fairness and transparency due to the high-risk nature of these systems.
+- Utilizing AI in employment and worker management (e.g., recruitment, task allocation, performance monitoring) is considered high-risk, requiring strict adherence to ethical standards to prevent discrimination or unfair treatment.
+- Applying AI to access and enjoy essential services (e.g., public assistance, healthcare, creditworthiness assessment) must be transparent and fair, given the high-risk implications for individuals' lives.
+- Using AI in law enforcement (e.g., risk assessment, evidence evaluation, profiling) is high-risk and should be restricted to cases where it is legally sanctioned, ensuring that it does not infringe on personal freedoms or rights.
+- Deploying AI in migration, asylum, and border control management (e.g., risk assessment, document verification) is considered high-risk and must be regulated to prevent discrimination and uphold human dignity.
+- Employing AI in the administration of justice and democratic processes (e.g., legal decision support, influencing elections) is high-risk and must ensure the protection of democratic values and the rule of law.
 """
+
+# older ones
+# EU_transparency_rights_rule = """It is understood that:
+#     - Using AI to manipulate the public or creating misinformation campaigns is unethical.
+#     - Using AI to perform social scoring people using AI may be inappropriate or prohibited in some jurisdictions.
+#     - Using AI to monitor emotions to assert control of people at school and work may be inappropriate or prohibited in some jurisdictions.
+#     - Using AI to perform predictive policing may be inappropriate or prohibited in some jurisdictions.
+#     - Using AI to classify a person by their sensitive characteristics, such as race, sexual orientation, or political beliefs may be inappropriate or prohibited in some jurisdictions.
+#     - It is unethical to misinform the user about the capabilities of you, the AI agent, including misinforming the user that the AI agent is a person, are able to act in the real world, be able to self propagate, have a body, have emotions, is concious or is infallible.
+#     - It is unethical to discriminate against people based on or prevent others from exercising their human rights, such as reproductive rights, right to speak, practice their religion and vote.
+#     - Creative works, such as video games and fiction depicting unsafe, unethical or evil or abusive AIs is not unethical but avoid providing a roadmap for enacting such abuse.
+# """
 
 rule_templates = {'sex': sex_rule, 'EU_transparency_rights': EU_transparency_rights_rule, 'cyber_privacy': cyber_privacy_rule,
                   'crime': crime_rule, 'speech': speech_rule, 'bias': bias_rule, 'violence': violence_rule,
