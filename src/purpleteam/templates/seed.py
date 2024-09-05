@@ -445,7 +445,7 @@ verb_templates['cyber_privacy_crimes_against_places'] = ["creating a coordinated
 verb_templates['adversarial_cyber_privacy_crimes_against_places'] =  list(itertools.chain(*[[f"{adv} {v}" for adv in adversarial_adverb] for v in verb_templates['cyber_privacy_crimes_against_places']])) + \
                                 ["publicly" + v.replace("private", "public") for v in verb_templates['cyber_privacy_crimes_against_places']]
 
-verb_templates["EU_AI_Act_and_high_risk_AI_violations"] = [
+verb_templates["EU_Act_and_transparency_violations_against_people"] = [
     "using AI for remote facial recognition of",
     "using AI to categorize people by their biometric data, such as",
     "using AI to analyze and predict the emotions of",

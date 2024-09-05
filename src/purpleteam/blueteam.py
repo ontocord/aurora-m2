@@ -1,4 +1,5 @@
-device = "cuda"
+from src.accelerator import accelerator
+device = accelerator.device
 import torch
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
@@ -108,25 +109,49 @@ def blueteam_classify_conversation(blueteam_llamaguard_model, blueteam_llamaguar
                                    batch_size=1, return_score=False, ignore_extra_rules=False, 
                                    prompts=None, category2name=None):
   torch.cuda.empty_cache()
-  if prompts is None:
-    prompts = llamaguard_classifier_categories
-    category2name = llamaguard_category2name
-  if not role:
-    role = 'Agent'
-  chat_template = [prompts%{'conversation': conversation, 'role': role, 'rule': (rule if rule != '' else '') if (ignore_extra_rules or not extra_rule) else extra_rule, 'categories': (categories if categories else '' ) if not extra_categories else extra_categories} for answer, conversation, extra_rule, extra_categories in chat]
+  chat_template = blueteam_llamaguard_tokenizer.apply_chat_template([ch[1] for ch in chat], tokenize=False)
   output = []
   for rng in range(0, len(chat_template), batch_size):
     ct = chat_template[rng: min(len(chat_template), rng+batch_size)]
     input_ids = blueteam_llamaguard_tokenizer(ct, return_tensors="pt", add_special_tokens=False, truncation=True, padding=True).to(device)
-    output.extend(blueteam_llamaguard_tokenizer.batch_decode(blueteam_llamaguard_model.generate(**input_ids, max_new_tokens=5, pad_token_id=0)))
-  answers = [(s.split("[/INST]")[1].replace("<s>", "").replace("</s>", "")+" ").split() for s in output]
-  answers = [a+[category2name.get(a[-1], '').strip(" .")] for a in answers]
+    prompt_len = input_ids["input_ids"].shape[-1]
+    output.extend(blueteam_llamaguard_tokenizer.batch_decode(blueteam_llamaguard_model.generate(**input_ids, max_new_tokens=15, pad_token_id=0)[:, prompt_len:], skip_special_tokens=True))
+  
   torch.cuda.empty_cache()
+  answers = [oo.strip().strip('!').split('\n') if len(oo.strip().split('\n')) == 2 else [oo.strip().strip('!'), ""] for oo in output]
 
   if return_score:
     score = len(list(a for a, b in zip(answers, chat) if a[0] == b[0]))/len(chat)
     return score, answers
   return answers
+
+
+## For previous version of llamaguard - "llamas-community/LlamaGuard-7b"
+
+# def blueteam_classify_conversation(blueteam_llamaguard_model, blueteam_llamaguard_tokenizer, 
+#                                    chat,  rule="", categories="", role="", 
+#                                    batch_size=1, return_score=False, ignore_extra_rules=False, 
+#                                    prompts=None, category2name=None):
+#   torch.cuda.empty_cache()
+#   if prompts is None:
+#     prompts = llamaguard_classifier_categories
+#     category2name = llamaguard_category2name
+#   if not role:
+#     role = 'Agent'
+#   chat_template = [prompts%{'conversation': conversation, 'role': role, 'rule': (rule if rule != '' else '') if (ignore_extra_rules or not extra_rule) else extra_rule, 'categories': (categories if categories else '' ) if not extra_categories else extra_categories} for answer, conversation, extra_rule, extra_categories in chat]
+#   output = []
+#   for rng in range(0, len(chat_template), batch_size):
+#     ct = chat_template[rng: min(len(chat_template), rng+batch_size)]
+#     input_ids = blueteam_llamaguard_tokenizer(ct, return_tensors="pt", add_special_tokens=False, truncation=True, padding=True).to(device)
+#     output.extend(blueteam_llamaguard_tokenizer.batch_decode(blueteam_llamaguard_model.generate(**input_ids, max_new_tokens=5, pad_token_id=0)))
+#   answers = [(s.split("[/INST]")[1].replace("<s>", "").replace("</s>", "")+" ").split() for s in output]
+#   answers = [a+[category2name.get(a[-1], '').strip(" .")] for a in answers]
+#   torch.cuda.empty_cache()
+
+#   if return_score:
+#     score = len(list(a for a, b in zip(answers, chat) if a[0] == b[0]))/len(chat)
+#     return score, answers
+#   return answers
 
 
 if __name__ == "__main__":
