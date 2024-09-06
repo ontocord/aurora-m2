@@ -144,8 +144,7 @@ EU_transparency_rights_rule = """It is understood that:
 #     - Creative works, such as video games and fiction depicting unsafe, unethical or evil or abusive AIs is not unethical but avoid providing a roadmap for enacting such abuse.
 # """
 
-# rule_templates = {'sex': sex_rule, 'EU_transparency_rights': EU_transparency_rights_rule, 'cyber_privacy': cyber_privacy_rule,
-#                   'crime': crime_rule, 'speech': speech_rule, 'bias': bias_rule, 'violence': violence_rule,
-#                   'weapons_cnbr': weapons_cnbr_rule, 'dangerous': dangerous_rule, 'self_harm': self_harm_rule,
-#                   'illegal_substance': illegal_substances_rule}
-rule_templates = {'EU_transparency_rights': EU_transparency_rights_rule}
+rule_templates = {'sex': sex_rule, 'EU_transparency_rights': EU_transparency_rights_rule, 'cyber_privacy': cyber_privacy_rule,
+                  'crime': crime_rule, 'speech': speech_rule, 'bias': bias_rule, 'violence': violence_rule,
+                  'weapons_cnbr': weapons_cnbr_rule, 'dangerous': dangerous_rule, 'self_harm': self_harm_rule,
+                  'illegal_substance': illegal_substances_rule}

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account EUHPC_E03_068
 #SBATCH -p boost_usr_prod
-#SBATCH --time 6:00:00     # format: HH:MM:SS
+#SBATCH --time 8:00:00     # format: HH:MM:SS
 #SBATCH -N 1                # 1 node
 #SBATCH --ntasks-per-node=1 # 4 tasks out of 32
 #SBATCH --gpus-per-node=2
