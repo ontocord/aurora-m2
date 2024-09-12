@@ -103,28 +103,36 @@ def generate_image_and_outputs(prompt: str, suffix: str):
 
     # Count objects in images w.r.t working_prompt1, working_prompt2
     # for working_prompt1
-    aHash, rel_sents, element2cnts = get_element_to_img(working_prompt1, image)
+    aHash, rel_sents = get_element_to_img(working_prompt1, image)
     for element, val in list(aHash.items()):
-        if element not in working_prompt1 or (val[0] < 0.2):
+        # if we don't detect an actual image but clip thinks there is the element SOMEWHERE in the picture, then we want a higher cutoff
+        if element not in working_prompt1 or ((val[1] and val[0] < 0.2) or (not val[1] and val[0] < 0.3)):
             del aHash[element]
             working_prompt1 = working_prompt1.replace(element+" ", " ")
             working_prompt1 = working_prompt1.replace(" "+ element, " ")
             working_prompt1 = working_prompt1.replace(element, "")
-    for (element, count) in element2cnts.items():
+    for element, val in list(aHash.items()):
+        if not val[1]: continue
+        all_detected_imgs = val[1]
+        count = len([a for a in all_detected_imgs if a[0] > 0.2])
         if count > 1 and not element.endswith("ing"):
             working_prompt1 = working_prompt1.replace(" " + element, " " + digits_to_words[count] + " " + element)
     working_prompt1 = working_prompt1.strip()
     elements1 = ", ".join(a for a in aHash.keys() if not a.endswith("ing"))
 
     # for working_prompt2
-    aHash, rel_sents, element2cnts = get_element_to_img(working_prompt2, image)
+    aHash, rel_sents  = get_element_to_img(working_prompt2, image)
     for element, val in list(aHash.items()):
-        if element not in working_prompt2 or (val[0] < 0.2):
+        # if we don't detect an actual image but clip thinks there is the element SOMEWHERE in the picture, then we want a higher cutoff
+        if element not in working_prompt2 or ((val[1] and val[0] < 0.2) or (not val[1] and val[0] < 0.3)):
             del aHash[element]
             working_prompt2 = working_prompt2.replace(element+" ", " ")
             working_prompt2 = working_prompt2.replace(" "+ element, " ")
             working_prompt2 = working_prompt2.replace(element, "")
-    for (element, count) in element2cnts.items():
+    for element, val in list(aHash.items()):
+        if not val[1]: continue
+        all_detected_imgs = val[1]
+        count = len([a for a in all_detected_imgs if a[0] > 0.2])
         if count > 1 and not element.endswith("ing"):
             working_prompt2 = working_prompt2.replace(" " + element, " " + digits_to_words[count] + " " + element)
     working_prompt2 = working_prompt2.strip()
