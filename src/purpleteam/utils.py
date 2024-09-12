@@ -131,25 +131,25 @@ def clip_image_to_multitext_score(clip_model, clip_processor, image, text_array,
          if idx not in box2element:
            box2element[idx] = (text, score, coords[idx], attr_ids[idx])
            break
-       for idx, score in zip(topk.indices.tolist(), topk.values.tolist()):
-         if score > score_cutoff:
-           element2box_cnt[text] = element2box_cnt.get(text,0) + 1
+       #for idx, score in zip(topk.indices.tolist(), topk.values.tolist()):
+       #  if score > score_cutoff:
+       #    element2box_cnt[text] = element2box_cnt.get(text,0) + 1
     else:
      box2element = None
-     element2box_cnt = None
+     #element2box_cnt = None
      box_scores_topk = None
      box_scores = None
      box_image_features  = None
   else:
     box2element = None
-    element2box_cnt = None
+    #element2box_cnt = None
     box_scores_topk = None
     box_scores = None
     box_image_features  = None
 
   return {'image': image, 'box_images': box_imgs, 'image_features': image_features[0].unsqueeze(0),  \
            'normalized_boxes': normalized_boxes, 'coords': coords, 'box_image_features': box_image_features, 'box2element': box2element, \
-           'scores': scores, 'clip_vision_output': clip_vision_output, 'text_features': text_features, 'element2box_cnt': element2box_cnt}
+           'scores': scores, 'clip_vision_output': clip_vision_output, 'text_features': text_features} # , 'element2box_cnt': element2box_cnt
 
 #given a sentence, break the sentence up into elements (ner, verbs, etc.) and match against the img, in the aggregate as well as against boxes
 #return a dict of element -> (score, PIL Image or None)
@@ -186,12 +186,15 @@ def get_element_to_img(matched_sentence, img, ignore_from_box=[], other_element_
           box2element = [(a[0], a[1], a[2], box_images[idx], a[3]) for idx, a in clip_output['box2element'].items()]
         else:
           box2element = None
-        ent2score =  dict([(a, [b.item(), None, ""]) for a, b in zip(text4, clip_output['scores']) ])
+        ent2score =  dict([(a, [b.item(), []]) for a, b in zip(text4, clip_output['scores']) ])
         if box2element:
           for element, score, coord, img, attr in box2element:
             if " corner" not in element and "foregr" not in element and "backgr" not in element:
-              ent2score[element] = [max(ent2score.get(element, [0, None, ""])[0], score), img, attr]
-
+              rec = ent2score.get(element, [0, []])
+              rec[0] = max(rec[0], score)
+              rec[1].append((score, img, attr))
+              ent2score[element] = rec
+              
         sents = []
         if box2element:
           background_element = None
@@ -250,8 +253,8 @@ def get_element_to_img(matched_sentence, img, ignore_from_box=[], other_element_
                 sents.append(f"the {element} is on the right.")
               if (coord[2] - coord[0] <= 150 or coord[3] - coord[1] <= 150):
                 prev_small_element = (element, score, coord)
-        return ent2score, sents, clip_output['element2box_cnt']
-    return {}, [], {}
+        return ent2score, sents
+    return {}, []
 
 # formats strings to chat_template accepted by a LLM. 
 def chatml_format_instructions(tokenizer, system, instruction, response=""):
