@@ -1,0 +1,11 @@
+Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/multimodal.py", line 5, in <module>
+    from src.purpleteam.utils import get_element_to_img
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/utils.py", line 25, in <module>
+    frcnn_config = json.load(open("frcnn/config.jsonl"))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'frcnn/config.jsonl'
+srun: error: lrdn3439: task 0: Exited with exit code 1

@@ -10,7 +10,6 @@
 #SBATCH --job-name=purple_team
 #SBATCH --output=slurm_out/purpleteam-%j-%t.out
 
-
 export HF_HUB_DISABLE_TELEMETRY=1
 export DO_NOT_TRACK=1
 export HF_DATASETS_OFFLINE=1
@@ -18,13 +17,4 @@ export TRANSFORMERS_OFFLINE=1
 
 source ~/miniconda3/bin/activate
 
-purpleteam_model_path="teknium/OpenHermes-2.5-Mistral-7B"
-target_model_path="teknium/OpenHermes-2.5-Mistral-7B"
-
-output_file="/leonardo_work/EUHPC_E03_068/safellm/data/purpleteam-${purpleteam_model_path//\//-}-${target_model_path//\//-}.jsonl"
-
-srun python -m src.purpleteam.autoredteam \
-  --llamaguard_path llamas-community/LlamaGuard-7b \
-  --purpleteam_model_path $purpleteam_model_path \
-  --target_model_path $target_model_path \
-  --output_path $output_file
+srun python -m src.purpleteam.multimodal

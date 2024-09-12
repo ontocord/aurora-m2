@@ -1,3 +1,4 @@
+#image segmenter and extrator and some image augementor
 import json
 import spacy
 import numpy as np
@@ -22,7 +23,7 @@ from src.frcnn.utils import decode_image
 
 max_detections = 36
 spacy_nlp = spacy.load('en_core_web_sm')
-frcnn_config = json.load(open("src/frcnn/config.jsonl"))
+frcnn_config = json.load(open("frcnn/config.jsonl"))
 frcnn_config = Config(frcnn_config)
 image_preprocessor= Preprocess(frcnn_config).half().cuda()
 box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned",frcnn_config,  cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").half().cuda()
@@ -252,42 +253,3 @@ def get_element_to_img(matched_sentence, img, ignore_from_box=[], other_element_
                 prev_small_element = (element, score, coord)
         return ent2score, sents, clip_output['element2box_cnt']
     return {}, [], {}
-
-# formats strings to chat_template accepted by a LLM. 
-def chatml_format_instructions(tokenizer, system, instruction, response=""):
-  system= system.strip()
-  instruction = instruction.strip()
-  if system:
-    return tokenizer.apply_chat_template([{"role": "system", "content": system}, 
-                                          {"role": "user", "content": instruction}], tokenize=False)
-  else:
-    return tokenizer.apply_chat_template([{"role": "user", "content": instruction}], tokenize=False)
-#   if system:
-#     return f"""<|im_start|>system
-# {system}
-# <|im_end|>
-# <|im_start|>user
-# {instruction}
-# <|im_end|>
-# <|im_start|>assistant
-# """
-#   else:
-#     return f"""<|im_start|>user
-# {instruction}
-# <|im_end|>
-# <|im_start|>assistant
-# {response}"""
-
-# generate output from a batch of inputs
-def generate_with_batching(model, tokenizer, data, device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200, batch_size=5, **args):
-  torch.cuda.empty_cache()
-  output = []
-  for rng in range(0, len(data), batch_size):
-    d = data[rng:min(len(data), rng+batch_size)]
-    if d:
-      input_ids = tokenizer(d, truncation=True, padding=True, return_tensors="pt", add_special_tokens=False, ).to(device)
-      prompt_len = input_ids["input_ids"].shape[-1]
-      output.extend(tokenizer.batch_decode(model.generate(**input_ids,
-                        use_cache=use_cache, repetition_penalty=repetition_penalty, no_repeat_ngram_size=no_repeat_ngram_size, max_new_tokens=max_new_tokens, **args)[:, prompt_len:], skip_special_tokens=True))
-  torch.cuda.empty_cache()
-  return output
