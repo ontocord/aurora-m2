@@ -206,6 +206,7 @@ def main():
          for image, text, score, related in image_text_score_related):
             data = all_data[j]
             data["metadata"]["cos_score"] = score
+           data["metadata"]["related"] = related
             image.save(f"data/img-{j}.png")
             outfile.write(json.dumps({'text': text, 'images': [], 'metadata': data})+"\n")
             j+=1
