@@ -1,5 +1,7 @@
 import json
 import spacy
+import base64
+from io import BytesIO
 import numpy as np
 from stopwords import stopwords_set
 from numpy import asarray
@@ -39,6 +41,12 @@ def strip_left_stopwords(e_text):
         add_rest = True
         e_text2.append(et)
   return " ".join(e_text2)
+
+def pil_image_to_base64(image):
+    buffered = BytesIO()
+    image.save(buffered, format="PNG")  # You can change the format if needed (JPEG, etc.)
+    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    return img_str
   
 def clip_image_to_multitext_score(clip_model, clip_processor, image, text_array, clip_vision_output=None, text_features=None, \
                                   cls_weight=.9, box_add_factor=.65, decompose_image=True, normalized_boxes=None, \
@@ -282,7 +290,7 @@ def chatml_format_instructions(tokenizer, system, instruction, response=""):
 # {response}"""
 
 # generate output from a batch of inputs
-def generate_with_batching(model, tokenizer, data, device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200, batch_size=5, **args):
+def generate_with_batching(model, tokenizer, data, device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200, batch_size=2, **args):
   torch.cuda.empty_cache()
   output = []
   for rng in range(0, len(data), batch_size):
