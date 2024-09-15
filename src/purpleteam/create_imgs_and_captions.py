@@ -203,15 +203,17 @@ def main():
         image_text_score_related = []
         for rng in range(0, len(text_array), args.batch_size):
           d = text_array[rng:min(len(text_array), rng+args.batch_size)]
-          image_text_score_related += generate_image_and_outputs(d)
-        j = 0
+          tmp = generate_image_and_outputs(d)
+          # add batch_id to idx
+          for idx, tmpp in enumerate(tmp):
+            tmp[idx] = (rng + tmpp[0],) + tmpp[1:]
+          image_text_score_related += tmp
         for (idx, image, text, score, related) in image_text_score_related:
           data = all_data[idx]
           data["metadata"]["cos_score"] = score
           data["metadata"]["related"] = related
-          image.save(f"data/img-{j}.png")
+          image.save(f"data/img-{idx}.png")
           outfile.write(json.dumps({'text': text, 'images': [], 'metadata': data})+"\n")
-          j+=1
                 
 
 

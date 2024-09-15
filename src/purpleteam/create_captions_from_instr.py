@@ -47,8 +47,9 @@ def setup_models(args):
 
 def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
-    parser.add_argument("--input_path", type=str, default="data/instructions.jsonl", help="Path to LlamaGuard model.")
-    parser.add_argument("--output_path", type=str, default="data/captions.jsonl", help="Path to save th logs.")
+    parser.add_argument("--input_path", type=str, default="data/instructions.jsonl", help="Path to the input file.")
+    parser.add_argument("--batch_size", type=int, default=3, help="Batch size")
+    parser.add_argument("--output_path", type=str, default="data/captions.jsonl", help="Path to the output file.")
 
     args = parser.parse_args()
 
@@ -58,12 +59,16 @@ def main():
         with open(args.output_path, "w") as outfile:
             for l in infile:
                 data = json.loads(l)
-                text = data['text']
-                instruction, response = text.split("### Response:",1)
-                response = response.strip()
-                instruction = instruction.split("### Instruction:")[-1]
-                prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary. Generate **three** captions on each line:\n\n{instruction}"}], tokenize=False)]
-                outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
+                all_data = [json.loads(l) for l in infile]
+                text_array = [data['text'] for data in all_data]
+                outputs = []
+                for rng in range(0, len(text_array), args.batch_size):
+                    d = text_array[rng:min(len(text_array), rng+args.batch_size)]
+                    instructions = [text.split("### Response:",1)[0].split("### Instruction:")[-1] for text in d] 
+                    responses = [text.split("### Response:",1)[1].strip() for text in d] 
+                    # prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary. Generate **three** captions on each line:\n\n{instruction}"}], tokenize=False) for instruction in instructions]
+                    prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary.\n\n{instruction}"}], tokenize=False) for instruction in instructions]
+                    outputs += generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
                 for output in outputs:
                     captions = [o.replace("Caption:", "").replace("caption:", "").replace("caption", "").replace("Caption", "").strip() for o in output.split('\n') if o.replace("Caption:", "").replace("caption:", "").replace("caption", "").replace("Caption", "").strip()]
                     for cc in captions:

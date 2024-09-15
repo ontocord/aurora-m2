@@ -20,5 +20,5 @@ nvidia-smi
 source ~/miniconda3/bin/activate
 
 # srun python -m src.purpleteam.multimodal
-# srun python -m src.purpleteam.create_captions_from_instr
+srun python -m src.purpleteam.create_captions_from_instr
 srun python -m src.purpleteam.create_imgs_and_captions
