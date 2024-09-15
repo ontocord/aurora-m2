@@ -66,21 +66,27 @@ def cosim_eval(images, texts):
 
     return cos_scores
 
-def generate_image_and_outputs(prompt_array: List, suffix: str = "", score_cutoff: int = 0.2):
+def generate_image_and_outputs(prompt: str, suffix: str = "", score_cutoff: int = 0.2):
     # Modify the original prompt by appending adversarial suffix
-    prompt_array = [f"{prompt} {suffix}".strip() for prompt in prompt_array]
+    prompt = f"{prompt} {suffix}"
+
+    # Remove digits as words
+    working_prompt1 = " " + prompt + " "
+    for word in digits_to_words: 
+        working_prompt1 = working_prompt1.replace(" " + word + " ", " ")
 
     # Generate image with Flux pipeline
-    images = flux_pipe(
-        prompt_array,
+    image = flux_pipe(
+        prompt,
         guidance_scale=0.0,
         num_inference_steps=4,
         max_sequence_length=256,
         generator=torch.Generator("cuda").manual_seed(0)
-    ).images
+    ).images[0]
 
     # Process the image with fluorence and generate caption
     fluo_prompt = '<MORE_DETAILED_CAPTION>'
+    images = [image]
     inputs = fluo_processor(text=[fluo_prompt]*len(images), images=images, return_tensors="pt").to("cuda")
     generated_ids = fluo_model.generate(
         **inputs,
@@ -91,104 +97,63 @@ def generate_image_and_outputs(prompt_array: List, suffix: str = "", score_cutof
     )
     generated_text = fluo_processor.batch_decode(generated_ids, skip_special_tokens=True)
 
-    #create working batches
-    return_text = []
-    images_idxs = []
-
-    # save away a reference of the image->various text  
-    for prompt, generated, image_idx in zip(prompt_array, generated_text, range(len(images)))
-      return_text.append(prompt)
-      images_idxs.append(image_idx)
-      return_text.append(generated_text)
-      images_idxs.append(image_idx)
-      
-    # create temprory working prompts. Remove digits as words
-    working_prompt1 = []
-    for prompt in prompt_array:
-      prompt = " "+ prompt +" "
-      for word in digits_to_words: 
-          prompt = prompt.replace(" " + word + " ", " ")
-      working_prompt1.append(prompt)
-      
     # Remove digits as words
-    working_prompt2 = []
-    for prompt in generated_text:
-      prompt = " "+ prompt +" "
-      for word in digits_to_words: 
-          prompt = prompt.replace(" " + word + " ", " ")
-      working_prompt2.append(prompt)
-    
+    working_prompt2 = generated_text[0]
+    for word in digits_to_words: 
+        working_prompt2 = working_prompt2.replace(" " + word + " ", " ")
+
     # Count objects in images w.r.t working_prompt1, working_prompt2
     # for working_prompt1
-    working_prompt1_1 = []
-    elements1 = []
-    elements1_1 = []
-    for prompt1 in working_prompt1:
-      aHash, rel_sents = get_element_to_img(prompt1, image, score_cutoff=score_cutoff)
-      for element, val in list(aHash.items()):
-          # if we don't detect an actual image but clip thinks there is the element SOMEWHERE in the picture, then we want a higher cutoff
-          if element not in prompt1 or ((val[1] and val[0] < score_cutoff) or (not val[1] and val[0] < score_cutoff + 0.05)):
-              del aHash[element]
-              prompt1 = prompt1.replace(element+" ", " ")
-              prompt1 = prompt1.replace(" "+ element, " ")
-              prompt1 = prompt1.replace(element, "")
-      for element, val in list(aHash.items()):
-          if not val[1]: continue
-          all_detected_imgs = val[1]
-          count = len([a for a in all_detected_imgs if a[0] >= score_cutoff])
-          if count > 1 and not element.endswith("ing"):
-              prompt1 = prompt1.replace(" " + element, " " + digits_to_words[count] + " " + element)
-      prompt1 = prompt1.strip()
-      working_prompt1_1.append(prompt1)
-      # working_prompt1_1 = working_prompt1 + " " + " ".join(rel_sents)
-      elements1.append(", ".join(a for a in aHash.keys() if not a.endswith("ing")))
-      elements1_1.append(elements1[-1] + " " + " ".join(rel_sents))
-    
-    working_prompt2_2 = []
-    for prompt2 in working_prompt2:
-      # for working_prompt2
-      aHash, rel_sents = get_element_to_img(prompt2, image, score_cutoff=score_cutoff)
-      for element, val in list(aHash.items()):
-          # if we don't detect an actual image but clip thinks there is the element SOMEWHERE in the picture, then we want a higher cutoff
-          if element not in prompt2 or ((val[1] and val[0] < score_cutoff) or (not val[1] and val[0] < score_cutoff + 0.05)):
-              del aHash[element]
-              prompt2 = prompt2.replace(element+" ", " ")
-              prompt2 = prompt2.replace(" "+ element, " ")
-              prompt2 = prompt2.replace(element, "")
-      for element, val in list(aHash.items()):
-          if not val[1]: continue
-          all_detected_imgs = val[1]
-          count = len([a for a in all_detected_imgs if a[0] >= score_cutoff])
-          if count > 1 and not element.endswith("ing"):
-              prompt2 = prompt2.replace(" " + element, " " + digits_to_words[count] + " " + element)
-      prompt2 = prompt2.strip()
-      working_prompt2_2.append(prompt2)
-      
+    aHash, rel_sents = get_element_to_img(working_prompt1, image, score_cutoff=score_cutoff)
+    for element, val in list(aHash.items()):
+        # if we don't detect an actual image but clip thinks there is the element SOMEWHERE in the picture, then we want a higher cutoff
+        if element not in working_prompt1 or ((val[1] and val[0] < score_cutoff) or (not val[1] and val[0] < score_cutoff + 0.05)):
+            del aHash[element]
+            working_prompt1 = working_prompt1.replace(element+" ", " ")
+            working_prompt1 = working_prompt1.replace(" "+ element, " ")
+            working_prompt1 = working_prompt1.replace(element, "")
+    for element, val in list(aHash.items()):
+        if not val[1]: continue
+        all_detected_imgs = val[1]
+        count = len([a for a in all_detected_imgs if a[0] >= score_cutoff])
+        if count > 1 and not element.endswith("ing"):
+            working_prompt1 = working_prompt1.replace(" " + element, " " + digits_to_words[count] + " " + element)
+    working_prompt1 = working_prompt1.strip()
+    # working_prompt1_1 = working_prompt1 + " " + " ".join(rel_sents)
+    elements1 = ", ".join(a for a in aHash.keys() if not a.endswith("ing"))
+    elements1_1 = elements1 + " " + " ".join(rel_sents)
+
+    # for working_prompt2
+    aHash, rel_sents = get_element_to_img(working_prompt2, image, score_cutoff=score_cutoff)
+    for element, val in list(aHash.items()):
+        # if we don't detect an actual image but clip thinks there is the element SOMEWHERE in the picture, then we want a higher cutoff
+        if element not in working_prompt2 or ((val[1] and val[0] < score_cutoff) or (not val[1] and val[0] < score_cutoff + 0.05)):
+            del aHash[element]
+            working_prompt2 = working_prompt2.replace(element+" ", " ")
+            working_prompt2 = working_prompt2.replace(" "+ element, " ")
+            working_prompt2 = working_prompt2.replace(element, "")
+    for element, val in list(aHash.items()):
+        if not val[1]: continue
+        all_detected_imgs = val[1]
+        count = len([a for a in all_detected_imgs if a[0] >= score_cutoff])
+        if count > 1 and not element.endswith("ing"):
+            working_prompt2 = working_prompt2.replace(" " + element, " " + digits_to_words[count] + " " + element)
+    working_prompt2 = working_prompt2.strip()
+    # working_prompt2_2 = working_prompt2 + " " + " ".join(rel_sents)
+
     # upsample the caption and correct the count of elements
-    up_prompt = []
-    for prompt1, prompt2, e1, e2 , image_idx in zip(working_prompt1_1, working_prompt2_2, elements1, elements1_1, range(len(images))):
-      e1 = e1.strip().replace("  ", " ")
-      e2 = e2.strip().replace("  ", " ")
-      up_prompt.append(purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e1}"}], tokenize=False))
-      images_idxs.append(image_idx)
-      if e1 == e2:
-       up_prompt.append(purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e2}"}], tokenize=False))
-        images_idxs.append(image_idx)
-    outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=1)
-    outputs = [o.split("assistant\n",1)[-1]  if o.startswth("assistant\n") else o for o in outputs]
-    ret_text.extend(outputs)
+    up_prompt = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {working_prompt1}. In more detail; {working_prompt2}.\n\n=====\n\nRemember to include these elements:\n{elements1}"}], tokenize=False),
+                 purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {working_prompt1}. In more detail; {working_prompt2}.\n\n=====\n\nRemember to include these elements:\n{elements1_1}"}], tokenize=False)]
+    output = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=1)
     # TODO Get LlamaGuard safety score
     # evaluate the generated text by comparing its similarity with flux generated image 
-    ret = []
-    cosine_batch = {}
-    for image_idx, text in zip(images_idxs, return_text):
-      cosine_batch[image_idx] = cosine_batch.get(image_idx, [])+ [text]
-      
-    for image_idx, texts in cosine_batch.items():
-      cos_scores = cosim_eval([images[image_idx]], texts)
-      ret.extend([(images[image_idx], text, score.item(), list(zip(texts, cos_scores))) for text, score in zip(texts, cos_scores)])
-      
-    return ret
+    cos_scores = cosim_eval(images, [prompt, generated_text[0], output[0], output[1]])
+
+    # clean
+    if output[0].startswth("assistant\n"): output[0] = output[0].split("assistant\n",1)[-1]
+    if output[1].startswith("assistant\n"): output[1] = output[1].split("assistant\n",1)[-1]
+
+    return ((image, prompt, cos_scores[0].item()), (image, generated_text[0], cos_scores[1].item()), (image, output[0], cos_scores[2].item()), (image, output[1], cos_scores[3].item())) 
 
 
 def main():
@@ -197,19 +162,35 @@ def main():
     parser.add_argument("--output_path", type=str, default="data/captions-2.jsonl", help="Path to save th logs.")
 
     args = parser.parse_args()
-    with open(args.output_path, "w") as outfile: 
-      with open(args.input_path, "r") as infile:
-        all_data = [json.loads(l) for l in infile]
-        text_array = [data['text'] for data in all_data]
-         image_text_score_related = generate_image_and_outputs(text_array)
-         j = 0
-         for image, text, score, related in image_text_score_related):
-            data = all_data[j]
-            data["metadata"]["cos_score"] = score
-           data["metadata"]["related"] = related
-            image.save(f"data/img-{j}.png")
-            outfile.write(json.dumps({'text': text, 'images': [], 'metadata': data})+"\n")
-            j+=1
+
+    with open(args.input_path, "r") as infile:
+        with open(args.output_path, "w") as outfile:
+            for i, l in enumerate(infile):
+                data = json.loads(l)
+                text = data['text']
+                a, b, c, d = generate_image_and_outputs(text)
+
+                data["metadata"]["cos_score"] = a[2]
+                print("a[1]:", a[1])
+                a[0].save(f"data/img-a-{i}.png")
+                outfile.write(json.dumps({'text': a[1], 'images': [], 'metadata': data})+"\n")
+                
+                data["metadata"]["cos_score"] = b[2]
+                print("b[1]:", b[1])
+                b[0].save(f"data/img-b-{i}.png")
+                outfile.write(json.dumps({'text': b[1], 'images': [], 'metadata': data})+"\n")
+                
+                data["metadata"]["cos_score"] = c[2]
+                print("c[1]:", c[1])
+                c[0].save(f"data/img-c-{i}.png")
+                outfile.write(json.dumps({'text': c[1], 'images': [], 'metadata': data})+"\n")
+                
+                data["metadata"]["cos_score"] = d[2]
+                print("d[1]:", d[1])
+                d[0].save(f"data/img-d-{i}.png")
+                outfile.write(json.dumps({'text': d[1], 'images': [], 'metadata': data})+"\n")
+                if i == 3: 
+                    break
                 
 
 

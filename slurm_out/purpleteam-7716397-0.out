@@ -1,0 +1,101 @@
+Sun Sep 15 19:43:07 2024       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 530.30.02              Driver Version: 530.30.02    CUDA Version: 12.1     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                  Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf            Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA A100-SXM-64GB            On | 00000000:1D:00.0 Off |                    0 |
+| N/A   43C    P0               65W / 480W|      0MiB / 65536MiB |      0%      Default |
+|                                         |                      |             Disabled |
++-----------------------------------------+----------------------+----------------------+
+|   1  NVIDIA A100-SXM-64GB            On | 00000000:56:00.0 Off |                    0 |
+| N/A   42C    P0               64W / 472W|      0MiB / 65536MiB |      0%      Default |
+|                                         |                      |             Disabled |
++-----------------------------------------+----------------------+----------------------+
+|   2  NVIDIA A100-SXM-64GB            On | 00000000:8F:00.0 Off |                    0 |
+| N/A   42C    P0               61W / 458W|      0MiB / 65536MiB |      0%      Default |
+|                                         |                      |             Disabled |
++-----------------------------------------+----------------------+----------------------+
+|   3  NVIDIA A100-SXM-64GB            On | 00000000:C8:00.0 Off |                    0 |
+| N/A   43C    P0               64W / 465W|      0MiB / 65536MiB |      0%      Default |
+|                                         |                      |             Disabled |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+loading configuration file cache
+loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
+All model checkpoint weights were used when initializing GeneralizedRCNN.
+
+All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
+If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
+loading configuration file cache
+loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
+All model checkpoint weights were used when initializing GeneralizedRCNN.
+
+All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
+If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:05<00:16,  5.36s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:11<00:11,  5.58s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:16<00:05,  5.65s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:18<00:00,  4.01s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:18<00:00,  4.58s/it]
+Couldn't connect to the Hub: Cannot reach https://huggingface.co/api/models/black-forest-labs/FLUX.1-schnell: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable..
+Will try to load from local cache.
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Loading pipeline components...:  29%|██▊       | 2/7 [00:00<00:02,  2.04it/s]Loading pipeline components...:  57%|█████▋    | 4/7 [00:01<00:00,  3.74it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
+Loading pipeline components...:  86%|████████▌ | 6/7 [00:01<00:00,  4.85it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  5.05it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.10it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.09it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:01<00:00,  3.81it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:01<00:00,  3.67it/s]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:08<00:25,  8.62s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:16<00:16,  8.14s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:24<00:07,  7.96s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  5.62s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:26<00:00,  6.55s/it]
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:17<00:53, 17.96s/it] 50%|█████     | 2/4 [00:18<00:15,  7.81s/it] 75%|███████▌  | 3/4 [00:19<00:04,  4.78s/it]100%|██████████| 4/4 [00:21<00:00,  3.36s/it]100%|██████████| 4/4 [00:21<00:00,  5.26s/it]
+/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/functional.py:512: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3587.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+len(ret): 7
+len(images_idxs): 7
+images_idxs: [0, 1, 2, 0, 0, 1, 2]
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:24,  8.24s/it] 50%|█████     | 2/4 [00:08<00:07,  3.81s/it] 75%|███████▌  | 3/4 [00:10<00:02,  2.61s/it]100%|██████████| 4/4 [00:11<00:00,  2.04s/it]100%|██████████| 4/4 [00:11<00:00,  2.83s/it]
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+len(ret): 6
+len(images_idxs): 6
+images_idxs: [0, 1, 2, 0, 1, 2]
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:24,  8.23s/it] 50%|█████     | 2/4 [00:08<00:07,  3.80s/it] 75%|███████▌  | 3/4 [00:10<00:02,  2.61s/it]100%|██████████| 4/4 [00:11<00:00,  2.04s/it]100%|██████████| 4/4 [00:11<00:00,  2.82s/it]
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+len(ret): 6
+len(images_idxs): 6
+images_idxs: [0, 1, 2, 0, 1, 2]
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:24,  8.24s/it] 50%|█████     | 2/4 [00:08<00:07,  3.81s/it] 75%|███████▌  | 3/4 [00:10<00:02,  2.61s/it]100%|██████████| 4/4 [00:11<00:00,  2.04s/it]100%|██████████| 4/4 [00:11<00:00,  2.83s/it]
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+len(ret): 8
+len(images_idxs): 8
+images_idxs: [0, 1, 2, 0, 1, 1, 2, 2]
+  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:24,  8.25s/it] 50%|█████     | 2/4 [00:08<00:07,  3.81s/it] 75%|███████▌  | 3/4 [00:10<00:02,  2.61s/it]100%|██████████| 4/4 [00:11<00:00,  2.05s/it]100%|██████████| 4/4 [00:11<00:00,  2.83s/it]
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+len(ret): 7
+len(images_idxs): 7
+images_idxs: [0, 1, 2, 0, 1, 1, 2]
+Completed!!

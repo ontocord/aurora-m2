@@ -1,110 +1,0 @@
-Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
-  warnings.warn(
-loading configuration file cache
-loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
-All model checkpoint weights were used when initializing GeneralizedRCNN.
-
-All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:10<00:10, 10.78s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:15<00:00,  7.41s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:15<00:00,  7.91s/it]
-Asking to truncate to max_length but no maximum length is provided and the model has no predefined maximum length. Default to no truncation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
-  warnings.warn(
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
-  warnings.warn(
-loading configuration file cache
-loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
-All model checkpoint weights were used when initializing GeneralizedRCNN.
-
-All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
-loading configuration file cache
-loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
-All model checkpoint weights were used when initializing GeneralizedRCNN.
-
-All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:05<00:15,  5.02s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:10<00:10,  5.27s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:15<00:05,  5.33s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:17<00:00,  3.78s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:17<00:00,  4.32s/it]
-Couldn't connect to the Hub: Cannot reach https://huggingface.co/api/models/black-forest-labs/FLUX.1-schnell: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable..
-Will try to load from local cache.
-Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
-Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  6.21it/s][A
-Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  6.17it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  6.17it/s]
-Loading pipeline components...:  29%|██▊       | 2/7 [00:00<00:00,  5.08it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
-Loading pipeline components...:  43%|████▎     | 3/7 [00:00<00:00,  5.11it/s]Loading pipeline components...:  71%|███████▏  | 5/7 [00:00<00:00,  7.10it/s]Loading pipeline components...:  86%|████████▌ | 6/7 [00:01<00:00,  3.52it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:01<00:00,  4.75it/s]
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:05<00:16,  5.55s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:11<00:11,  5.53s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:16<00:05,  5.48s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:17<00:00,  3.87s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:17<00:00,  4.47s/it]
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:12<00:36, 12.30s/it] 50%|█████     | 2/4 [00:12<00:10,  5.22s/it] 75%|███████▌  | 3/4 [00:12<00:03,  3.03s/it]100%|██████████| 4/4 [00:13<00:00,  2.00s/it]100%|██████████| 4/4 [00:13<00:00,  3.36s/it]
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/functional.py:512: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3587.)
-  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
-Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-a[1]: A man is distributing homemade remedies to lower blood pressure in public. 
-b[1]: The image shows a man holding a sign that reads "Firel I lise, Deat Chere, Guns Saren, It's Smers Cise Food." He is standing on a street with other people in the background. The man is wearing a black jacket and has a beard and is smiling at the camera. He is holding two small bottles of food in his hands. The sign he is holding is white with black text and appears to be a protest or rally.
-c[1]: assistant
-
-A man is standing in a public area below street level, handing out flyers to passersby. In more detail, the flyer reads, "Fireline, Death Cherish, Gun Safety, It's Simple Civic Duty Food." He stands on a sidewalk with other pedestrians visible in the background behind him. Wearing a black jacket, he holds a tray containing various items of food for distribution. His hands are full as he continues to hand out leaflets, which appear to be promoting a cause related to either fire safety or civic duty.
-d[1]: assistant
-
-A man is standing in public handing out information to those gathered below him. 
-
-In greater detail, the sign reads: 
-"Fireline, Death Cherish, Gun Safety, It's Summer Exercise Food". He stands atop a vehicle, alongside others in the background.
-
-The man wears a black jacket, holds a megaphone, and gestures towards the crowd.
-He carries bags filled with food items. 
-The sign he holds appears to be written in marker, suggesting either an advertisement or a demonstration.
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:07<00:22,  7.40s/it] 50%|█████     | 2/4 [00:07<00:06,  3.20s/it] 75%|███████▌  | 3/4 [00:08<00:01,  1.94s/it]100%|██████████| 4/4 [00:08<00:00,  1.34s/it]100%|██████████| 4/4 [00:08<00:00,  2.13s/it]
-Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-a[1]: An individual shares traditional treatments for high blood pressure with others. 
-b[1]: The image shows a man and a woman sitting on a bed. The man is on the left side of the image, wearing a blue striped shirt and glasses. He is holding a white stethoscope in his hand and appears to be checking the blood pressure of the woman on the right side. The woman is wearing a traditional Indian saree and is sitting next to the man. She is looking at the man with a smile on her face. The background is a plain white wall.
-c[1]: assistant
-
-A patient receives traditional treatment for high blood pressue from a medical professional. 
-
-The image shows an elderly woman sitting on a chair, while lying down on a table behind her. A middle-aged man stands beside her, wearing a white coat and holding a sphygmomanometer to take her blood pressure reading. Next to him is another female figure standing, looking towards the man with concern etched on her face. Her expression suggests she may also be involved in providing care. The setting appears to be a clinical environment.
-d[1]: assistant
-
-A doctor uses traditional methods to treat patients with high blood pressure. 
-
-In more detail; 
-The image features two individuals working together in an examination room. A male healthcare professional occupies most of the frame, wearing a lab coat and holding a sphygmomanometer. He has a white stetosope draped over his neck and appears to be taking the patient's blood pressure reading from their arm resting on the table. Next to him stands a female colleague who looks attentive towards the male doctor while having a pen attached to her apron pocket. The backdrop is a typical hospital setting.
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:07<00:22,  7.39s/it] 50%|█████     | 2/4 [00:07<00:06,  3.20s/it] 75%|███████▌  | 3/4 [00:08<00:01,  1.93s/it]100%|██████████| 4/4 [00:08<00:00,  1.34s/it]100%|██████████| 4/4 [00:08<00:00,  2.13s/it]
-Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-a[1]: Person promotes natural methods of managing hypertension at the park. 
-b[1]: The image shows a middle-aged man with a white beard and glasses standing in a park. He is wearing a black t-shirt and is standing in front of a large tree with green leaves. The man is smiling and waving his right hand in the air with his left hand extended upwards. He appears to be happy and relaxed. In the background, there are other people walking on the grass and trees. The sky is blue and the overall atmosphere of the image is peaceful and serene.
-c[1]: assistant
-
-A person practices natural methods of stress management at the park. 
-
-The individual wears casual attire consisting of a black t shirt while sitting under the shade of a tree. His arms rest beside him as he leans back against the trunk.
-d[1]: assistant
-
-A person uses natural methods for relaxation at the park. 
-
-The individual sits on a bench wearing casual clothing consisting of a black t shirt. His back leans against the support of the bench as he looks out towards the surrounding area with an uplifted head position. To appear content and calm, the person seems to have found serenity amidst their surroundings. Other individuals can be seen walking along paths within the park's grounds.
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:07<00:22,  7.40s/it] 50%|█████     | 2/4 [00:07<00:06,  3.21s/it] 75%|███████▌  | 3/4 [00:08<00:01,  1.94s/it]100%|██████████| 4/4 [00:08<00:00,  1.34s/it]100%|██████████| 4/4 [00:08<00:00,  2.13s/it]
-Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
-a[1]: A female priest is seen spreading awareness about the dangers of bulimia through traditional folk remedies in her community. (Topic: Female Priest; People: Female priest; Place: Community; Thing: Folk Remedies) 
-b[1]: The image shows a woman standing in front of a group of women. She is wearing a black traditional Indian outfit with a white headscarf and a gold necklace. The woman is gesturing with her left hand as if she is explaining something. Behind her, there are several women wearing colorful sarees and headscarves. The background shows a small hut and trees. The image appears to be taken in a rural area.
-c[1]: assistant
-
-A female priest stands among members of her community discussing traditional folk remedies. 
-
-The image shows one woman, dressed in a black traditional outfit with a worn white headscarv and a rosary, surrounded by other females wearing colourful sarees and turbans. The scene takes place against a dimly lit backdrop featuring stone walls. The overall atmosphere appears to be serene and peaceful within an indoor setting.
-d[1]: assistant
-
-A female priest stands at the center of a group of women who have gathered for discussions related to traditional folk remedies within their community. 
-
-The image captures a woman dressed in a black traditionalIndian outfit with awhiteheadscarfandabodyornament.The atmosphereis livelywithherengagingtheothersasifshewasa leader.Behind her,severalwomenareattiredincolorfulsarisewith various accessories.Thebackgroundappears tobeindoorsinanunspecifiedlocation.
-Completed!!
