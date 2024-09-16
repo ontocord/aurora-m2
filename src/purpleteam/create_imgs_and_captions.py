@@ -2,7 +2,6 @@ import json
 import argparse
 import spacy
 import numpy as np
-from stopwords import stopwords_set
 from src.purpleteam.utils import get_element_to_img, pil_image_to_base64
 
 import torch
@@ -14,7 +13,7 @@ from datasets import load_dataset
 from transformers import CLIPProcessor, CLIPModel, AutoModel, AutoTokenizer, AutoModelWithLMHead
 from transformers import AutoModelForCausalLM, AutoProcessor, AutoTokenizer
 from src.accelerator import accelerator
-from src.purpleteam.utils import chatml_format_instructions, generate_with_batching
+from src.purpleteam.utils import chatml_format_instructions, generate_with_batching, assign_uuid
 
 from src.frcnn.visualizing_image import SingleImageViz
 from src.frcnn.processing_image import Preprocess
@@ -22,36 +21,33 @@ from src.frcnn.modeling_frcnn import GeneralizedRCNN
 from src.frcnn.utils import Config
 from src.frcnn.utils import decode_image
 
+
 # Load necessary data
 digits_to_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
-                   'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen',
-                   'nineteen', 'twenty']
+                  'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen',
+                  'nineteen', 'twenty']
 
 spacy_nlp = spacy.load('en_core_web_sm')
 max_detections = 36
 
-# Load models and processors
-frcnn_config = json.load(open("src/frcnn/config.jsonl"))
-frcnn_config = Config(frcnn_config)
-image_preprocessor = Preprocess(frcnn_config).half().to(accelerator.device)
-box_segmentation_model = GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned", frcnn_config, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").half().to(accelerator.device)
+def setup(args):
+  clip_model = CLIPModel.from_pretrained(args.cos_score_model_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache", device_map="auto")
+  clip_model = accelerator.prepare(clip_model)
+  clip_processor = CLIPProcessor.from_pretrained(args.cos_score_model_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
 
-clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache", device_map="auto")
-clip_model = accelerator.prepare(clip_model)
-clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
+  fluo_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").to(accelerator.device).eval()
+  fluo_processor = AutoProcessor.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
 
-fluo_model = AutoModelForCausalLM.from_pretrained('multimodalart/Florence-2-large-no-flash-attn', trust_remote_code=True, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").to(accelerator.device).eval()
-fluo_processor = AutoProcessor.from_pretrained('multimodalart/Florence-2-large-no-flash-attn', trust_remote_code=True, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
+  purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_generative_model_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
+  purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").eval()
+  purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
+  purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
 
-purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3.1-8B-Instruct", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
-purpleteam_generative_model = AutoModelForCausalLM.from_pretrained("meta-llama/Meta-Llama-3.1-8B-Instruct", low_cpu_mem_usage=True, device_map="auto", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").eval()
-purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
-purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
+  flux_pipe = FluxPipeline.from_pretrained(args.image_generator_model_path, torch_dtype=torch.bfloat16, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
+  flux_pipe.enable_model_cpu_offload()
 
-flux_pipe = FluxPipeline.from_pretrained("black-forest-labs/FLUX.1-schnell", torch_dtype=torch.bfloat16, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
-flux_pipe.enable_model_cpu_offload()
-
-lguard_pipe = pipeline("text-generation", model="meta-llama/Llama-Guard-3-8B", device_map="auto", max_new_tokens=256)
+  lguard_pipe = pipeline("text-generation", model=args.llamaguard_path, device_map="auto", max_new_tokens=256)
+  return clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe, lguard_pipe
 
 
 def cosim_eval(images, texts):
@@ -191,15 +187,26 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
 
 def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
-    parser.add_argument("--input_path", type=str, default="data/captions.jsonl", help="Path to LlamaGuard model.")
+    parser.add_argument("--input_path", type=str, default="data/multimodal/step-1.jsonl", help="Path to LlamaGuard model.")
     parser.add_argument("--batch_size", type=int, default=3, help="Path to LlamaGuard model.")
-    parser.add_argument("--output_path", type=str, default="data/captions-2.jsonl", help="Path to save th logs.")
+    parser.add_argument("--purpleteam_generative_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
+    parser.add_argument("--cos_score_model_path", type=str, default="openai/clip-vit-base-patch32", help="Model used to get the image-text cosine similarity.")
+    parser.add_argument("--caption_generator_model_path", type=str, default='multimodalart/Florence-2-large-no-flash-attn', help="Model used for generating caption of an image.")
+    parser.add_argument("--image_generator_model_path", type=str, default="black-forest-labs/FLUX.1-schnell")
+    parser.add_argument("--llamaguard_path", type=str, default="meta-llama/Llama-Guard-3-8B")
+    parser.add_argument("--output_path", type=str, default="data/multimodal/step-2.jsonl", help="Path to save output for this step.")
 
     args = parser.parse_args()
+    global clip_processor, clip_model, fluo_model, fluo_processor
+    global purpleteam_generative_tokenizer, purpleteam_generative_model
+    global flux_pipe, lguard_pipe
+    clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe, lguard_pipe = setup(args)
+    
+    # TODO: load jsonl till batch_size
     with open(args.output_path, "w") as outfile: 
       with open(args.input_path, "r") as infile:
         all_data = [json.loads(l) for l in infile]
-        text_array = [data['text'] for data in all_data]
+        text_array = [data['caption'] for data in all_data]
         image_text_score_related = []
         for rng in range(0, len(text_array), args.batch_size):
           d = text_array[rng:min(len(text_array), rng+args.batch_size)]
@@ -212,8 +219,12 @@ def main():
           data = all_data[idx]
           data["metadata"]["cos_score"] = score
           data["metadata"]["related"] = related
-          image.save(f"data/img-{idx}.png")
-          outfile.write(json.dumps({'text': text, 'images': [], 'metadata': data})+"\n")
+          img_id = str(assign_uuid(text))
+          image.save(f"data/{img_id}.png")
+          data["caption"] = text
+          data["image"] = ["data/{img_id}.png"]
+          data["metadata"]["step2_params"] = json.dumps(vars(args))
+          outfile.write(json.dumps(data)+"\n")
                 
 
 

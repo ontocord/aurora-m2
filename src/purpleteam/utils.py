@@ -1,9 +1,10 @@
 import json
 import spacy
 import base64
+import uuid
+import hashlib
 from io import BytesIO
 import numpy as np
-from stopwords import stopwords_set
 from numpy import asarray
 
 import torch
@@ -22,6 +23,7 @@ from src.frcnn.utils import Config
 from src.frcnn.utils import decode_image
 
 
+stopwords_set = en_stopwords = {'haven', 'are', 'why', 'most', "won't", 'against', 'with', 'needn', 'couldn', 'now', 'mustn', 'who', 'under', 'doing', 'am', 'aren', 'they', "didn't", 'd', 'doesn', 'if', 'he', 'her', "haven't", 'isn', 'own', 'does', 'such', 'until', 'into', 'had', 'again', 'over', "hadn't", "you'll", 't', 'by', 'be', "wasn't", 'so', 'yours', 'both', 'any', 'did', "you've", 'these', 'myself', 'o', 'hasn', "isn't", 'you', 'other', 'shan', 'being', 'yourselves', 'was', 'no', 'm', 'those', 'will', 'its', 'itself', 'have', 'down', 'weren', 'having', 'wouldn', 'herself', "mustn't", 'very', 'do', "should've", 'him', "you'd", 'below', 'just', 'that', 'for', 'which', 'but', 'nor', 'all', 'then', 'i', 'whom', 'it', 'once', 'here', 've', "you're", 'ours', "that'll", 'a', 'won', 'himself', 'where', 'this', 'your', "hasn't", 'same', 'when', 'ourselves', 'because', "needn't", 'theirs', 'from', 'mightn', 'my', 'while', 'yourself', "she's", 'each', "doesn't", 'only', 'at', 's', 'their', "wouldn't", 'shouldn', 'and', 'themselves', 'hers', 'has', 'up', 'ma', 'in', 'll', 'we', 're', 'y', 'of', 'after', 'our', "shan't", 'before', 'wasn', 'can', 'should', 'been', 'through', 'as', 'further', 'during', 'between', 'there', 'me', 'on', 'don', "shouldn't", 'more', 'out', "don't", 'the', "weren't", "aren't", "it's", 'what', 'or', "couldn't", 'hadn', "mightn't", 'his', 'above', 'to', 'how', 'few', 'off', 'them', 'didn', 'ain', 'not', 'she', 'an', 'than', 'too', 'is', 'some', 'were', 'about'}
 max_detections = 36
 spacy_nlp = spacy.load('en_core_web_sm')
 frcnn_config = json.load(open("src/frcnn/config.jsonl"))
@@ -41,6 +43,16 @@ def strip_left_stopwords(e_text):
         add_rest = True
         e_text2.append(et)
   return " ".join(e_text2)
+
+def assign_uuid(input_string: str = None) -> uuid.UUID:
+    """Assign a UUID to a string using MD5 hash.
+    
+    input_string: str
+        The string to be hashed.
+    """
+    if input_string is None:
+        return str(uuid.uuid4())
+    return uuid.UUID(hashlib.md5(input_string.encode('UTF-8')).hexdigest())
 
 def pil_image_to_base64(image):
     buffered = BytesIO()

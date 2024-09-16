@@ -31,8 +31,8 @@ def setup(args):
     # llamaguard_model = accelerator.prepare(llamaguard_model)
 
     # Setup for PurpleTeam generative model
-    purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_generative_model_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
-    purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").eval() # quantization_config=bnb_config
+    purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained("teknium/OpenHermes-2.5-Mistral-7B", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
+    purpleteam_generative_model = AutoModelForCausalLM.from_pretrained("teknium/OpenHermes-2.5-Mistral-7B", low_cpu_mem_usage=True, device_map="auto", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").eval() # quantization_config=bnb_config
     purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
     purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
 
@@ -47,36 +47,37 @@ def setup(args):
 
 def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
-    parser.add_argument("--input_path", type=str, default="data/instructions.jsonl", help="Path to the input file.")
-    parser.add_argument("--purpleteam_generative_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
+    parser.add_argument("--input_path", type=str, default="data/multimodal/step-2.jsonl", help="Path to the input file.")
+    parser.add_argument("--purpleteam_generative_model", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
     parser.add_argument("--batch_size", type=int, default=3, help="Batch size")
-    parser.add_argument("--output_path", type=str, default="data/multimodal/step-1.jsonl", help="Path to the output file.")
+    parser.add_argument("--output_path", type=str, default="data/multimodal/processed.jsonl", help="Path to the output file.")
 
     args = parser.parse_args()
 
     purpleteam_generative_model, purpleteam_generative_tokenizer = setup(args)
 
     # TODO: load jsonl till batch_size
+    # TODO: Correct the saving of metadata
+    # TODO: Save in HF format. chosen text1's response rejection is text2's and text3's response. Format: 'text', 'images', 'chosen', 'rejection', metadata, 'source', 'params': json.dumps(params)
     with open(args.input_path, "r") as infile:
         with open(args.output_path, "w") as outfile:
             all_data = [json.loads(l) for l in infile]
-            text_array = [data['text'] for data in all_data]
+            text_array = [data['caption'] for data in all_data]
+            instr_array = [data['instruction'] for data in all_data]
             outputs = []
             for rng in range(0, len(text_array), args.batch_size):
-                d = text_array[rng:min(len(text_array), rng+args.batch_size)]
-                instructions = [text.split("### Response:",1)[0].split("### Instruction:")[-1] for text in d] 
-                responses = [text.split("### Response:",1)[1].strip() for text in d] 
-                # prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary. Generate **three** captions on each line:\n\n{instruction}"}], tokenize=False) for instruction in instructions]
-                prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary.\n\n{instruction}"}], tokenize=False) for instruction in instructions]
+                captions = text_array[rng:min(len(text_array), rng+args.batch_size)]
+                instructions = instr_array[rng:min(len(instr_array), rng+args.batch_size)]
+                # instructions = [text.split("### Response:",1)[0].split("### Instruction:")[-1] for text in instructions] 
+                prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"You are given the below image:\n{caption}\n===\nRevise the below question such that events, physical conditions, attributes, color, actions, feelings, objects, people or other information from the image are removed from the question, and the question refers to the image instead. Do not refer to any context document. Do not refer to the 'description' of the image. Retain the theme of the question. Do not repeat this instruction or the information from the image in your revised question. Do not answer the question, but simply provide the revised question. The question is:\n{instruction}"}], tokenize=False) for caption, instruction in zip(captions, instructions)]
                 outputs += generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
             for i, output in enumerate(outputs):
-                caption = output.replace("Caption:", "").replace("caption:", "").replace("caption", "").replace("Caption", "").strip()
-                caption = caption.replace("1.","").replace("2.","").replace("3.","").replace("1)","").replace("2)","").replace("3)","").strip('-\' "').strip()
-                instr = all_data[i]['text'].split("### Response:",1)[0].split("### Instruction:")[-1]
-                chosen_response = all_data[i]['text'].split("### Response:",1)[1].strip()
-                rejected_responses = [all_data[i]['text2'].split("### Response:",1)[1].strip(), all_data[i]['text3'].split("### Response:",1)[1].strip()]
-                all_data[i]["metadata"]["step1_params"] = json.dumps(vars(args))
-                outfile.write(json.dumps({'instruction': instr, 'caption': caption, 'chosen_response': chosen_response, 'rejected_response': rejected_responses, 'images': [], 'metadata': all_data[i]['metadata']})+"\n")
+                if "answer:" in output.lower(): continue
+                revised_instruction = output.split("Revised question:",1)[-1].split("Revised Question:",1)[-1].split("Question:",1)[-1].split("question:",1)[-1].strip()
+                revised_instruction = revised_instruction.replace("caption", "image")
+                all_data[i]['instruction'] = revised_instruction
+                all_data[i]["metadata"]["step3_params"] = json.dumps(vars(args))
+                outfile.write(json.dumps(all_data[i])+"\n")
 
 
 if __name__ == "__main__":
