@@ -188,7 +188,7 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
 def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
     parser.add_argument("--input_path", type=str, default="data/multimodal/step-1.jsonl", help="Path to LlamaGuard model.")
-    parser.add_argument("--batch_size", type=int, default=3, help="Path to LlamaGuard model.")
+    parser.add_argument("--batch_size", type=int, default=12, help="Path to LlamaGuard model.")
     parser.add_argument("--purpleteam_generative_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
     parser.add_argument("--cos_score_model_path", type=str, default="openai/clip-vit-base-patch32", help="Model used to get the image-text cosine similarity.")
     parser.add_argument("--caption_generator_model_path", type=str, default='multimodalart/Florence-2-large-no-flash-attn', help="Model used for generating caption of an image.")

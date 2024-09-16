@@ -49,7 +49,7 @@ def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
     parser.add_argument("--input_path", type=str, default="data/instructions.jsonl", help="Path to the input file.")
     parser.add_argument("--purpleteam_generative_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
-    parser.add_argument("--batch_size", type=int, default=3, help="Batch size")
+    parser.add_argument("--batch_size", type=int, default=12, help="Batch size")
     parser.add_argument("--output_path", type=str, default="data/multimodal/step-1.jsonl", help="Path to the output file.")
 
     args = parser.parse_args()
@@ -76,7 +76,17 @@ def main():
                 chosen_response = all_data[i]['text'].split("### Response:",1)[1].strip()
                 rejected_responses = [all_data[i]['text2'].split("### Response:",1)[1].strip(), all_data[i]['text3'].split("### Response:",1)[1].strip()]
                 all_data[i]["metadata"]["step1_params"] = json.dumps(vars(args))
-                outfile.write(json.dumps({'instruction': instr, 'caption': caption, 'chosen_response': chosen_response, 'rejected_response': rejected_responses, 'images': [], 'metadata': all_data[i]['metadata']})+"\n")
+
+                # change the key names
+                for key in list(all_data[i]['metadata'].keys()):
+                    key1 = key.replace("text1", "chosen")
+                    key1 = key1.replace("text2", "rejection1")
+                    key1 = key1.replace("text3", "rejection2")
+                    if key != key1:
+                        all_data[i]['metadata'][key1] = all_data[i]['metadata'][key]
+                        del all_data[i]['metadata'][key]
+                    
+                outfile.write(json.dumps({'instruction': instr, 'caption': caption, 'chosen_response': chosen_response, 'rejected_responses': rejected_responses, 'images': [], 'metadata': all_data[i]['metadata']})+"\n")
 
 
 if __name__ == "__main__":

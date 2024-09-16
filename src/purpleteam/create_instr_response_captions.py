@@ -49,7 +49,7 @@ def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
     parser.add_argument("--input_path", type=str, default="data/multimodal/step-2.jsonl", help="Path to the input file.")
     parser.add_argument("--purpleteam_generative_model", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
-    parser.add_argument("--batch_size", type=int, default=3, help="Batch size")
+    parser.add_argument("--batch_size", type=int, default=12, help="Batch size")
     parser.add_argument("--output_path", type=str, default="data/multimodal/processed.jsonl", help="Path to the output file.")
 
     args = parser.parse_args()
