@@ -1,0 +1,69 @@
+Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+loading configuration file cache
+loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
+All model checkpoint weights were used when initializing GeneralizedRCNN.
+
+All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
+If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:15<00:15, 15.57s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:23<00:00, 11.15s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:23<00:00, 11.82s/it]
+Couldn't connect to the Hub: Cannot reach https://huggingface.co/api/models/black-forest-labs/FLUX.1-schnell: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable..
+Will try to load from local cache.
+Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Loading pipeline components...:  14%|█▍        | 1/7 [00:01<00:07,  1.25s/it]Loading pipeline components...:  29%|██▊       | 2/7 [00:01<00:03,  1.44it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
+Loading pipeline components...:  57%|█████▋    | 4/7 [00:01<00:00,  3.01it/s]Loading pipeline components...:  86%|████████▌ | 6/7 [00:01<00:00,  4.85it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  3.51it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.55it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  3.54it/s]
+Loading pipeline components...: 100%|██████████| 7/7 [00:02<00:00,  3.23it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:02<00:00,  2.76it/s]
+Traceback (most recent call last):
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/utils/hub.py", line 402, in cached_file
+    resolved_file = hf_hub_download(
+                    ^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/huggingface_hub/utils/_deprecation.py", line 101, in inner_f
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1240, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1347, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1848, in _raise_on_head_call_error
+    raise LocalEntryNotFoundError(
+huggingface_hub.utils._errors.LocalEntryNotFoundError: Cannot find the requested files in the disk cache and outgoing traffic has been disabled. To enable hf.co look-ups and downloads online, set 'local_files_only' to False.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/create_imgs_and_captions.py", line 232, in <module>
+    main()
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/create_imgs_and_captions.py", line 203, in main
+    clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe, lguard_pipe = setup(args)
+                                                                                                                                                   ^^^^^^^^^^^
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/create_imgs_and_captions.py", line 49, in setup
+    lguard_pipe = pipeline("text-generation", model=args.llamaguard_path, device_map="auto", max_new_tokens=256)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/pipelines/__init__.py", line 805, in pipeline
+    config = AutoConfig.from_pretrained(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/models/auto/configuration_auto.py", line 976, in from_pretrained
+    config_dict, unused_kwargs = PretrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/configuration_utils.py", line 632, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/configuration_utils.py", line 689, in _get_config_dict
+    resolved_config_file = cached_file(
+                           ^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/utils/hub.py", line 445, in cached_file
+    raise EnvironmentError(
+OSError: We couldn't connect to 'https://huggingface.co' to load this file, couldn't find it in the cached files and it looks like meta-llama/Llama-Guard-3-8B is not the path to a directory containing a file named config.json.
+Checkout your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.
+srun: error: lrdn3329: task 0: Exited with exit code 1

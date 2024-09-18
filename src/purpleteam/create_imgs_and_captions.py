@@ -219,10 +219,10 @@ def main():
           data = all_data[idx]
           data["metadata"]["cos_score"] = score
           data["metadata"]["related"] = related
-          img_id = str(assign_uuid(text))
-          image.save(f"data/{img_id}.png")
+          # img_idx = str(assign_uuid(text))
+          image.save(f"data/{idx}.png")
           data["caption"] = text
-          data["image"] = ["data/{img_id}.png"]
+          data["image"] = [f"data/{idx}.png"]
           data["metadata"]["step2_params"] = json.dumps(vars(args))
           outfile.write(json.dumps(data)+"\n")
                 
