@@ -19,6 +19,6 @@ export TRANSFORMERS_OFFLINE=1
 
 source ~/miniconda3/bin/activate
 
-srun python -m src.purpleteam.create_captions_from_instr --input_path data/purpleteam-teknium-OpenHermes-2.5-Mistral-7B-teknium-OpenHermes-2.5-Mistral-7B-v1.jsonl
+srun python -m src.purpleteam.create_captions_from_instr --input_path data/purpleteam-teknium-OpenHermes-2.5-Mistral-7B-teknium-OpenHermes-2.5-Mistral-7B.jsonl
 srun python -m src.purpleteam.create_imgs_and_captions
 srun python -m src.purpleteam.create_instr_response_captions
