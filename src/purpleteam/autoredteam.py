@@ -910,20 +910,20 @@ def setup_models(args):
     # )
 
     # Setup for LlamaGuard model
-    llamaguard_tokenizer = AutoTokenizer.from_pretrained(args.llamaguard_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
-    llamaguard_model = AutoModelForCausalLM.from_pretrained(args.llamaguard_path, low_cpu_mem_usage=True, device_map="auto", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").eval() # quantization_config=bnb_config
+    llamaguard_tokenizer = AutoTokenizer.from_pretrained(args.llamaguard_path, cache_dir=args.cache_dir)
+    llamaguard_model = AutoModelForCausalLM.from_pretrained(args.llamaguard_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval() # quantization_config=bnb_config
     llamaguard_tokenizer.pad_token = llamaguard_tokenizer.eos_token
     llamaguard_model = accelerator.prepare(llamaguard_model)
 
     # Setup for PurpleTeam generative model
-    purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_model_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
-    purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").eval() # quantization_config=bnb_config
+    purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_model_path, cache_dir=args.cache_dir)
+    purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval() # quantization_config=bnb_config
     purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
     purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
 
     # Setup for target model
-    target_tokenizer = AutoTokenizer.from_pretrained(args.target_model_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
-    target_model = AutoModelForCausalLM.from_pretrained(args.target_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").eval() # quantization_config=bnb_config
+    target_tokenizer = AutoTokenizer.from_pretrained(args.target_model_path, cache_dir=args.cache_dir)
+    target_model = AutoModelForCausalLM.from_pretrained(args.target_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval() # quantization_config=bnb_config
     target_tokenizer.pad_token = target_tokenizer.eos_token
     target_model = accelerator.prepare(target_model)
 
@@ -933,6 +933,7 @@ def setup_models(args):
 def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
     parser.add_argument("--llamaguard_path", type=str, default="llamas-community/LlamaGuard-7b", help="Path to LlamaGuard model.")
+    parser.add_argument("--cache_dir", type=str, default="", help="Path to cache directory.")
     parser.add_argument("--verb_types_to_include", type=str, default="")
     parser.add_argument("--obj_types_to_include", type=str, default="")
     parser.add_argument("--purpleteam_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Path to PurpleTeam generative model.")

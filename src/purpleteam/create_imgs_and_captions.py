@@ -31,19 +31,19 @@ spacy_nlp = spacy.load('en_core_web_sm')
 max_detections = 36
 
 def setup(args):
-  clip_model = CLIPModel.from_pretrained(args.cos_score_model_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache", device_map="auto")
+  clip_model = CLIPModel.from_pretrained(args.cos_score_model_path, cache_dir=args.cache_dir, device_map="auto")
   clip_model = accelerator.prepare(clip_model)
-  clip_processor = CLIPProcessor.from_pretrained(args.cos_score_model_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
+  clip_processor = CLIPProcessor.from_pretrained(args.cos_score_model_path, cache_dir=args.cache_dir)
 
-  fluo_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").to(accelerator.device).eval()
-  fluo_processor = AutoProcessor.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
+  fluo_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir=args.cache_dir).to(accelerator.device).eval()
+  fluo_processor = AutoProcessor.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir=args.cache_dir)
 
-  purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_generative_model_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
-  purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").eval()
+  purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_generative_model_path, cache_dir=args.cache_dir)
+  purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval()
   purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
   purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
 
-  flux_pipe = FluxPipeline.from_pretrained(args.image_generator_model_path, torch_dtype=torch.bfloat16, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
+  flux_pipe = FluxPipeline.from_pretrained(args.image_generator_model_path, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir)
   flux_pipe.enable_model_cpu_offload()
 
   lguard_pipe = pipeline("text-generation", model=args.llamaguard_path, device_map="auto", max_new_tokens=256)
@@ -194,6 +194,7 @@ def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
     parser.add_argument("--input_path", type=str, default="data/multimodal/step-1.jsonl", help="Path to the input file.")
     parser.add_argument("--batch_size", type=int, default=12, help="Batch size")
+    parser.add_argument("--cache_dir", type=str, default="", help="Path to cache directory.")
     parser.add_argument("--purpleteam_generative_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
     parser.add_argument("--cos_score_model_path", type=str, default="openai/clip-vit-base-patch32", help="Model used to get the image-text cosine similarity.")
     parser.add_argument("--caption_generator_model_path", type=str, default='multimodalart/Florence-2-large-no-flash-attn', help="Model used for generating caption of an image.")

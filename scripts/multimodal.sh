@@ -19,6 +19,14 @@ export TRANSFORMERS_OFFLINE=1
 
 source ~/miniconda3/bin/activate
 
-# srun python -m src.purpleteam.create_captions_from_instr --input_path data/purpleteam-teknium-OpenHermes-2.5-Mistral-7B-teknium-OpenHermes-2.5-Mistral-7B.jsonl
-srun python -m src.purpleteam.create_imgs_and_captions --input_path data/multimodal/step-1-test.jsonl
-# srun python -m src.purpleteam.create_instr_response_captions
+cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache"
+
+srun python -m src.purpleteam.create_captions_from_instr \
+    --cache_dir $cache_dir \
+    --input_path data/purpleteam-teknium-OpenHermes-2.5-Mistral-7B-teknium-OpenHermes-2.5-Mistral-7B-verb_type-EU_tool-obj_type-EU_tool.jsonl
+srun python -m src.purpleteam.create_imgs_and_captions \
+    --cache_dir $cache_dir \
+    --input_path data/multimodal/step-1.jsonl
+srun python -m src.purpleteam.create_instr_response_captions \
+    --cache_dir $cache_dir \
+    --input_path data/multimodal/step-2.jsonl
