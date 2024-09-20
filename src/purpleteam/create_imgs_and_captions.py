@@ -171,8 +171,13 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
         images_idxs.append(image_idx)
     outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=1)
     outputs = [o.split("assistant\n",1)[-1]  if o.startswith("assistant\n") else o for o in outputs]
+    outputs = [o.replace("Caption:", "").replace("caption:", "").strip() for o in outputs]
     return_text.extend(outputs)
-    # TODO Get LlamaGuard safety score
+
+    # # Get LlamaGuard safety score
+    # safety_tags = lguard_pipe([[{"role": "user", "content": text}] for text in return_text])
+    # safety_tags = ["unsafe" if "unsafe" in tag else "safe" for tag in safety_tags]
+    
     # evaluate the generated text by comparing its similarity with flux generated image 
     ret = []
     cosine_batch = {}
@@ -187,8 +192,8 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
 
 def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
-    parser.add_argument("--input_path", type=str, default="data/multimodal/step-1.jsonl", help="Path to LlamaGuard model.")
-    parser.add_argument("--batch_size", type=int, default=12, help="Path to LlamaGuard model.")
+    parser.add_argument("--input_path", type=str, default="data/multimodal/step-1.jsonl", help="Path to the input file.")
+    parser.add_argument("--batch_size", type=int, default=12, help="Batch size")
     parser.add_argument("--purpleteam_generative_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
     parser.add_argument("--cos_score_model_path", type=str, default="openai/clip-vit-base-patch32", help="Model used to get the image-text cosine similarity.")
     parser.add_argument("--caption_generator_model_path", type=str, default='multimodalart/Florence-2-large-no-flash-attn', help="Model used for generating caption of an image.")
