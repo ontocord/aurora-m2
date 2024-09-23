@@ -21,6 +21,10 @@ from src.frcnn.modeling_frcnn import GeneralizedRCNN
 from src.frcnn.utils import Config
 from src.frcnn.utils import decode_image
 
+import pyarrow
+from pyarrow import parquet
+from io import BytesIO
+from PIL import Image
 
 # Load necessary data
 digits_to_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
