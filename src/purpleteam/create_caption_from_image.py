@@ -158,7 +158,7 @@ def main():
     global clip_processor, clip_model, fluo_model, fluo_processor
     global purpleteam_generative_tokenizer, purpleteam_generative_model
     global flux_pipe, lguard_pipe
-    clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe, lguard_pipe = setup(args)
+    clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model = setup(args)
     
     # TODO: load jsonl till batch_size
     with open(args.output_path, "w") as outfile: 
