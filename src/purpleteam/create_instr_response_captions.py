@@ -8,7 +8,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
 from src.purpleteam.blueteam import blueteam_classify_conversation, llamaguard_classifier_categories, llamaguard_category2name
-from src.purpleteam.utils import chatml_format_instructions, generate_with_batching
+from src.purpleteam.utils import chatml_format_instructions, generate_with_batching, remove_quotes
 from src.purpleteam.templates.rule import rule_templates
 from src.purpleteam.templates.seed import *
 from src.accelerator import accelerator
@@ -47,23 +47,20 @@ def setup(args):
 
 def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
-    parser.add_argument("--input_path", type=str, default="data/multimodal/step-2.jsonl", help="Path to the input file.")
+    parser.add_argument("--input_path", type=str, help="Path to the input file.")
     parser.add_argument("--cache_dir", type=str, default="", help="Path to cache directory.")
     parser.add_argument("--purpleteam_generative_model", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
-    parser.add_argument("--batch_size", type=int, default=12, help="Batch size")
-    parser.add_argument("--output_path", type=str, default="data/multimodal/processed.jsonl", help="Path to the output file.")
+    parser.add_argument("--batch_size", type=int, default=4, help="Batch size")
+    parser.add_argument("--output_path", type=str, help="Path to the output file.")
 
     args = parser.parse_args()
 
     purpleteam_generative_model, purpleteam_generative_tokenizer = setup(args)
 
-    # TODO: load jsonl till batch_size
-    # TODO: Correct the saving of metadata
-    # TODO: Save in HF format. chosen text1's response rejection is text2's and text3's response. Format: 'text', 'images', 'chosen', 'rejection', metadata, 'source', 'params': json.dumps(params)
     with open(args.input_path, "r") as infile:
         with open(args.output_path, "w") as outfile:
             all_data = [json.loads(l) for l in infile]
-            text_array = [data['caption'] for data in all_data]
+            text_array = [remove_quotes(data['caption']) for data in all_data]
             instr_array = [data['instruction'] for data in all_data]
             outputs = []
             for rng in range(0, len(text_array), args.batch_size):
@@ -83,3 +80,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    print("Completed!!")

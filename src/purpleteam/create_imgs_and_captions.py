@@ -13,7 +13,7 @@ from datasets import load_dataset
 from transformers import CLIPProcessor, CLIPModel, AutoModel, AutoTokenizer, AutoModelWithLMHead
 from transformers import AutoModelForCausalLM, AutoProcessor, AutoTokenizer
 from src.accelerator import accelerator
-from src.purpleteam.utils import chatml_format_instructions, generate_with_batching, assign_uuid
+from src.purpleteam.utils import chatml_format_instructions, generate_with_batching, assign_uuid, tokenize_with_assistant_continuation
 
 from src.frcnn.visualizing_image import SingleImageViz
 from src.frcnn.processing_image import Preprocess
@@ -65,7 +65,7 @@ def cosim_eval(images, texts):
 def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutoff: int = 0.2):
     # Modify the original prompt by appending adversarial suffix
     prompt_array = [f"{prompt} {suffix}".strip() for prompt in prompt_array]
-
+    # TODO: prompt not to give text in the img
     # Generate image with Flux pipeline
     images = flux_pipe(
         prompt_array,
@@ -95,6 +95,7 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
     for prompt, generated_text, image_idx in zip(prompt_array, generated_texts, range(len(images))):
       return_text.append(prompt)
       return_text.append(generated_text)
+      images_idxs.append(image_idx)
       images_idxs.append(image_idx)
       
     # create temprory working prompts. Remove digits as words
@@ -166,7 +167,7 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
       e2 = e2.strip().replace("  ", " ")
       up_prompt.append(purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e1}"}], tokenize=False))
       images_idxs.append(image_idx)
-      if e1 == e2:
+      if e1 != e2:
         up_prompt.append(purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e2}"}], tokenize=False))
         images_idxs.append(image_idx)
     outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=1)
@@ -192,15 +193,16 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
 
 def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
-    parser.add_argument("--input_path", type=str, default="data/multimodal/step-1.jsonl", help="Path to the input file.")
-    parser.add_argument("--batch_size", type=int, default=12, help="Batch size")
+    parser.add_argument("--input_path", type=str, help="Path to the input file.")
+    parser.add_argument("--batch_size", type=int, default=4, help="Batch size")
+    parser.add_argument("--score_cutoff", type=float, default=0.2, help="score cutoff")
     parser.add_argument("--cache_dir", type=str, default="", help="Path to cache directory.")
     parser.add_argument("--purpleteam_generative_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
     parser.add_argument("--cos_score_model_path", type=str, default="openai/clip-vit-base-patch32", help="Model used to get the image-text cosine similarity.")
     parser.add_argument("--caption_generator_model_path", type=str, default='multimodalart/Florence-2-large-no-flash-attn', help="Model used for generating caption of an image.")
     parser.add_argument("--image_generator_model_path", type=str, default="black-forest-labs/FLUX.1-schnell")
     parser.add_argument("--llamaguard_path", type=str, default="meta-llama/Llama-Guard-3-8B")
-    parser.add_argument("--output_path", type=str, default="data/multimodal/step-2.jsonl", help="Path to save output for this step.")
+    parser.add_argument("--output_path", type=str, help="Path to save output for this step.")
 
     args = parser.parse_args()
     global clip_processor, clip_model, fluo_model, fluo_processor
@@ -216,19 +218,22 @@ def main():
         image_text_score_related = []
         for rng in range(0, len(text_array), args.batch_size):
           d = text_array[rng:min(len(text_array), rng+args.batch_size)]
-          tmp = generate_image_and_outputs(d)
+          tmp = generate_image_and_outputs(d, score_cutoff=args.score_cutoff)
           # add batch_id to idx
           for idx, tmpp in enumerate(tmp):
             tmp[idx] = (rng + tmpp[0],) + tmpp[1:]
           image_text_score_related += tmp
         for (idx, image, text, score, related) in image_text_score_related:
           data = all_data[idx]
+          if "metadata" not in data:
+            data["metadata"] = {}
           data["metadata"]["cos_score"] = score
           data["metadata"]["related"] = related
           # img_idx = str(assign_uuid(text))
-          image.save(f"data/{idx}.png")
+          image.save(f"data/test-samples/{args.score_cutoff}-{idx}.png")
           data["caption"] = text
-          data["image"] = [f"data/{idx}.png"]
+          data["image"] = [f"data/test-samples/{args.score_cutoff}-{idx}.png"]
+          print("data['image']:", data['image'])
           data["metadata"]["step2_params"] = json.dumps(vars(args))
           outfile.write(json.dumps(data)+"\n")
                 

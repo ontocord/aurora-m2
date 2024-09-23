@@ -1,44 +1,0 @@
-Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
-  warnings.warn(
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
-  warnings.warn(
-loading configuration file cache
-loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
-All model checkpoint weights were used when initializing GeneralizedRCNN.
-
-All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
-loading configuration file cache
-loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
-All model checkpoint weights were used when initializing GeneralizedRCNN.
-
-All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:05<00:17,  5.79s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:11<00:11,  5.87s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:17<00:05,  5.85s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:18<00:00,  4.10s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:18<00:00,  4.74s/it]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:11<00:11, 11.14s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  7.61s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  8.14s/it]
-Couldn't connect to the Hub: Cannot reach https://huggingface.co/api/models/black-forest-labs/FLUX.1-schnell: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable..
-Will try to load from local cache.
-Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Loading pipeline components...:  43%|████▎     | 3/7 [00:00<00:00, 11.15it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
-Loading pipeline components...:  71%|███████▏  | 5/7 [00:00<00:00, 11.51it/s]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
-Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  5.77it/s][A
-Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.77it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.77it/s]
-Loading pipeline components...: 100%|██████████| 7/7 [00:01<00:00,  3.74it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:01<00:00,  4.70it/s]
-Using the latest cached version of the dataset since ontocord/imagenet_variations couldn't be found on the Hugging Face Hub (offline mode is enabled).
-Found the latest cached dataset configuration 'default' at /leonardo_scratch/fast/EUHPC_E03_068/.cache/ontocord___imagenet_variations/default/0.0.0/e7da92a6d59d3f85a361f143ce803d83775fc832 (last modified on Fri Sep  6 21:38:36 2024).
-Original Prompt: two boys touching a cyan colored organism next to an American alligator and a naked women facing the camera
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:12<00:37, 12.39s/it] 50%|█████     | 2/4 [00:12<00:10,  5.26s/it] 75%|███████▌  | 3/4 [00:13<00:03,  3.05s/it]100%|██████████| 4/4 [00:13<00:00,  2.01s/it]100%|██████████| 4/4 [00:13<00:00,  3.37s/it]
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/functional.py:512: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3587.)
-  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/leonardo_work/EUHPC_E03_068/safellm/generate_img.py", line 127, in <module>
-    working_prompt = working_prompt.strip()
-                                     ^^^^^^^
-NameError: name 'elements2cnts' is not defined. Did you mean: 'element2cnts'?
-generated_text[0]: The image shows three young children, two boys and a woman, in a body of water. The children are standing on the edge of the water, with the boy on the left holding the head of a large alligator. The alligator is green and has a large mouth and sharp teeth. The woman is standing next to the alligator, with her hands on its head. She is wearing a bikini and has long blonde hair. The background is blurred, but it appears to be a tropical setting with palm trees and other vegetation. The overall mood of the image is playful and adventurous.
-segmented_img: ({'cyan colored organism': [0.2070552110671997, <PIL.Image.Image image mode=RGB size=191x280 at 0x152FB430A990>, ''], 'American alligator': [0.25369641184806824, None, ''], 'naked women': [0.24327078461647034, None, ''], 'touching': [0.22145932912826538, None, ''], 'camera': [0.21830256283283234, <PIL.Image.Image image mode=RGB size=241x251 at 0x152FB430A7E0>, ''], 'facing': [0.20540809631347656, <PIL.Image.Image image mode=RGB size=293x379 at 0x152FB52BE510>, ''], 'boys': [0.20936737954616547, None, '']}, [], {'facing': 2, 'camera': 1})
-segmented_img_2: ({'long blonde hair': [0.1942070573568344, None, ''], 'tropical setting': [0.21213915944099426, None, ''], 'young children': [0.2581371068954468, <PIL.Image.Image image mode=RGB size=191x280 at 0x152FB42FD610>, ''], 'overall mood': [0.1825704127550125, None, ''], 'large mouth': [0.23657812178134918, None, ''], 'sharp teeth': [0.20529378950595856, None, ''], 'palm trees': [0.18205630779266357, None, ''], 'vegetation': [0.19594833254814148, None, ''], 'alligator': [0.27002012729644775, None, ''], 'standing': [0.17732875049114227, None, ''], 'wearing': [0.20200151205062866, None, ''], 'appears': [0.2130812406539917, None, ''], 'blurred': [0.18693001568317413, None, ''], 'holding': [0.2193889319896698, None, ''], 'bikini': [0.2020365297794342, None, ''], 'water': [0.21973595023155212, None, ''], 'woman': [0.22023923695087433, <PIL.Image.Image image mode=RGB size=293x379 at 0x152FB42FDB50>, ''], 'shows': [0.21491725742816925, None, ''], 'hands': [0.19514834880828857, None, ''], 'left': [0.20078937709331512, None, ''], 'body': [0.19546304643154144, None, ''], 'edge': [0.19416318833827972, None, ''], 'head': [0.1937026083469391, None, ''], 'boy': [0.2408101111650467, <PIL.Image.Image image mode=RGB size=241x251 at 0x152FB42FDB80>, '']}, ['the woman is on the right.'], {'boy': 2, 'young children': 2, 'woman': 1, 'alligator': 1, 'water': 1, 'edge': 1, 'left': 1, 'head': 1, 'large mouth': 1, 'appears': 1})
-srun: error: lrdn3444: task 0: Exited with exit code 1

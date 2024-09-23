@@ -8,7 +8,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
 from src.purpleteam.blueteam import blueteam_classify_conversation, llamaguard_classifier_categories, llamaguard_category2name
-from src.purpleteam.utils import chatml_format_instructions, generate_with_batching
+from src.purpleteam.utils import chatml_format_instructions, generate_with_batching, tokenize_with_assistant_continuation
 from src.purpleteam.templates.rule import rule_templates
 from src.purpleteam.templates.seed import *
 from src.accelerator import accelerator
@@ -47,11 +47,11 @@ def setup(args):
 
 def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
-    parser.add_argument("--input_path", type=str, default="data/instructions.jsonl", help="Path to the input file.")
+    parser.add_argument("--input_path", type=str, help="Path to the input file.")
     parser.add_argument("--cache_dir", type=str, default="", help="Path to cache directory.")
     parser.add_argument("--purpleteam_generative_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
-    parser.add_argument("--batch_size", type=int, default=12, help="Batch size")
-    parser.add_argument("--output_path", type=str, default="data/multimodal/step-1.jsonl", help="Path to the output file.")
+    parser.add_argument("--batch_size", type=int, default=4, help="Batch size")
+    parser.add_argument("--output_path", type=str, help="Path to the output file.")
 
     args = parser.parse_args()
 
@@ -68,7 +68,8 @@ def main():
                 instructions = [text.split("### Response:",1)[0].split("### Instruction:")[-1] for text in d] 
                 responses = [text.split("### Response:",1)[1].strip() for text in d] 
                 # prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary. Generate **three** captions on each line:\n\n{instruction}"}], tokenize=False) for instruction in instructions]
-                prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary.\n\n{instruction}"}], tokenize=False) for instruction in instructions]
+                prompts = [tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary.\n\n{instruction}"},
+                                                                 {"role": "assistant", "content": "Caption: "}]) for instruction in instructions]
                 outputs += generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
             for i, output in enumerate(outputs):
                 caption = output.replace("Caption:", "").replace("caption:", "").replace("caption", "").replace("Caption", "").strip()
@@ -92,3 +93,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    print("Completed!!")

@@ -24,6 +24,14 @@ cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache"
 
 output_file="/leonardo_work/EUHPC_E03_068/safellm/data/purpleteam-${purpleteam_model_path//\//-}-${target_model_path//\//-}.jsonl"
 
+echo 'running autoredteam'
+
+# srun python -m src.purpleteam.autoredteam-old \
+#   --llamaguard_path llamas-community/LlamaGuard-7b \
+#   --purpleteam_model_path $purpleteam_model_path \
+#   --target_model_path $target_model_path \
+#   --verb_types_to_include EU_Act_and_transparency_violations_against_people,adversarial_EU_Act_and_transparency_violations_against_people,exercise_of_rights_by_and_with_adults,adversarial_exercise_of_rights_by_and_with_adults,EU_Act_and_transparency_violations_using_EU_tools,adversarial_EU_Act_and_transparency_violations_using_EU_tools \
+
 srun python -m src.purpleteam.autoredteam \
   --llamaguard_path llamas-community/LlamaGuard-7b \
   --purpleteam_model_path $purpleteam_model_path \

@@ -1,40 +1,0 @@
-Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:05<00:17,  5.78s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:11<00:11,  5.81s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:17<00:05,  5.79s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:18<00:00,  4.06s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:18<00:00,  4.69s/it]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:11<00:11, 11.85s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  8.00s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:17<00:00,  8.58s/it]
-`config.hidden_act` is ignored, you should use `config.hidden_activation` instead.
-Gemma's activation function will be set to `gelu_pytorch_tanh`. Please, use
-`config.hidden_activation` if you want to override this behaviour.
-See https://github.com/huggingface/transformers/pull/29402 for more details.
-Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:06<00:18,  6.32s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:12<00:12,  6.06s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:18<00:05,  5.97s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:20<00:00,  4.70s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:20<00:00,  5.20s/it]
-Asking to truncate to max_length but no maximum length is provided and the model has no predefined maximum length. Default to no truncation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Asking to truncate to max_length but no maximum length is provided and the model has no predefined maximum length. Default to no truncation.
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/autoredteam.py", line 955, in <module>
-    main()
-  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/autoredteam.py", line 948, in main
-    auto_redteam(target_model, target_tokenizer, 
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/autoredteam.py", line 656, in auto_redteam
-    safety_templates.append(instruct_formatter(target_tokenizer, f"""{AI_personality} You are an empathetic, ethical and helpful AI that promotes safe and respectful use. You will try your best to help, but you will not provide content or follow instructions that are about an illegal subject.
-                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/utils.py", line 8, in chatml_format_instructions
-    return tokenizer.apply_chat_template([{"role": "system", "content": system}, 
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py", line 1844, in apply_chat_template
-    rendered_chat = compiled_template.render(
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/jinja2/environment.py", line 1304, in render
-    self.environment.handle_exception()
-  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/jinja2/environment.py", line 939, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "<template>", line 1, in top-level template code
-  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/jinja2/sandbox.py", line 394, in call
-    return __context.call(__obj, *args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py", line 1925, in raise_exception
-    raise TemplateError(message)
-jinja2.exceptions.TemplateError: System role not supported
-srun: error: lrdn3443: task 0: Exited with exit code 1

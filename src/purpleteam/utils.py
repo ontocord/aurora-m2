@@ -3,6 +3,7 @@ import spacy
 import base64
 import uuid
 import hashlib
+import random
 from io import BytesIO
 import numpy as np
 from numpy import asarray
@@ -34,6 +35,30 @@ box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetu
 clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache", device_map="auto")
 clip_model = accelerator.prepare(clip_model)
 clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
+
+def remove_quotes(text):
+  text = text.replace("'s ", " @s@ ").replace("'ve ", " @ve@ ").replace("'m ", " @m@ ").replace("'t ", " @t@ ")
+  ret_text = []
+  for idx, segment in enumerate(text.split("'")):
+    if idx % 2 == 0:
+      ret_text.append(segment + " ")
+  text = ''.join(ret_text)
+  text = text.replace(" @s@ ", "'s ").replace(" @ve@ ", "'ve ").replace( " @m@ ", "'m ").replace(" @t@ ", "'t ").strip()
+
+  text = text.replace("'s ", " @s@ ").replace("'ve ", " @ve@ ").replace("'m ", " @m@ ").replace("'t ", " @t@ ")
+  ret_text = []
+  for idx, segment in enumerate(text.split('"')):
+    if idx % 2 == 0:
+      ret_text.append(segment + " ")
+  text = ''.join(ret_text)
+  text = text.replace(" @s@ ", "'s ").replace(" @ve@ ", "'ve ").replace( " @m@ ", "'m ").replace(" @t@ ", "'t ").strip()
+  return text
+
+def tokenize_with_assistant_continuation(tokenizer, messages):
+  if not hasattr(tokenizer, "assistant_ending"):
+    msg = tokenizer.apply_chat_template([{"role": "user", "content": ""}, {"role": "assistant", "content": "@@@@@@"}], tokenize=False)
+    tokenizer.assistant_ending = msg.split("@@@@@@")[-1]
+  return tokenizer.apply_chat_template(messages, tokenize=False)[:-len(tokenizer.assistant_ending)]
 
 def strip_left_stopwords(e_text):
   e_text2 = []
@@ -275,6 +300,36 @@ def get_element_to_img(matched_sentence, img, ignore_from_box=[], other_element_
                 prev_small_element = (element, score, coord)
         return ent2score, sents
     return {}, []
+
+def chatml_format_instructions_old(system, instruction, response=""):
+  system= system.strip()
+  instruction = instruction.strip()
+  if system:
+    return f"""<|im_start|>system
+{system}
+<|im_end|>
+<|im_start|>user
+{instruction}
+<|im_end|>
+<|im_start|>assistant
+"""
+  else:
+    return f"""<|im_start|>user
+{instruction}
+<|im_end|>
+<|im_start|>assistant
+{response}"""
+
+def generate_with_batching_old(model, tokenizer, data, device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200, batch_size=5, **args):
+  torch.cuda.empty_cache()
+  output = []
+  for rng in range(0, len(data), batch_size):
+    d = data[rng:min(len(data), rng+batch_size)]
+    if d:
+      output.extend(tokenizer.batch_decode(model.generate(**tokenizer(d, truncation=True, padding=True, return_tensors="pt", add_special_tokens=False, ).to(device),
+                        use_cache=use_cache, repetition_penalty=repetition_penalty, no_repeat_ngram_size=no_repeat_ngram_size, max_new_tokens=max_new_tokens, **args)))
+  torch.cuda.empty_cache()
+  return output
 
 # formats strings to chat_template accepted by a LLM. 
 def chatml_format_instructions(tokenizer, system, instruction, response=""):
