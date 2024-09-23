@@ -162,7 +162,7 @@ def main():
     
     # TODO: load jsonl till batch_size
     with open(args.output_path, "w") as outfile: 
-      for file in glob.glob(args.input_path.rstrip("/")+"/*/*/*/*):
+      for file in glob.glob(args.input_dir.rstrip("/")+"/*/*/*/*):
         df = parquet.read_table(file)
         idx = 0
         all_data = []
