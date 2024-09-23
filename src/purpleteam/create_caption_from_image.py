@@ -63,7 +63,7 @@ def cosim_eval(images, texts):
 
     return cos_scores
 
-def generate_image_and_outputs(images, suffix: str = "", score_cutoff: int = 0.2):
+def generate_captions(images, suffix: str = "", score_cutoff: int = 0.2):
 
     # Process the image with fluorence and generate caption
     fluo_prompt = '<MORE_DETAILED_CAPTION>'
@@ -176,7 +176,7 @@ def main():
         image_text_score_related = []
         for rng in range(0, len(image_array), args.batch_size):
           images = image_array[rng:min(len(image_array), rng+args.batch_size)]
-          tmp = generate_image_and_outputs(images)
+          tmp = generate_captions(images)
           # add batch_id to idx
           for idx, tmpp in enumerate(tmp):
             tmp[idx] = (rng + tmpp[0],) + tmpp[1:]
