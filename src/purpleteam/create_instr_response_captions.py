@@ -57,25 +57,32 @@ def main():
 
     purpleteam_generative_model, purpleteam_generative_tokenizer = setup(args)
 
-    with open(args.input_path, "r") as infile:
+    with open(args.input_path, "r") as infile: 
         with open(args.output_path, "w") as outfile:
-            all_data = [json.loads(l) for l in infile]
-            text_array = [remove_quotes(data['caption']) for data in all_data]
-            instr_array = [data['instruction'] for data in all_data]
-            outputs = []
-            for rng in range(0, len(text_array), args.batch_size):
-                captions = text_array[rng:min(len(text_array), rng+args.batch_size)]
-                instructions = instr_array[rng:min(len(instr_array), rng+args.batch_size)]
-                # instructions = [text.split("### Response:",1)[0].split("### Instruction:")[-1] for text in instructions] 
-                prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"You are given the below image:\n{caption}\n===\nRevise the below question such that events, physical conditions, attributes, color, actions, feelings, objects, people or other information from the image are removed from the question, and the question refers to the image instead. Do not refer to any context document. Do not refer to the 'description' of the image. Retain the theme of the question. Do not repeat this instruction or the information from the image in your revised question. Do not answer the question, but simply provide the revised question. The question is:\n{instruction}"}], tokenize=False) for caption, instruction in zip(captions, instructions)]
-                outputs += generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
-            for i, output in enumerate(outputs):
-                if "answer:" in output.lower(): continue
-                revised_instruction = output.split("Revised question:",1)[-1].split("Revised Question:",1)[-1].split("Question:",1)[-1].split("question:",1)[-1].strip()
-                revised_instruction = revised_instruction.replace("caption", "image")
-                all_data[i]['instruction'] = revised_instruction
-                all_data[i]["metadata"]["step3_params"] = json.dumps(vars(args))
-                outfile.write(json.dumps(all_data[i])+"\n")
+            while True:
+                # Read a batch of lines from the input file
+                lines = list(itertools.islice(infile, args.batch_size))
+                if not lines:
+                    break  # Exit the loop if no lines are left
+
+                # Apply the algo over the batched data
+                all_data = [json.loads(l) for l in lines]
+                text_array = [remove_quotes(data['caption']) for data in all_data]
+                instr_array = [data['instruction'] for data in all_data]
+                outputs = []
+                for rng in range(0, len(text_array), args.batch_size):
+                    captions = text_array[rng:min(len(text_array), rng+args.batch_size)]
+                    instructions = instr_array[rng:min(len(instr_array), rng+args.batch_size)]
+                    # instructions = [text.split("### Response:",1)[0].split("### Instruction:")[-1] for text in instructions] 
+                    prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"You are given the below image:\n{caption}\n===\nRevise the below question such that events, physical conditions, attributes, color, actions, feelings, objects, people or other information from the image are removed from the question, and the question refers to the image instead. Do not refer to any context document. Do not refer to the 'description' of the image. Retain the theme of the question. Do not repeat this instruction or the information from the image in your revised question. Do not answer the question, but simply provide the revised question. The question is:\n{instruction}"}], tokenize=False) for caption, instruction in zip(captions, instructions)]
+                    outputs += generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
+                for i, output in enumerate(outputs):
+                    if "answer:" in output.lower(): continue
+                    revised_instruction = output.split("Revised question:",1)[-1].split("Revised Question:",1)[-1].split("Question:",1)[-1].split("question:",1)[-1].strip()
+                    revised_instruction = revised_instruction.replace("caption", "image")
+                    all_data[i]['instruction'] = revised_instruction
+                    all_data[i]["metadata"]["step3_params"] = json.dumps(vars(args))
+                    outfile.write(json.dumps(all_data[i])+"\n")
 
 
 if __name__ == "__main__":

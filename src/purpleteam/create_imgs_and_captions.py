@@ -165,14 +165,16 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
     for prompt1, prompt2, e1, e2 , image_idx in zip(working_prompt1_1, working_prompt2_2, elements1, elements1_1, range(len(images))):
       e1 = e1.strip().replace("  ", " ")
       e2 = e2.strip().replace("  ", " ")
-      up_prompt.append(purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e1}"}], tokenize=False))
+      up_prompt.append(tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e1}"},
+                                                                                              {"role": "assistant", "content": "Modified Caption:"}]))
       images_idxs.append(image_idx)
       if e1 != e2:
-        up_prompt.append(purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e2}"}], tokenize=False))
+        up_prompt.append(tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e2}"}, 
+                                                                                                {"role": "assistant", "content": "Modified Caption:"}]))
         images_idxs.append(image_idx)
     outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=1)
     outputs = [o.split("assistant\n",1)[-1]  if o.startswith("assistant\n") else o for o in outputs]
-    outputs = [o.replace("Caption:", "").replace("caption:", "").strip() for o in outputs]
+    outputs = [o.replace("Caption:", "").replace("caption:", "").replace("Modified Caption:", "").replace("Modified caption:", "").replace("modified caption:", "").strip() for o in outputs]
     return_text.extend(outputs)
 
     # # Get LlamaGuard safety score
@@ -213,29 +215,36 @@ def main():
     # TODO: load jsonl till batch_size
     with open(args.output_path, "w") as outfile: 
       with open(args.input_path, "r") as infile:
-        all_data = [json.loads(l) for l in infile]
-        text_array = [data['caption'] for data in all_data]
-        image_text_score_related = []
-        for rng in range(0, len(text_array), args.batch_size):
-          d = text_array[rng:min(len(text_array), rng+args.batch_size)]
-          tmp = generate_image_and_outputs(d, score_cutoff=args.score_cutoff)
-          # add batch_id to idx
-          for idx, tmpp in enumerate(tmp):
-            tmp[idx] = (rng + tmpp[0],) + tmpp[1:]
-          image_text_score_related += tmp
-        for (idx, image, text, score, related) in image_text_score_related:
-          data = all_data[idx]
-          if "metadata" not in data:
-            data["metadata"] = {}
-          data["metadata"]["cos_score"] = score
-          data["metadata"]["related"] = related
-          # img_idx = str(assign_uuid(text))
-          image.save(f"data/test-samples/{args.score_cutoff}-{idx}.png")
-          data["caption"] = text
-          data["image"] = [f"data/test-samples/{args.score_cutoff}-{idx}.png"]
-          print("data['image']:", data['image'])
-          data["metadata"]["step2_params"] = json.dumps(vars(args))
-          outfile.write(json.dumps(data)+"\n")
+        while True:
+          # Read a batch of lines from the input file
+          lines = list(itertools.islice(infile, args.batch_size))
+          if not lines:
+              break  # Exit the loop if no lines are left
+
+          # Apply the algo over the batched data
+          all_data = [json.loads(l) for l in lines]
+          text_array = [data['caption'] for data in all_data]
+          image_text_score_related = []
+          for rng in range(0, len(text_array), args.batch_size):
+            d = text_array[rng:min(len(text_array), rng+args.batch_size)]
+            tmp = generate_image_and_outputs(d, score_cutoff=args.score_cutoff)
+            # add batch_id to idx
+            for idx, tmpp in enumerate(tmp):
+              tmp[idx] = (rng + tmpp[0],) + tmpp[1:]
+            image_text_score_related += tmp
+          for (idx, image, text, score, related) in image_text_score_related:
+            data = all_data[idx]
+            if "metadata" not in data:
+              data["metadata"] = {}
+            data["metadata"]["cos_score"] = score
+            data["metadata"]["related"] = related
+            # img_idx = str(assign_uuid(text))
+            image.save(f"data/test-samples/{args.score_cutoff}-{idx}.png")
+            data["caption"] = text
+            data["image"] = [f"data/test-samples/{args.score_cutoff}-{idx}.png"]
+            print("data['image']:", data['image'])
+            data["metadata"]["step2_params"] = json.dumps(vars(args))
+            outfile.write(json.dumps(data)+"\n")
                 
 
 

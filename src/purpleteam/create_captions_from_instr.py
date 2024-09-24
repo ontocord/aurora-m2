@@ -60,35 +60,42 @@ def main():
     # TODO: load jsonl till batch_size
     with open(args.input_path, "r") as infile:
         with open(args.output_path, "w") as outfile:
-            all_data = [json.loads(l) for l in infile]
-            text_array = [data['text'] for data in all_data]
-            outputs = []
-            for rng in range(0, len(text_array), args.batch_size):
-                d = text_array[rng:min(len(text_array), rng+args.batch_size)]
-                instructions = [text.split("### Response:",1)[0].split("### Instruction:")[-1] for text in d] 
-                responses = [text.split("### Response:",1)[1].strip() for text in d] 
-                # prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary. Generate **three** captions on each line:\n\n{instruction}"}], tokenize=False) for instruction in instructions]
-                prompts = [tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary.\n\n{instruction}"},
-                                                                 {"role": "assistant", "content": "Caption: "}]) for instruction in instructions]
-                outputs += generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
-            for i, output in enumerate(outputs):
-                caption = output.replace("Caption:", "").replace("caption:", "").replace("caption", "").replace("Caption", "").strip()
-                caption = caption.replace("1.","").replace("2.","").replace("3.","").replace("1)","").replace("2)","").replace("3)","").strip('-\' "').strip()
-                instr = all_data[i]['text'].split("### Response:",1)[0].split("### Instruction:")[-1]
-                chosen_response = all_data[i]['text'].split("### Response:",1)[1].strip()
-                rejected_responses = [all_data[i]['text2'].split("### Response:",1)[1].strip(), all_data[i]['text3'].split("### Response:",1)[1].strip()]
-                all_data[i]["metadata"]["step1_params"] = json.dumps(vars(args))
+            while True:
+                # Read a batch of lines from the input file
+                lines = list(itertools.islice(infile, args.batch_size))
+                if not lines:
+                    break  # Exit the loop if no lines are left
 
-                # change the key names
-                for key in list(all_data[i]['metadata'].keys()):
-                    key1 = key.replace("text1", "chosen")
-                    key1 = key1.replace("text2", "rejection1")
-                    key1 = key1.replace("text3", "rejection2")
-                    if key != key1:
-                        all_data[i]['metadata'][key1] = all_data[i]['metadata'][key]
-                        del all_data[i]['metadata'][key]
-                    
-                outfile.write(json.dumps({'instruction': instr, 'caption': caption, 'chosen_response': chosen_response, 'rejected_responses': rejected_responses, 'images': [], 'metadata': all_data[i]['metadata']})+"\n")
+                # Apply the algo over the batched data
+                all_data = [json.loads(l) for l in lines]
+                text_array = [data['text'] for data in all_data]
+                outputs = []
+                for rng in range(0, len(text_array), args.batch_size):
+                    d = text_array[rng:min(len(text_array), rng+args.batch_size)]
+                    instructions = [text.split("### Response:",1)[0].split("### Instruction:")[-1] for text in d] 
+                    responses = [text.split("### Response:",1)[1].strip() for text in d] 
+                    # prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary. Generate **three** captions on each line:\n\n{instruction}"}], tokenize=False) for instruction in instructions]
+                    prompts = [tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary.\n\n{instruction}"},
+                                                                    {"role": "assistant", "content": "Caption: "}]) for instruction in instructions]
+                    outputs += generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
+                for i, output in enumerate(outputs):
+                    caption = output.replace("Caption:", "").replace("caption:", "").replace("caption", "").replace("Caption", "").strip()
+                    caption = caption.replace("1.","").replace("2.","").replace("3.","").replace("1)","").replace("2)","").replace("3)","").strip('-\' "').strip()
+                    instr = all_data[i]['text'].split("### Response:",1)[0].split("### Instruction:")[-1]
+                    chosen_response = all_data[i]['text'].split("### Response:",1)[1].strip()
+                    rejected_responses = [all_data[i]['text2'].split("### Response:",1)[1].strip(), all_data[i]['text3'].split("### Response:",1)[1].strip()]
+                    all_data[i]["metadata"]["step1_params"] = json.dumps(vars(args))
+
+                    # change the key names
+                    for key in list(all_data[i]['metadata'].keys()):
+                        key1 = key.replace("text1", "chosen")
+                        key1 = key1.replace("text2", "rejection1")
+                        key1 = key1.replace("text3", "rejection2")
+                        if key != key1:
+                            all_data[i]['metadata'][key1] = all_data[i]['metadata'][key]
+                            del all_data[i]['metadata'][key]
+                        
+                    outfile.write(json.dumps({'instruction': instr, 'caption': caption, 'chosen_response': chosen_response, 'rejected_responses': rejected_responses, 'images': [], 'metadata': all_data[i]['metadata']})+"\n")
 
 
 if __name__ == "__main__":
