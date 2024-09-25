@@ -1,0 +1,1368 @@
+Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+loading configuration file cache
+loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
+All model checkpoint weights were used when initializing GeneralizedRCNN.
+
+All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
+If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:11<00:11, 11.01s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  7.70s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  8.19s/it]
+args.input_dir.rstrip("/")+"/*/*/*/*": /leonardo_work/EUHPC_E03_068/safellm/data/test-commoncatalog-cc-by/*/*/*/*
+file: /leonardo_work/EUHPC_E03_068/safellm/data/test-commoncatalog-cc-by/0/least_dim_range=256-512/aspect_ratio_bucket=1-1/part-00000-tid-4706868160279389178-bbe490c0-37b3-4c20-a536-22eb9efb5fea-74701-1-c000.parquet
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: In+the+Sculpture+Garden+on+the+Mall.%0A%0AI+think+I%27ve+seen+a+sister+work+in+Dublin+-+rings+lots+of+bells.
+caption: 
+caption: 
+caption: 
+caption: Having+a+pleasent+conversation.
+caption: There+were+two+of+these%2C+horizonal+on+a+wall+in+an+obscure+area+of+Swedagon.+Swedagon%2C+the+most+important+site+for+Buddhist+and+the+first+place+to+visit+for+tourist.%0D%0AThe+mandala%2Cmeditatin+object%2C+my+logo%2C+symbolizing+all+that+Buddhism+have+given+the+world+in+philosophy%2C+a+way+to+transcend+suffering%2C+and+sacred+art.
+caption: %3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphoto.gne%3Fid%3D68704%22%3E%3C%3C+previous+page%3C%2Fa%3E+%7C+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphoto.gne%3Fid%3D69801%22%3Enext+page+%3E%3E%3C%2Fa%3E%0D%0A%0D%0A%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphoto.gne%3Fid%3D67035%22%3Efirst+page%3C%2Fa%3E%0D%0A%0D%0Aflickr%27s+first+daily+updated+comic%2C+a+panel+per+day.
+caption: 
+caption: Read+More+About+These+Fascinating+Design+Objects+At+%3Ca+href%3D%22http%3A%2F%2Fdesigncrack.com%22+rel%3D%22nofollow%22%3Edesigncrack.com%3C%2Fa%3E
+caption: 
+caption: Montgomery%2C+Cherice.++%282005%29.++Magnolias.++Taken+outside+Erickson+hall+at+Michigan+State+University%2C+East+Lansing%2C+MI.++Created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: 
+caption: Agora%2C+o+que+isto+pode+querer+dizer%3F%0A--%0AS%C3%A3o+Paulo%2C+centro+23%2F09%2F2006
+caption: 
+caption: 
+caption: 
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%2F2006_07_01_london-underground_archive.html%23115283093531100260%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E
+caption: This+is+a+map+of+all+the+SEEDS+micro-finance+banks+throughout+Sri+Lanka
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F35977634%40N00%2F106269248%2F%22%3EWinter+leaves%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F35977634%40N00%2F111369774%2F%22%3ESnowy+Steps%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F35977634%40N00%2F111369785%2F%22%3Ewalls%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F35977634%40N00%2F111369784%2F%22%3EIvy%2C+snow%2C+wall%3C%2Fa%3E%2C+5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F35977634%40N00%2F111369778%2F%22%3ECurve+in+the+wall%3C%2Fa%3E%2C+6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F35977634%40N00%2F113788818%2F%22%3Ewinter+stream%3C%2Fa%3E%2C+7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F35977634%40N00%2F121231210%2F%22%3EStanage+edge+January+1995%3C%2Fa%3E%2C+8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F35977634%40N00%2F136843869%2F%22%3Etree%3C%2Fa%3E%2C+9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F35977634%40N00%2F111369782%2F%22%3EIvy+leaf+with+snow%3C%2Fa%3E%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fbighugelabs.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: Interesting+9+panel+in+order+of+interest.%0A%0A1.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F115316901%2F%22%3Euntitled%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F86350425%2F%22%3Emoon+over+rust+farm%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F60086087%2F%22%3Ebirch%2C+catalpa%2C+maple+leaves+gathered+for+for+a+photo+op%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F119435993%2F%22%3Etanks-pilings%3C%2Fa%3E%2C+5.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F60086599%2F%22%3Eselfportrait+with+oak+leaves+in+puddle%3C%2Fa%3E%2C+6.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F120013544%2F%22%3EKiki%27s+swim+with+Senya%3C%2Fa%3E%2C+7.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F103568659%2F%22%3Eblue+ice%3C%2Fa%3E%2C+8.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F69844752%2F%22%3EKiki+and+the+candle%3C%2Fa%3E%2C+9.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F31744233%2F%22%3EPark+Pay+Per+View%3C%2Fa%3ECreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: mad+mag
+caption: 
+caption: Just+found+this+new+web+2.0+service+called+%22%3Ca+href%3D%22http%3A%2F%2Fwww.photomashing.com%22%3EphotoMASHING%3C%2Fa%3E%22.%0A%0AFunny+stuff+you+can+do+with+a+pumpkin....+And+only+a+pumpkin.+But+in+the+%22about%22+section+they+say+this%3A%0A%0A%22Can+I+add+my+photos+to+anything+else+but+a+lousy+pumpkin%3F+%0AHang+on%2C+its+Halloween+-+and+we+are+in+our+early+Beta+.+.+.+%0ABut+in+the+near+future+we+will+open+this+up+and+have+tons+%0Aof+new+images+%2F+themes+to+work+with+.+.+.%22%0A%0AWell+then%2C+I%27ll+keep+an+eye+on+them.%0A%0AHappy+Halloween%21
+caption: 
+caption: Outside+on+the+walking+bridge
+caption: %3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: Flickr+Toys+made+two+copies+by+mistake.++hmmm...%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: %3A+%3Ca+href%3D%22http%3A%2F%2Fpicasa.google.co.jp%2F%22+rel%3D%22nofollow%22%3Epicasa.google.co.jp%2F%3C%2Fa%3E
+caption: 
+caption: On+Cheneies+Street+in+Bloomsbury%2C+there%27s+a+building+with+four+greenmen+on+it--three+are+serious%2C+but+one+is+laughing.
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%2Fmix.php%2Fdanzen%2Fdz_posters%22%3Ewww.zenmix.com%2Fmix.php%2Fdanzen%2Fdz_posters%3C%2Fa%3E
+caption: Thanks+to+everyone+who+chose+one+of+my+photos+as+one+of+their+%22favorite.%22
+caption: 
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F74445673%2F%22%3Eburied%3C%2Fa%3E%0A2.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F88209548%2F%22%3Ewinter+clings+to+the+earth+below+the+water%3C%2Fa%3E%0A3.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F74445410%2F%22%3E%28once%29+animated+leaf.%3C%2Fa%3E%0A4.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F88564537%2F%22%3Eah+%2C+you+didn%27t+know+i+could+do+that.%3C%2Fa%3E%0A5.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F88209434%2F%22%3Eup+side+down+weather%3C%2Fa%3E%0A6.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F88565073%2F%22%3Eice+filigree%3C%2Fa%3E%0A7.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F75674936%2F%22%3EIced+thicket+road+to+gorham%3C%2Fa%3E%0A8.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F86350425%2F%22%3Emoon+over+rust+farm%3C%2Fa%3E%0A9.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F75674613%2F%22%3EIced+thicket%3C%2Fa%3E%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: 
+caption: struukepoepers+e.p..+Bootleg+release+of+our+heros
+caption: shot+in+vill%C3%A1nyk%C3%B6vesd%2C+hungary
+caption: 
+caption: I+like+the+monochromatic+composition+broken+by+the+red+pail.
+caption: They+have+covered+the+Dick+Dale+version+of+MISERLOU.++Covered+it+in+smelly+donkey+crap.++I+oppose+the+death+penalty+on+principle.++I%27d+make+an+exception+for+them.++WTF%21
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.%0A%0A%3Ca+href%3D%22http%3A%2F%2Fmaps.google.com%3Fq%3D28.263263279931966%2C-16.63330078125%28Best+Of+One+Year%29%26t%3Dh%22%3ESee+where+this+picture+was+taken.%3C%2Fa%3E+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2Fgeotagging%2Fdiscuss%2F72157594165549916%2F%22%3E%5B%3F%5D%3C%2Fa%3E
+caption: 
+caption: Garmont+Syncro.+3+roky+star%C3%A9.+Velmi+m%C3%A1lo+pou%C5%BE%C3%ADvan%C3%A9.
+caption: 8x8+square+made+for+blanket+to+be+given+to+VT+Tech+victims%27+families.
+caption: badge+made+from+my+squared+circle+spicy+peas+..
+caption: See+More+Fascinating+Design+Objects+at+%3Ca+href%3D%22http%3A%2F%2Fdesigncrack.com%22+rel%3D%22nofollow%22%3Edesigncrack.com%3C%2Fa%3E
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F121488%2F%22+rel%3D%22nofollow%22%3ESee+the+%22Christmas+Greeting+no.2%22+video%3C%2Fa%3E%0A%0ACertain+songs+sound+festive+to+me.+Like+Greensleeves+for+example.+Anyhow+these+three+songs+sound+wintry+or+festive+to+me.+%22Gates+of+Eden%22%2C+%22Melancholia%22+%28The+Who%29+and+%22Purple+Haze%22.+This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Ross+County%2C+Ohio
+caption: 
+caption: 
+caption: 
+caption: Large+granite+sphere+on+a+grave+in+Frederick+Maryland.+For+the+quared+circle+group.
+caption: Pub+sign
+caption: %3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2Fonblack.php%3Fid%3D102577720%22%3E%27iced+mosaic%27+On+Black%3C%2Fa%3E%0A%0ABelongs+to+my+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2Fsets%2F1438952%2F%22%3E9+panel+Mosaic+set%3C%2Fa%3E+also+the+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2Fsets%2F1598015%2F%22%3EWINTER+Set%3C%2Fa%3E+%0ABelongs+to+the+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2F9_panel_3x3s%2F%22%3E9+panel+%283X3%29mosaics+GROUP%3C%2Fa%3E++which+is+a+group+dedicated+to+this+format%2C+if+you+like+the+format+%28and+want+to+contribute%29+consider+joining.%0A%0A1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F97583436%2F%22%3Ecatacorner+hoarfrost%3C%2Fa%3E%0A2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F102363290%2F%22%3EFrozen%3C%2Fa%3E%0A3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F102363626%2F%22%3Esuspended+leaf%3C%2Fa%3E%0A4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F74445952%2F%22%3Emostly+under%3C%2Fa%3E%0A5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F56564061%2F%22%3Eleaf+on+frosty+ball%3C%2Fa%3E%0A6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F88564724%2F%22%3Elone+oak+in++ice%3C%2Fa%3E%0A7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F97186411%2F%22%3ESea+Ice+drapes+shore%3C%2Fa%3E%0A8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F102363002%2F%22%3Eblue+ice+abstract%3C%2Fa%3E%0A9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F97186615%2F%22%3Esea+ice+%2F+island+shore%3C%2Fa%3E%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: 
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E%2C+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EHappy+Easter%21%3C%2Fa%3E
+caption: Cover+for+Black+Mist+Promo
+caption: 1929++International+truck+preserved+in+Pike+County%2C+Ohio
+caption: Before+on+left+and+most+recent+on+right.
+caption: 
+caption: 
+caption: 
+caption: %E3%81%93%E3%81%93%E3%82%82%E3%82%82%E3%81%86%E7%B7%91
+caption: Weddings+are+joyful+events.++Wedding+photography%2C+not+usually+so+much.++Greg+giving+the+universal+groom+sign+of+%22aaaack.++when+will+this+photo+stuff+end%21%22
+caption: check+out+%3Ca+href%3D%22http%3A%2F%2Fwww.cartercomics.com%2F%22+rel%3D%22nofollow%22%3Ewww.cartercomics.com%2F%3C%2Fa%3E+for+more.
+caption: per+davino
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%2F2006_05_01_london-underground_archive.html%23114860350207115167%22+target%3D%22_blank%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Sunny+music+for+sunny+weather%21%0A%0AMatisyahu+-+No+Place+to+Be%0AManu+Chao+-+Proxima+Estaci%C3%B3n%3A+Esperanza%0ABob+Marley+-+Survival%0AAmadou+%26+Mariam+-+Dimanche+a+Bamako
+caption: shot+in+esztergom%2C+hungary
+caption: 
+caption: 
+caption: In+the+Linnaea%27s+koi+pond.+%28This+might+be+iffy+for+the+squared-circle+group.%29
+caption: 
+caption: 
+caption: Rolled+DAF+cab+having+front+bulkhead+re-aligned+prior+to+side+panel+replacement.
+caption: I%27m+on+your+call+listening+to+ur+waffle
+caption: 
+caption: A+local+resident+takes+in+the+scenery.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F475073066%2F%22%3EIn+the+Building%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F475062028%2F%22%3EOrange+Lamp%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F474513184%2F%22%3EGolden+Landing%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F474513040%2F%22%3EWicked%3C%2Fa%3E%2C+5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F473514850%2F%22%3EAUX+AMIS%3C%2Fa%3E%2C+6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F473514770%2F%22%3ELight+Pole%3C%2Fa%3E%2C+7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F473514660%2F%22%3EBench+and+Lamp%3C%2Fa%3E%2C+8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F471263413%2F%22%3EFloor+of+Fluorescent%3C%2Fa%3E%2C+9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F475170337%2F%22%3EAbout+21H30M%3C%2Fa%3E%2C+10.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F475189110%2F%22%3EBlue+Green+Red%3C%2Fa%3E%2C+11.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F400531046%2F%22%3EBamboo%3C%2Fa%3E%2C+12.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F475262066%2F%22%3ECurve%3C%2Fa%3E%2C+13.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F475376591%2F%22%3ESpace+in+the+Buildings%3C%2Fa%3E%2C+14.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F475376387%2F%22%3ETokyo+Kaikan%3C%2Fa%3E%2C+15.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F475532632%2F%22%3EHappy+Lawson+%28film+version%29%3C%2Fa%3E%2C+16.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F405802546%2F%22%3EIidabashi+station+at+night%3C%2Fa%3E%2C+17.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F419977396%2F%22%3ETsukishima+Station%3C%2Fa%3E%2C+18.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F421115755%2F%22%3EYurakucho+Station%3C%2Fa%3E%2C+19.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F472403627%2F%22%3EIn+The+Elevator%3C%2Fa%3E%2C+20.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F474513256%2F%22%3EWhite+Green+Red%3C%2Fa%3E%2C+21.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F474519836%2F%22%3EShin+Maru+Biru%3C%2Fa%3E%2C+22.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F423046962%2F%22%3EStainless+Steel+Rest+Room%3C%2Fa%3E%2C+23.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F458558945%2F%22%3EGoodbye+Today%3C%2Fa%3E%2C+24.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F479852499%2F%22%3ETwo+Logos%3C%2Fa%3E%2C+25.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F479838254%2F%22%3EMay+2007%3C%2Fa%3E%2C+26.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F481378583%2F%22%3EWoman+in+Shoe%3C%2Fa%3E%2C+27.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F484904710%2F%22%3ENight+Ristorante%3C%2Fa%3E%2C+28.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F484904654%2F%22%3EWhite+Escalator%3C%2Fa%3E%2C+29.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F488290926%2F%22%3EAt+The+Street+Corner%3C%2Fa%3E%2C+30.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F488290846%2F%22%3EShopwindow+at+Night%3C%2Fa%3E%2C+31.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F488317921%2F%22%3EWall+Of+Light%3C%2Fa%3E%2C+32.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F488317751%2F%22%3ETo+The+Sky%3C%2Fa%3E%2C+33.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F489797984%2F%22%3EWall+Of+Lattice%3C%2Fa%3E%2C+34.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F489797924%2F%22%3ERed+Fish%3C%2Fa%3E%2C+35.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F491085462%2F%22%3EInside+of+Building%3C%2Fa%3E%2C+36.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F24374725%40N00%2F491085416%2F%22%3EOffice+of+Stationmaster%3C%2Fa%3E%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fbighugelabs.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: enough+said
+caption: 
+caption: 
+caption: When+we+moved+a+dresser+that+hadn%27t+been+moved+in+20+years%2C+we+discovered+there+were+THIRTY+tennis+balls+underneath+it.
+caption: 
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.%0A%0AThese+are+some+of+my+favorites+of+other%27s+photos.+I%27ll+add+some+more%21
+caption: 
+caption: 
+caption: a+%3Ca+href%3D%22http%3A%2F%2Fwww.patandkat.com%2Fpat%2Fweblog%2F%22%3Epat+berry%3C%2Fa%3E+script+using+the+flickr+word+via+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Frealjimbob%2F79300985%2F%22%3EREALJimbob%3C%2Fa%3E%0A%0Aview+the+whys+and+wherefors+%3Ca+href%3D%22http%3A%2F%2Fwww.patandkat.com%2Fflickr%2Findex.php%3Fuser%3D_sarchi%26sqsize%3D6%26Action%3DDOIT%22%3Ehere%3C%2Fa%3E+for+yours+mine+and+theirs..%3Ci%3Eupdate%3C%2Fi%3E+%3Ca+href%3D%22http%3A%2F%2Fwww.patandkat.com%2Fflickr%2F%22%3Ewww.patandkat.com%2Fflickr%2F%3C%2Fa%3E%0A%0A%3Ca+href%3D%22http%3A%2F%2Fwatchinmewatchinu.blogspot.com%2F2006%2F06%2Fcategory-photo-favorites-last-six.html%22%3Eblogged%3C%2Fa%3E+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fbillywarhol%2F360595710%2F%23comment72157594489547871%22%3Ecomment%3C%2Fa%3E
+caption: On+each+a+flickrite+page+when+we+click+on+most+interesting+it+ranks+our+pictures%3B+the+top+20+for+that+date+%28that+first+page%29.+Today+there+were+eight+mosaics+mostly+9+panels+and+one+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F102602866%2F%22%3EOTHER%3C%2Fa%3E+today.+They+%28mosaics%29+fade+in+%26+out+of+interestingness%2Fexplore.+the+Self+P+never+made+it+but+fits+this+mosaic+%2C+.%0A%0A1.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F76209226%2F%22%3EKiki+candlelight%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F70021145%2F%22%3EGehry+Disney+Curves+%26+Rounds+favorites%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F102602866%2F%22%3Emoon+%26+ice%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F80228113%2F%22%3E9+panel+%28of%29+9+panels%3C%2Fa%3E%2C+5.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F34669122%2F%22%3ESelf+Portrait%3C%2Fa%3E%2C+6.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F67705650%2F%22%3Esmall+bodies+of+water+set+mosaic%3C%2Fa%3E%2C+7.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F69455648%2F%22%3Efaved+flickr+fall+colors%3C%2Fa%3E%2C+8.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F66926655%2F%22%3Esunflower+nine+panel%3C%2Fa%3E%2C+9.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F66014597%2F%22%3EFall+on+my+street%3C%2Fa%3E%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: Sea+Cucumber
+caption: %E3%81%86%E3%83%BC%E3%82%93%E3%81%A8%E3%80%81%E3%81%84%E3%81%BE%E3%81%95%E3%82%89%E3%81%AA%E3%81%8C%E3%82%89%E3%80%81%E3%83%87%E3%82%B8%E3%82%AB%E3%83%A1%E3%81%A7%E5%8B%95%E7%94%BB%E3%81%8C%E6%92%AE%E3%82%8C%E3%82%8B%E3%81%93%E3%81%A8%E3%81%AB%E6%B0%97%E3%81%A5%E3%81%84%E3%81%9F%E3%81%AE%E3%82%88%E3%81%AD%E3%80%82QVGA%E3%82%B5%E3%82%A4%E3%82%BA%E3%81%A0%E3%81%A8%E4%B8%80%E6%99%82%E9%96%93%E3%82%82%E6%92%AE%E3%82%8C%E3%82%8B%E3%81%91%E3%81%A9%E3%81%95%E3%80%81%E7%B5%B6%E5%AF%BE%E3%81%AB%E9%9B%BB%E6%B1%A0%E3%81%8C%E3%81%9D%E3%82%93%E3%81%AA%E3%81%AB%E4%BF%9D%E3%81%9F%E3%81%AA%E3%81%84%E3%81%A8%E6%80%9D%E3%81%86%E3%81%95%E3%80%82%E3%81%A8%E3%82%8A%E3%81%82%E3%81%88%E3%81%9A+YouTube+%E3%81%AB%E3%82%A2%E3%83%83%E3%83%97%E3%81%97%E3%81%A6%E3%81%BF%E3%82%8B%E5%AE%9F%E9%A8%93%E3%80%82%0A%3Ca+href%3D%22http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dq-XS2CTopgg%22%3Ewww.youtube.com%2Fwatch%3Fv%3Dq-XS2CTopgg%3C%2Fa%3E
+caption: 
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76270%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22United+for+Peace+%26+Justice+%234%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: Ms+Oola+Montana%2C+an+eight+week-old+Great+Dane%2C+at+her+new+home+in+Boulder%2C+Colorado.%0A%0A%28She+was+a+very%2C+very+good+dog.%29%0ARIP%0AMs+Oola+Montana%0AJanuary+6%2C+2004+-+October+19%2C+2012
+caption: 
+caption: A+workshop+is+a+cool+thing+to+have%21
+caption: 
+caption: cue+chalk
+caption: 
+caption: 
+caption: end+of+the+serie+%28for+now%29
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F194306%2F%22+rel%3D%22nofollow%22%3ESee+the+%223rd+Alarm+Bronx+Fire%22+video%3C%2Fa%3E%0A%0ANo+cuts.+I+left+my+studio+in+Harlem+at+2nd+alarm.+I+got+to+the+address+at+3rd+alarm.+The+trip+took+about+30+minutes.+I+wasn%27t+working%3B+I+listen+to+the+scanner+for+nearby+emergencies+to+document+for+the+FDNY+Photo%2FAV+unit.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-nd%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-NoDerivs%3C%2Fa%3E+license.
+caption: A+Visit+To+A+Retro+Resteraunt+turned+out+to+be+a+AWESOME+picture+vacation%21%21+%3AD+%0D%0A%0D%0AWith+Photoshop+Ink+Outline
+caption: 
+caption: Better+late+than+never%21%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: 
+caption: You+are+free+to+use+this+photo+for+any+reason%2C+including+commercial+reasons%2C+but+you+MUST+include+EITHER+a+link+to+%3Ca+href%3D%22http%3A%2F%2Fwww.brisbaneishome.com%22%3Ewww.brisbaneishome.com%3C%2Fa%3E+or%2C+%28ONLY+if+you+are+not+using+it+on+the+internet%29%2C+you+must+print+the+URL+%3Ca+href%3D%22http%3A%2F%2Fwww.brisbaneishome.com%22%3Ewww.brisbaneishome.com%3C%2Fa%3E+next+to+or+on+the+photo.%0D%0A%0D%0AIf+you+do+NOT+provide+this+credit%2C+in+this+way%2C+you+will+be+using+the+photo+ILLEGALLY.%0D%0A%0D%0AIf+you+do+use+the+correct+credit%2C+you+don%27t+have+to+contact+me+for+permission+-+but+if+you+can+let+me+know+where+you+are+using+it%2C+that+would+be+cool.
+caption: 
+caption: Mercado+Chico%2C+%C3%81vila
+caption: I+some+how+missed+posting+this+to+some+groups+It+is+one+of+my+fav+9+panels+shots.%0A%28the+icon+for+my+9+panel+mosaic+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2Fsets%2F1438952%2F%22%3ESET%3C%2Fa%3E+a+growing+body+of+nine+panel+images+the+Slide+show+is+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2Fsets%2F1438952%2Fshow%2F%22%3E+H+E+R+E+%3C%2Fa%3E%0ACheckout++the+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2F9_panel_3x3s%2F%22%3E9+panel+%283X3%29mosaics+GROUP%3C%2Fa%3E%0A%0A1.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F60085724%2F%22%3Eoak+leaves+passed%2C+still+up%2C+in+sunlight%3C%2Fa%3E%2C+%0A2.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F63008329%2F%22%3Ereflected+sky+and+trees+in+puddle+swimming+with+leaves%3C%2Fa%3E%2C+%0A3.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F51931012%2F%22%3EFall%27s+here%3C%2Fa%3E%2C+%0A4.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F8779785%2F%22%3EFall+Palette%3C%2Fa%3E%2C+%0A5.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F57250980%2F%22%3Ecolorful+leaves+are+harder+to+rake.%3C%2Fa%3E%2C+%0A6.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F54858303%2F%22%3Efallen+leaf%3C%2Fa%3E%2C%0A7.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F57250801%2F%22%3Efull+maple+laying+on+catalpa%3C%2Fa%3E%2C+%0A8.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F63008210%2F%22%3EOak+leaf+on+water%3C%2Fa%3E%2C+%0A9.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F56302975%2F%22%3Elove+affair+with+a+leaf%3C%2Fa%3E
+caption: Hello++these+images+are+ones+I+have+favorited+and+added+to+the+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fgroups%2F3x3%2F%22%3E3x3FAVs+group%3C%2Fa%3E+as+the+above+mosaic%2C+powerful+stuff.Note+the+images+herein+are+somewhat+cropped+by+mosaic+maker+check+out+the+full+images+below+%28+are+all+the+source+image%28s%29+locations+%29%3B%0A%0A1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Fbeija-flor%2F67659577%2F%22%3EAfro-Brazilian+Art+-+III%3C%2Fa%3E%2C+%0A2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Falphageek%2F65114074%2F%22%3EInvitation+D%27Automne%3C%2Fa%3E%2C+%0A3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Frise_n_shine%2F54331243%2F%22%3EGet+Colored%3C%2Fa%3E%2C+%0A4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Fsilverwood%2F54704485%2F%22%3EWearing+a+coat+of+many+colours...%3C%2Fa%3E%2C+%0A5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Fzelcam%2F59530317%2F%22%3EFly+Agarica+Mushroom%3C%2Fa%3E%2C+%0A6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Fgtl%2F8608834%2F%22%3EAutumn+Colours%3C%2Fa%3E%2C+%0A7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Flynnintokyo%2F46091440%2F%22%3EMomiji%3C%2Fa%3E%2C+%0A8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Fyamaken%2F66759265%2F%22%3ECherry+Leaf%3C%2Fa%3E%2C+%0A9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Ftedguy49%2F57842950%2F%22%3ESunday+Fall+Walk-Sugar+Maple%3C%2Fa%3E%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: Kevin+%26+John+1970
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: This+is+my+first+attempt+at+a+%22squared+circle%22+picture.%0A%0AThis+is+the+subwoofer+on+one+of+the+large+speakers+in+the+production+studio+of+%3Ca+href%3D%22http%3A%2F%2Fwww.huntington.edu%22+target%3D%22_blank%22%3EHuntington+University%3C%2Fa%3E%27s+radio+station%2C+%3Ca+href%3D%22http%3A%2F%2Fwww.wqhu.net%22+target%3D%22_blank%22%3EFUSE+FM%3C%2Fa%3E.%0A%0A%23DSC02056
+caption: 
+caption: 
+caption: I+was+just+digging+around+some+old+files+and+found+this.
+caption: %D7%9E%D7%A2%D7%9C+%D7%9C%D7%9B%D7%A0%D7%99%D7%A1%D7%94+%D7%9C%D7%9E%D7%92%D7%A8%D7%A9+%D7%94%D7%97%D7%A0%D7%99%D7%94+%D7%A9%D7%9E%D7%95%D7%9C+%D7%9E%D7%95%D7%96%D7%99%D7%90%D7%95%D7%9F+%D7%A8%D7%95%D7%A7%D7%A4%D7%9C%D7%A8+%D7%91%D7%A2%D7%99%D7%A8+%D7%94%D7%A2%D7%AA%D7%99%D7%A7%D7%94+%D7%91%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D%0D%0A+%D7%9E%D7%96%D7%9C+%D7%A9%D7%9C%D7%90+%D7%A0%D7%A4%D7%9C%D7%95+%D7%90%D7%95%D7%AA%D7%99%D7%95%D7%AA+%D7%91%D7%AA%D7%A8%D7%92%D7%95%D7%9D+%D7%9C%D7%A2%D7%A8%D7%91%D7%99%D7%AA++%D7%95%D7%9C%D7%90%D7%A0%D7%92%D7%9C%D7%99%D7%AA
+caption: Is+it+a+Boeing+717%3F++An+MD-80%3F
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76361%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22United+for+Peace+%26+Justice+%2310%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: As+seen+on+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fsteffe%2F5046345%2F%22%3ESteffe%27s+stream%3C%2Fa%3E.+The+%22most+favorites%22+from+my+stream.+Instructions+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fgroups%2Ftopic%2F16407%2F%22%3Ehere%3C%2Fa%3E.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F68890481%2F%22%3Evessel%3C%2Fa%3E%2C+%0A2.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F68891058%2F%22%3Espun+light%3C%2Fa%3E%2C+%0A3.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F68890481%2F%22%3Evessel%3C%2Fa%3E%2C+%0A4.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F24791767%2F%22%3EHeading+home+going+down+the+road.%3C%2Fa%3E%2C+%0A5.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F68890801%2F%22%3Erapid+gestures%3C%2Fa%3E%0A6.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F24826025%2F%22%3EDriving+home+in+the+truck%3C%2Fa%3E%2C+%0A7.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F28675927%2F%22%3EMoving+truck+shot+near+house%3C%2Fa%3E%2C+%0A8.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F68891058%2F%22%3Espun+light%3C%2Fa%3E%2C+%0A9.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F28675720%2F%22%3EKiki+w%2F+LCD+lamp+%26+I%3C%2Fa%3E
+caption: This+is+a+retouched+version+of+the+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fcheckerzwren%2F344701465%2Fin%2Fpool-fixmypic%2F%22%3Ephoto%3C%2Fa%3E++by+%3Ca+href%3D%22%2Fphotos%2Fcheckerzwren%2F%22%3E%3Cb%3Echeckerzwren%3C%2Fb%3E%3C%2Fa%3E+uploaded+to+%3Ca+href%3D%22%2Fgroups%2Ffixmypic%2Fpool%2F%22%3EFIX+MY+PIC+%28Pool%29%3C%2Fa%3E
+caption: Macro+Berries
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F199528659%2F%22%3EFloat+left%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F199529101%2F%22%3EFloating%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F199528529%2F%22%3EFloat+right%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F196149421%2F%22%3E7%3A05%3C%2Fa%3E%2C+5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F197560125%2F%22%3Esundown+%40+the+playground%3C%2Fa%3E%2C+6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F192487781%2F%22%3EHey%21%3C%2Fa%3E%2C+%0A7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F185425487%2F%22%3EGlass+detail%3C%2Fa%3E%2C+8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F198392843%2F%22%3Euntitled%3C%2Fa%3E%2C+9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F183905488%2F%22%3Euntitled%3C%2Fa%3E%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: %3Ca+href%3D%22http%3A%2F%2Fimages.rei.com%2Fmedia%2F679814Lrg.jpg%22%3Eimages.rei.com%2Fmedia%2F679814Lrg.jpg%3C%2Fa%3E
+caption: From+my+daily+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%22+target%3D%22_blank%22%3ELondon+Underground+Blog%3C%2Fa%3E
+caption: %E5%A5%BD%E6%83%A8%EF%BC%8C%E5%BE%88%E9%9C%87%E6%92%BC
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Google+Maps+has+added+two+levels+of+zoom+to+their+satellite+view.
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F97583436%2F%22%3Ecatacorner+hoarfrost%3C%2Fa%3E%0A2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F97186411%2F%22%3ESea+Ice+drapes+shore%3C%2Fa%3E%0A3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F89461614%2F%22%3Ecatacorner+ice+%231%3C%2Fa%3E%0A4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F97327394%2F%22%3Estar+horefrost%3C%2Fa%3E%0A5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F97583229%2F%22%3Eskim+ice+mask%3C%2Fa%3E%0A6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F97326826%2F%22%3Ehoarfrost%3C%2Fa%3E%0A7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F89460939%2F%22%3Ecatacorner+ice+%232%3C%2Fa%3E%0A8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F96548467%2F%22%3Eicon+ice%3C%2Fa%3E%0A9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F97583087%2F%22%3Edelicate+%28evaporation%29%3C%2Fa%3E%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: Model%3A+Daphne+%3B%29%0A%0A%27If+you+have+tears%2C+prepare+to+shed+them+now%27+-+William+Shakespeare%0A%0ADo+view+%3Ca+href%3D%22http%3A%2F%2Fbighugelabs.com%2Fflickr%2Fonblack.php%3Fid%3D372459311%22%3E%27Strength%27+On+Black%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.turkmenistan.gov.tm%2Fkomment%2Fkomm.htm%22%3Ewww.turkmenistan.gov.tm%2Fkomment%2Fkomm.htm%3C%2Fa%3E
+caption: 
+caption: Detail+of+private+plot+gate+in+Lafayette+Cemetery+No.+1
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F56303206%2F%22%3Ethey+come+down+they+swim%2C+they+die.%3C%2Fa%3E%2C+%0A2.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F62016000%2F%22%3Ebackside+oak+leaf+imitating+a+maple%3C%2Fa%3E%2C+%0A3.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F63008329%2F%22%3Ereflected+sky+and+trees+in+puddle+swimming+with+leaves%3C%2Fa%3E%2C+%0A4.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F60086469%2F%22%3Eleaves+in+the+black+water+%26+kiki%3C%2Fa%3E%2C+%0A5.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F60086599%2F%22%3Eselfportrait+with+oak+leaves+in+puddle%3C%2Fa%3E%2C+%0A6.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F62518378%2F%22%3Ereflection+with+leaves%3C%2Fa%3E%2C+%0A7.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F50537372%2F%22%3Erainy+driveway+puddle+treasure%3C%2Fa%3E%2C+%0A8.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F62518586%2F%22%3Euntitled%3C%2Fa%3E%2C+%0A9.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F56303070%2F%22%3EBright+red+submerged%3C%2Fa%3E
+caption: Abandoned+-+pretty+sure%2C+anyway.++Looking+towards+Shelton.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %E6%99%A9%E5%B9%B4
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: IMG_2258.JPG
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %E7%9A%87%E5%B1%85%E3%82%B8%E3%83%A7%E3%82%AC%E3%83%BC%E3%81%AB%E3%81%BE%E3%81%8E%E3%82%8C%E3%81%A6%E3%82%B8%E3%83%A7%E3%82%AE%E3%83%B3%E3%82%B0%E3%81%97%E3%81%A6%E3%81%BF%E3%82%8B%E3%80%82%0A%E9%80%86%E8%B5%B0%E3%81%A0%E3%81%91%E3%81%A9%E3%80%82
+caption: This+tree....+this+tree+keeps+demanding+that+I+take+its+picture.++I+can%27t+refuse.
+caption: 
+caption: 
+caption: This+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+egg%3C%2Fa%3E+was+created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: my+summer+project
+caption: 
+caption: Norwich+Cathedral+Cloister
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 1971+and+one+of+the+best+live+recordings+ever+made%2C+a+double+album+with+gatefold+cover.+What+was+going+on%3F+I+mean+why+did+they+not+ask+me+to+do+the+artwork%3F+this+has+to+be+1+out+of+10+for+getting+the+name+right.
+caption: 
+caption: Bueno%2C+aqu%C3%AD+una+visi%C3%B3n+del+futuro+que+parece+que+nos+quieren+plantar+con+los+nuevos+planes+antipirater%C3%ADa.
+caption: Tweaked+for+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fxerones%2F79277629%2Fin%2Fpool-95575847%40N00%3F%22%3E+Xerones+%3C%2Fa%3E+of+the+ManipulateThis+group
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F74553590%2F%22%3E9+panel+seasonal%3C%2Fa%3E%2C+%0A2.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F76065998%2F%22%3Etulips+with+christmas+tree%3C%2Fa%3E%2C+%0A3.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F74553590%2F%22%3E9+panel+seasonal%3C%2Fa%3E%2C+%0A4.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F76065868%2F%22%3Evase+%26+tree%3C%2Fa%3E%2C+%0A5.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F76065734%2F%22%3Evase+with+stems%3C%2Fa%3E%2C+%0A6.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F69844343%2F%22%3Ecandles+with+glass%3C%2Fa%3E%2C+%0A7.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F76099041%2F%22%3Elost+in+the+gaze%3C%2Fa%3E%2C+%0A8.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F76098446%2F%22%3Ebubbles%2C+stems+%26+lights%3C%2Fa%3E%2C+%0A9.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F69844752%2F%22%3EKiki+and+the+candle%3C%2Fa%3E%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: 
+caption: 
+caption: Create+your+own+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+Egg%3C%2Fa%3E+at+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: This+is+a+retouched+version+of+the+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Ffrizztext%2F365735405%2Fin%2Fpool-fixmypic%2F%22%3Ephoto%3C%2Fa%3E+by+%3Ca+href%3D%22%2Fphotos%2Ffrizztext%2F%22%3E%3Cb%3EFrizzText%3C%2Fb%3E%3C%2Fa%3E+uploaded+to+%3Ca+href%3D%22%2Fgroups%2Ffixmypic%2Fpool%2F%22%3EFIX+MY+PIC+%28Pool%29%3C%2Fa%3E%0A%0AA+more+traditional+predator+than+the+tiger+called+for.+He%27s+wearing+his+working+clothes.
+caption: Uploaded+for+my+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Ffictures%2F23514966%2F%22%3EFlickr+Badge.%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Christian+had+a+very+interesting+presentation+of+many+of+the+projects+he+has+been+working+on%2C+from+%3Cb%3Emovies+to+games%3C%2Fb%3E.+Amazing+stuff.%0A%0AIf+I%27m+building+my+own+city+some+time%2C+I%27m+certainly+going+to+make+Christian+a+call.%0A%0ASee+his+profile+on+IMDB.com+for+details+on+his+movie+work%2C+including+movies+like+Evan+Almighty%2C+Superman+returns%2C+The+day+after+tomorrow+and+Final+Fantasy%3A+The+Spirits+Within%3A+%3Ca+href%3D%22http%3A%2F%2Fimdb.com%2Fname%2Fnm0771216%2F%22%3Eimdb.com%2Fname%2Fnm0771216%2F%3C%2Fa%3E%0A%0AHe+has+been+working+on+games+like+Spore%2C+Golden+Eye+and+Lord+of+the+Rings.%0A%0AOfficial+website+here%3A+%3Ca+href%3D%22http%3A%2F%2Fwww.christianlorenzscheurer.com%22%3Echristianlorenzscheurer%3C%2Fa%3E%0A%0ABe+sure+to+read+the+%3Ca+href%3D%22http%3A%2F%2Fwww.christianlorenzscheurer.com%2Fhtmlpages%2Fabout%2Fabout_lightningstory.html%22%3E%22Lightning+story%22%3C%2Fa%3E%2C+about+luck+and+inspiration...%0A%0A%3Ci%3E%28thanks+for+the+call%2C+Christian%21%29%3C%2Fi%3E
+caption: 
+caption: 
+caption: 
+caption: Create+your+own+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+Egg%3C%2Fa%3E+at+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: This+is+the+dynamically+generated+PNG+that+gets+sent+to+the+printer.++Barcode+is+created+using+PEAR%3A%3AImage_Barcode
+caption: 
+caption: 
+caption: If+everyone+gives+one+thread%2C+the+poor+person+will+have+a+shirt.%0A%0AMar+2%2C+2007+%23212
+caption: 
+caption: After+cutting+the+cake...
+caption: 
+caption: i%27m+simply+BATS+over+halloween%21
+caption: 
+caption: 
+caption: This+is+the+top+to+a+ceramic+container%2C+not+a+cookie
+caption: Stars+of+David+on+the+Palace+Building+in+Ezra-19-Street%2C+Bucharim+neighborhood%2C+Jerusalem.+Built+by+Yehudayof+Elisha+and+Israel+Chefetz+in+1903-1914+and+planned+by+an+Italian+Architect+in+the+Renaissance+Style.+Legend+has+it+that+Yehudayof+Elisha+wanted+to+prepare+a+house+where+the++Messiah+will+be+able+to+live+and+have+guests.
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.last.fm%2Fmusic%2FJewel%22%3Ewww.last.fm%2Fmusic%2FJewel%3C%2Fa%3E
+caption: Shimmery.++The+trees+rock+on.
+caption: so+cool.
+caption: Belongs+to+the+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2Fsets%2F72157594172399252%2F%22%3EOn+Air+WMPG+Tops+SET%3C%2Fa%3E+and+is+for+%3Ca+href%3D%22http%3A%2F%2Fwww.WMPG.org%22%3E+Community+Radio+WMPG%3C%2Fa%3E+Belongs+also+to+the+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2F9_panel_3x3s%2Fpool%2F%22%3E+9+panel+%283X3%29mosaics+Group%3C%2Fa%3E%0A%0A1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F183669263%2F%22%3Ehost+mic%27s+pot%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F180954692%2F%22%3Einside%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F180949551%2F%22%3EAbout+to+%27fire+it+up%27+%21%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F182630737%2F%22%3EEyeing+the+new+board%3C%2Fa%3E%2C+5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F171635148%2F%22%3Esegmenting+edges%3C%2Fa%3E%2C+6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F183669086%2F%22%3EAlmost+ready%3C%2Fa%3E%2C+7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F171633437%2F%22%3EEdge+with+finish%3C%2Fa%3E%2C+8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F182632172%2F%22%3Eacrylic+laquer+on+MD+storage+drawer+insert%3C%2Fa%3E%2C+9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F182632849%2F%22%3ENew+Board+new+Way%3C%2Fa%3E%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: Old+skool+Garden+circa+2001
+caption: Pooooooooser...%0AEu+e+a+Sony+DSC-H2...+%3DD
+caption: Strange+attractor+made+with+Chaoscope.+It+is+nearly+a+sphere%2C+but+the+existence+of+nearby+unstable+fixed+points+makes+the+fill-in+converge+slowly+in+some+areas.
+caption: Illustration+i+did+for+a+college+cookbook+project
+caption: 
+caption: mosaic+from+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2Fsets%2F72057594054121326%2F%22%3EFace+of+Snow+SET%3C%2Fa%3E+diferent+perspectives+of+an+excise+in+%22sketching+in+snow+%22+other+than+a+%22Snow+man%22.%0A%0A1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F91306887%2F%22%3Etemporary+lawn+ornament+2%3C%2Fa%3E%0A2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F91307019%2F%22%3E%22looks+like+snow%22%3C%2Fa%3E%0A3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F91306749%2F%22%3Etemporary+lawn+ornament%3C%2Fa%3E%0A4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F91306623%2F%22%3Esay+what%21%3C%2Fa%3E%0A5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F91307197%2F%22%3Euntitled%3C%2Fa%3E%0A6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F91307111%2F%22%3Etemporary+lawn+ornament%3C%2Fa%3E%0A7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F90916547%2F%22%3Esnow+face+with+child%3C%2Fa%3E%0A8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F91307019%2F%22%3E%22looks+like+snow%22%3C%2Fa%3E%0A9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F90916299%2F%22%3ESnow+mask+profile%3C%2Fa%3E%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: 
+caption: Taken+with+my+Flexo+TLR+from+1945.+The+negative+was+photographed+with+a+paper+background+to+get+the+texture.
+caption: %3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2Fonblack.php%3Fid%3D212679445%26size%3DLarge%22%3E%27Copper+nine+panel%27+On+Black%3C%2Fa%3E%0A%0A1.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F211282185%2F%22%3Eto+be+sweated%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F211283114%2Fi%22%3Eheadflashing+to+dormer+ridgecap%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F211282431%2F%22%3Ejust+for+a+few+days%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F26685193%2Fi%22%3Ehouse+reflection+in+copper%3C%2Fa%3E%2C+5.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F210679797%2F%22%3ECladding+the+ridge%3C%2Fa%3E%2C+6.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F19067890%2F%22%3ERed+Copper+window+pan+2%3C%2Fa%3E%2C+7.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F28572891%2F%22%3EJog+in+end+wall+to+roof+detail%3C%2Fa%3E%2C+8.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F18402980%2Fi%22%3EThree+in+a+bank+of+four+dormers%3C%2Fa%3E%2C+9.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F26685143%2F%22%3EPanels+sit+waiting+to+be+installed.%3C%2Fa%3E%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: 
+caption: Caixa+de+software+%22Copian%C3%A7o+2007%22%0A%0A%28Brincadeira+com+o+Photoshop%29
+caption: Cat+Tree++%233+an+all-natural%2C+submitted+by+Joe+Callahan%2C+Director+of+Dogs+%28%E2%80%9CTraitor%E2%80%9D%2C+says+Bandit%29+has+the+cats+still+voting+on+who+will+get+this+cat+tree%21++All-natural+design.++Even+comes+with+your+very+own+spider+%21%21%21++Perfect+for+the+outdoor+environment.++Tying+for+First+Place+in+The+Best+Little+Cat+Tree+in+Town+contest.++%0A%0AJoin+in+the+fun+sign%2C+up+to+receive+Hairballs%2C+the+e-mail+newsletter+with+all+the+stories+of+what%E2%80%99s+coming+up+in+the+crazy+world+of+Animal+Antics%2C+brought+to+you+by+the+critters+of+Rikki%E2%80%99s+Refuge%2C+send+your+request+to+mail%40RikkisRefuge.org%0A%0ADon%E2%80%99t+miss+Sponsor+Appreciation+Day%2C+an+Open+House+at+Rikki%E2%80%99s+Refuge%2C+April+28+from+noon+until+4+p.m.++Tours+run+every+half+hour%2C+refreshments+and+vegan+yummies%2C+the+Great+Baldino+performs+his+magic+show+at+1+p.m.++This+special+event+is+free+tour+Family+Members.++Admission+for+others+is+one+can+of+cat+or+dog+food.++Rikki%27s+Refuge+No+Kill+Animal+Sanctuary%2C+%3Ca+href%3D%22http%3A%2F%2Fwww.RikkisRefuge.org%22%3Ewww.RikkisRefuge.org%3C%2Fa%3E
+caption: 
+caption: Inbajin++my+Warrior+got+his+%3Ca+href%3D%22http%3A%2F%2Fwww.thottbot.com%2F%3Fi%3D35887%22%3EQuel%27Serrar%3C%2Fa%3E+today.+Yay%21
+caption: In+the+order+of+top+9+for+this+a.m.%28top+left+%23+1+lower+right+%239%29+.+I+am+fascinated+by+the+configuration.+%28meaning+I+would+likely+not+placed+the+squares+in+%3Ci%3EThat%3C%2Fi%3E+order.%29%0A%0A1.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F120493400%2F%22%3ESwimmingly%3C%2Fa%3E%0A2.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F115316901%2F%22%3Euntitled%3C%2Fa%3E%0A3.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F86350425%2F%22%3Emoon+over+rust+farm%3C%2Fa%3E%0A4.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F60086087%2F%22%3Ebirch%2C+catalpa%2C+maple+leaves+gathered+for+for+a+photo+op%3C%2Fa%3E%0A5.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F119435993%2F%22%3Etanks-pilings%3C%2Fa%3E%0A6.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F60086599%2F%22%3Eselfportrait+with+oak+leaves+in+puddle%3C%2Fa%3E%0A7.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F120013544%2F%22%3EKiki%27s+swim+with+Senya%3C%2Fa%3E%0A8.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F103568659%2F%22%3Eblue+ice%3C%2Fa%3E%0A9.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkikisdad%2F69844752%2F%22%3EKiki+and+the+candle%3C%2Fa%3E%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 8+May+2006%0A%0AEverybody+loves+a+parade%21%0A%0AIn+the+morning%2C+there+were+brass+bands+and+people+in+traditional+dress.%0A%0AA+cornmuse+%28french+bag+pipe%29%2C+hurdy+gurdy+and+an+accordion.
+caption: Fireworks+in+Hambur+Harbour%0A%3Ca+href%3D%22http%3A%2F%2Fwww.trans-media.de%22%3Ewww.trans-media.de%3C%2Fa%3E
+caption: Kip+and+Pimienta+in+Spain.
+caption: 
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%2F2006_04_01_london-underground_archive.html%23114527832880876600%22+target%3D%22_blank%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E
+caption: Hi%2C+my+name+is+Baby.+And+I%27m+rather+angry+at+the+world+right+now.+Try+and+touch+me%2C+and+I%27ll+snap+your+hand+off.+Once+upon+a+time+I+had+a+home+where+I+thought+they+loved+me.+But+like+they+say%2C+only+time+will+tell.+And+if+being+dumped+means+I+love+you%2C+well+I+guess+they+really+love+me.+Happy+Valentine%27s+Day+to+you%2C+I+sure+hope+I%27m+not+the+one+you+pick+to+spay.++I%27m+told+only+79+bucks+will+do+the+job.++I+wish+you%E2%80%99d+just+take+me+home+for+your+Valentines+Present+instead.+++Rikki%27s+Refuge+No+Kill+Animal+Sanctuary%2C+RikkisRefuge.org
+caption: 
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E+-+%3Ci%3Efun+with+your+photos%3C%2Fi%3E
+caption: 
+caption: a+picture+of+a+girl+perhaps%0A18%2Fjuly%2F2005
+caption: 
+caption: Despite+hearing+periodic+rumbles%2C+I+saw+no+trains+during+my+time+on+the+bridge.
+caption: 
+caption: 
+caption: Gargoyles+are+carved%2C+decorative+ends+to+waterspouts+designed+to+throw+water+off+the+roof+and+away+from+the+side+of+a+building+to+prevent+damage.+They+are+most+commonly+found+on+medieval+buildings%2C+but+the+Chrysler+building+in+NYC+has+steel+gargoyles+and+a+series+of+modern+gargoyles+%28including+Darth+Vader%29+can+be+found+on+the+National+Cathedral+in+Washington+DC.%0AAll+the+full+size+images+can+be+found+in+my+Dornoch+Cathedral+set
+caption: no+special+effects+applied
+caption: U.S.+Army+Sgt.+Luis+Delgadillo+and+Spc.+Robert+Pinches+pull+a+litter+casualty+through+the+combat+lifesaver+course+at+Fort+Dix%2C+NJ%2C+April+19%2C+2007%2C+during+training+in+preparation+for+a+deployment+in+support+of+the+war+on+Terror.+The+Soldiers+are+with+the+302nd+Mobile+Public+Affairs+Detachment+out+of+Bell%2C+Calif.+%28U.S.+Army+photo+by+Pfc.+Jennifer+L.+Sierra%29+%3Ca+href%3D%22http%3A%2F%2Fwww.army.mil%22%3Ewww.army.mil%3C%2Fa%3E
+caption: 
+caption: A+year+ago+today+it+was+pouring+rain.+I+remember+this+distinctly+because+I+was+driving+through+sheets+of+it+on+the+way+to+the+San+Jose+airport+%282.5+hours+north%29.%0D%0A%0D%0AMy+friend+Marcus+who+lives+in+Houston+had+sent+me+two+kittens+--+right+on+the+plane%2C+all+by+themselves.+Two+little+2.5+pounds+of+fur%2C+sharing+one+kitty+traveling+box.%0D%0A%0D%0AOne+cat+would+go+to+me%2C+and+the+other+to+my+nextdoor+neighbor%2C+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fsweetdogk%2F%22%3ESweetdogK%3C%2Fa%3E.
+caption: %E9%8A%80%E3%83%97%E3%83%A9%E3%81%A8%E3%81%8B%E3%81%97%E3%81%A6%E3%81%BF%E3%82%8B
+caption: 
+caption: 
+caption: 
+caption: 
+caption: I%27m+making+another+web+gadget+like+my+%27people%27-thingy+on+%5Bhttp%3A%2F%2Ffeesta.com%5D.+I+have+reached+a+mile-marker+and+now+need+to+continue+into+uncharted+waters.+Hopefully+I%27ll+finish+this+in+another+day+or+so+and+will+put+it+online.+Right+now+I+can+drag+the+flowers+around+and+they+grow+from+a+seedling+into+a+flower+and+then+wilt.+I+need+to+allow+you+to+water+them+now.%0A%0A%5BI%27ve+heard+that+flickr+sharpens+pictures+and+uses+other+filters+to+make+people%27s+photos+look+%27better%27.+With+this+image%2C+the+colors+now+bleed+a+lot+on+the+stems+rather+than+the+original+crisp+but+not+with+the+fine+black+line.+interesting...but+not+good+here.%5D
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: A+very+mutated+but+edible+version+of+the+Squidoo+logo
+caption: This+is+the+intro+picture+for+a+recent+three-part+vlog+of+which+the+first+part+is+posted+using+the+Zen+Mix+tool+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%22%3Ewww.zenmix.com%3C%2Fa%3E+where+you+can+put+Web+video+on+Web+picture+and+apply+effects.++The+vlog+is+located+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenvlog.com%22%3Ewww.zenvlog.com%3C%2Fa%3E.++This+picture+is+from+the+third+mix+in+the+mash.
+caption: 
+caption: 
+caption: 
+caption: They%27re+grandparents+now%21
+caption: 
+caption: 
+caption: 
+caption: %E8%A1%A8%E7%B4%99%0D%0A%0D%0A%E3%81%B2%E3%81%A0%E3%81%BE%E3%82%8A+with+Photoback
+caption: Ballet+Junior+de+Gen%C3%A8ve.%0AChoreography%3A+Thierry+Malandain%2C%0AMusic%3A+Camille+Saint+Saens
+caption: 
+caption: 
+caption: Washington+Cemetery%0AWashington+Court+House%2C+Ohio
+caption: 
+caption: Girls+share+a+moment+via+digital+camera+%22chimping%22
+caption: shot+in+nagypall%2C+hungary
+caption: 
+caption: This+is+a+contribution+to+the+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2Fguess_my_shot%2Fpool%2F%22%3EGuess+What+I+Shot%3F%3C%2Fa%3E+pool.+%0A%0ALeave+some+guesses+as+to+what+this+could+be+in+the+comments%21
+caption: 
+caption: 
+caption: 
+caption: Kerri%2C+Melody%2C+and+Jenifer+waiting+to+throw+their+leaves.
+caption: This+coin+suggests+that+when+a+Jew+is+baptized%2C+a+stone+ring+should+be+hung+around+his+neck+and+he+should+be+cast+into+a+river%2C+so+that+there+is+no+risk+of+him+converting+back+to+Judaism.
+caption: On+the+Grand+Place
+caption: 
+caption: Peter+Jackson+casi+tuvo+que+poner+a+ese+individuo+como+rey+Theoden+ya+que+una+conocida+marca+de+hamburgueserias+queria+poner+dinero+en+la+produccion+de+la+pelicula%2C+el+resto+del+casting+dijo+que+o+se+marchaba+o+le+metian+una+paliza%2C+la+foto+corresponde+a+ese+momento%2C+notese+la+cara+de+mala+leche+que+pone+Vigo+Mortenssen
+caption: tux+is+one+special+creature.++he+and+i+have+a+deep+soul+connection
+caption: 
+caption: 
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F98515954%2F%22%3EHalo+rounds+moon%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F41165315%2F%22%3EChurch+door%2C+Maitland+NS%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F85390133%2F%22%3Efrost+with+glints%2C+trees+%26+sky%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F86350425%2F%22%3Emoon+over+rust+farm%3C%2Fa%3E%2C+5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F254008460%2F%22%3EKiki+and+hand%3C%2Fa%3E%2C+6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F24791993%2F%22%3EEastern+Prom+Portland%2C+Maine%3C%2Fa%3E%2C+7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Fkikisdad%2F31744233%2Fin%2Fset-1742151%2F%22%3EPark+Pay+Per+View%3C%2Fa%3E%2C+8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F163173110%2F%22%3Edoor+detail%3C%2Fa%3E%2C+9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F35506246%2F%22%3EMoon+%26+clouds+with+trees%3C%2Fa%3E%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fbighugelabs.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F96466040%40N00%2F318773314%2F%22%3ENew+Mittens%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F96466040%40N00%2F318764104%2F%22%3EIronstone+mittens%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F96466040%40N00%2F318764097%2F%22%3EIronstone+Mittens%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F96466040%40N00%2F318764090%2F%22%3ENew+Mittens%21%3C%2Fa%3E%0A%0ABasic+Mittens%0AYarn%3A++Ironstone+New+Wool%0APattern%3A++Family+Circle+Easy+Knitting+%28Winter+2005%29%0ANeedles%3A++Size+US+6+dpns%0A%0AFun+and+easy+project%21+*Christmas+gift+for+my+sister%2C+but+she+won%27t+mind+me+wearing+them*%0A%3Ca+href%3D%22http%3A%2F%2Flollygirl.com%2Fblog%2F%3Fp%3D570%22%3EMore+information+on+my+blog%21%3C%2Fa%3E
+caption: Ginger+Sling+and+Ryan+Keberly+of+The+Snowsuit+Effort
+caption: 
+caption: Photo+originally+taken+by+Jeremiah+Owyang++%0A%0A%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Fjeremiah_owyang%2F242203650%2F%22%3Eflickr.com%2Fphotos%2Fjeremiah_owyang%2F242203650%2F%3C%2Fa%3E
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E%2C+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EHappy+Easter%21%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: I+enjoy+taking+photos.+This+is+one+of+my+cat+named+Lexi.+She+was+sitting+on+some+old+wood.+I+modified+it+in+my+graphics+program+for+a+Black+and+White+look+with+a+little+color.+To+see+more+photos+visit+%3Ca+href%3D%22http%3A%2F%2Fwww.shuttershots.com%22%3Ewww.shuttershots.com%3C%2Fa%3E
+caption: 
+caption: The+Blue+Angels%2C+I+presume%2C+did+a+little+practice+flying+around+San+Francisco+Bay.%0D%0A%0D%0AWe+could+hear+them+from+the+beach+at+Crissy+Field%2C+but+they+were+just+above+the+fog%2Fclouds+almost+the+whole+time.++This+is+a+frustration+shot+of+one+of+the+few+seconds+we+got+a+glimpse+of+them.%0D%0A%0D%0AThey%27ll+be+back+for+real+for+Fleet+Week+in+early+October.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Model%3A+YC.%0A%0Athat%27s+exactly+how+i+feel+right+now.+%0Amessy.%0A%0A%3Ca+href%3D%22http%3A%2F%2Fbighugelabs.com%2Fflickr%2Fonblack.php%3Fid%3D448434472%22%3E%27Gently+falling%27+On+Black%3C%2Fa%3E
+caption: 
+caption: I+ate+this+-+a+re-crop+of+a+previous+upload+for+in+groups%3B+%27squared+circle%27+and+%27i+ate+this%27
+caption: 
+caption: 100_4968_crop2
+caption: 
+caption: 
+caption: Insects+takes+a+food+from+the+flower
+caption: 
+caption: 
+caption: 
+caption: 
+caption: shot+in+nagypall%2C+hungary
+caption: 
+caption: 
+caption: Here+I+am+wasting+time+playing+with+Photoshop+when+I+should+be+doing+other+stuff%21%0A%0AHere%27s+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fbcmom%2F68146519%2F%22%3Ethe+original%3C%2Fa%3E
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: on+US+411+between+Knoxville+and+Seveirville+on+the+Chapman+Highway.++Rooms+come+with+Cable+TV+and+either+Phones%2C+Photos+or+Photons.
+caption: 
+caption: the+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Ftwbuckner%22%3Ephotographer%3C%2Fa%3E%2C+trying+to+fit+in
+caption: Mosaic+of+photos+tagged+with+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Ftags%2Fdaibutsumerge%2F%22%3EDaibutsu+Merge%3C%2Fa%3E+Created+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.%0A%0A1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F20087702%40N00%2F63878562%2F%22%3EDaibutsu%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F67485304%40N00%2F63828776%2F%22%3EGreat+Buddha%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F67485304%40N00%2F63823503%2F%22%3EBuddha%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F67485304%40N00%2F63823258%2F%22%3EVerdigris%3C%2Fa%3E%2C+5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F45581782%40N00%2F63181607%2F%22%3EHis+Right+Side%3C%2Fa%3E%2C+6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F45581782%40N00%2F63181420%2F%22%3EBuddha+Windows%3C%2Fa%3E%2C+7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F45581782%40N00%2F63181247%2F%22%3EGreat+Buddha%27s+Ear%3C%2Fa%3E%2C+8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F45581782%40N00%2F63181184%2F%22%3EHis+Left+Side%3C%2Fa%3E%2C+9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F45581782%40N00%2F63180982%2F%22%3EGreat+Buddha%3C%2Fa%3E%2C+10.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F45581782%40N00%2F63180812%2F%22%3EGreat+Buddha+60s+Style%3C%2Fa%3E%2C+11.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F45581782%40N00%2F63180737%2F%22%3EGreat+Buddha%3C%2Fa%3E%2C+12.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F78435849%40N00%2F62939181%2F%22%3EJapan%2C+Nov+05%3C%2Fa%3E%2C+13.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F78435849%40N00%2F62939179%2F%22%3EJapan%2C+Nov+05%3C%2Fa%3E%2C+14.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F62004596%40N00%2F62300737%2F%22%3EThe+Big+Budda%3C%2Fa%3E%2C+15.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F62004596%40N00%2F62300593%2F%22%3EThe+Big+Budda%3C%2Fa%3E%2C+16.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F83491682%40N00%2F61764217%2F%22%3EDaibutsu%3C%2Fa%3E%2C+17.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F83491682%40N00%2F61764083%2F%22%3EDaibutsu%3C%2Fa%3E%2C+18.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F83491682%40N00%2F61764016%2F%22%3EDaibutsu%3C%2Fa%3E%2C+19.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F83491682%40N00%2F61763419%2F%22%3EDaibutsu%3C%2Fa%3E%2C+20.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F83491682%40N00%2F61763340%2F%22%3EDaibutsu%3C%2Fa%3E%2C+21.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F83491682%40N00%2F61763236%2F%22%3EDaibutsu%3C%2Fa%3E%2C+22.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F83491682%40N00%2F61763022%2F%22%3EObservation+windows%3C%2Fa%3E%2C+23.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F83491682%40N00%2F61762841%2F%22%3EDaibutsu%3C%2Fa%3E%2C+24.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F83491682%40N00%2F61762786%2F%22%3EDaibutsu%3C%2Fa%3E%2C+25.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F83491682%40N00%2F61762458%2F%22%3EDaibutsu%3C%2Fa%3E
+caption: not+sure+what+kind+of+a+band+..+maybe+white+gangsta+rap.
+caption: the+following+are+images+from+elopement+party+%2707.
+caption: De+Sousa+%26+Fils+Brut+Tradition
+caption: Volvo+FH12+tractor+painted+in+Stephen+Tabners+scheme.
+caption: 
+caption: I%27m+quite+disturbed+I+saw+this%2C+nevermind+that+I+have+a+photo+of+it.+He+wanted+to+chew+the+ball+thing%2C+but+for+some+reason+ended+up+doing+an+Exorcist+shot.
+caption: 
+caption: A+replica+straight+out+of+Disneyland%27s+incredible+Tiki+Room%21+Of+course+I+had+to+buy+one.
+caption: By%2C+J+%26+Hien+%28suoi%29
+caption: 
+caption: 
+caption: I+got+the+idea+for+this+images+from+a+really+dull+newscast+that+I+screengrabbed%2C+the+face+is+originally+a+fat%2C+grey%2C+german+politician.+I+seem+to+have+lost+the+original+images.+I+think+this+is+perhaps+the+coolest+image+I+have+ever+made.%0A%0ACheck+out+%3Ca+href%3D%22http%3A%2F%2Fpappmaskin.no%22%3Ehttp%3A%2F%2Fpappmaskin.no+for+more+stuff%3C%2Fa%3E.
+caption: 
+caption: Water%2C+just+water.
+caption: %E6%96%B0%E3%81%97%E3%81%84%E3%83%A9%E3%83%B3%E3%83%89%E3%83%AA%E3%83%BC%E5%85%A5%E3%82%8C%E3%82%92%E8%B2%B7%E3%81%A3%E3%81%A6%E3%81%BF%E3%82%8B%E3%82%82%E3%81%AE%E3%81%A7%E3%81%99%E3%82%88%E3%80%82%E5%BA%95%E3%81%8C%E5%9B%BA%E3%81%8F%E3%81%A6%E3%81%97%E3%81%A3%E3%81%8B%E3%82%8A%E3%81%97%E3%81%A6%E3%82%8B%E3%81%8B%E3%82%89%E3%80%81%E3%82%B3%E3%82%A4%E3%83%B3%E3%83%A9%E3%83%B3%E3%83%89%E3%83%AA%E3%83%BC%E3%81%A7%E3%81%9F%E3%81%9F%E3%82%93%E3%81%A7%E6%8C%81%E3%81%A3%E3%81%A6%E5%B8%B0%E3%82%8C%E3%82%8B%E3%81%AE%E3%83%BC%E8%B6%85%E4%BE%BF%E5%88%A9%E3%80%82
+caption: airplane+food.+in+the+same+package+as+a+small+container+of+Whole+Milk.+ugh.
+caption: 
+caption: Yet+another+cool+product+from+our+image+collection+for+April+at+%3Ca+href%3D%22http%3A%2F%2Fwww.designcrack.com%2Fv2%2F%22+rel%3D%22nofollow%22%3Ewww.designcrack.com%2Fv2%2F%3C%2Fa%3E
+caption: 
+caption: 
+caption: El+calendario+muisca+que+se+ve+se+utiliza+en+las+tardes+para+saber+que+temporada+es+y+cuando+hay+que+plantar.+Atr%C3%A1s%2C+las+conchas+ac%C3%BAsticas+esas+tienen+impresas+en+el+exterior+la+geograf%C3%ADa+de+la+luna%2C+esta+es+la+cara+visible.
+caption: 
+caption: 
+caption: the+jam%27s+2nd+album+%28not+the+best%29+but+has+some+killer+tracks+in+Modern+world+and+the+fine+cover+of+%27In+The+Midnight+Hour%27.%0Awe+don%27t+need+no+one+to+tell+us+what%27s+right+and+wrong
+caption: Joining+Rikki%27s+after+last+summer%27s+Monster+Chicken+Rescue%2C+this+tiny+little+peaked+has+grown+into+King+of+the+Transylvanian+Naked+Necks.++No+kidding%2C+that%27s+what+this+breed+of+chicken+is+called.++And+this+is+my+biggest%2C+most+gorgeous+boy.++Come+and+meet+all+the+chickens+-+Rikki%27s+Refuge+No+Kill+Animal+Sanctuary%2C+%3Ca+href%3D%22http%3A%2F%2Fwww.RikkisRefuge.org%22%3Ewww.RikkisRefuge.org%3C%2Fa%3E+-+Next+tour+March+31%2C+2007+1+PM%2C+next+Open+House+and+Sponsor+Appreciation+Day+April+28+from+12+to+4.++540-854-0870+x2+or+mail%40RikkisRefuge.org+++++Sign+up+to+receive+Hairballs%2C+the+e-mail+newsletter+with+all+the+stories+of+what%E2%80%99s+coming+up+in+the+crazy+world+of+Animal+Antics%2C+brought+to+you+by+the+critters+of+Rikki%E2%80%99s+Refuge%2C+send+your+request+to+mail%40RikkisRefuge.org
+caption: The+erie+calm+before+the+hatsumode+rush
+caption: %E3%83%89%E3%82%A4%E3%83%84%E8%AA%9E%E3%81%A7%E3%83%A4%E3%82%B9%E3%83%9F%E3%83%BC%E3%83%8D%E3%81%A0%E3%81%8B%E3%82%89%E3%81%95
+caption: 
+caption: Memoria+de+ferrita+de+una+calculadora+programable+IME+86S.%0D%0ACore+memory+of+an+IME+86S+programmable+calculator.
+caption: 
+caption: 
+caption: 
+caption: Hello%2C%0A%0AThis+is+a+little+collage+that+I+put+together+using+a+cool+program+called%0APicasa+by+Google.+Our+family+is+doing+well+and+we+hope+that+you+are+too.%0APlease+check+out+our+blog+website.+It+is+new+and+in+the+formation+stage%0Abut+let+me+know+if+you%C2%92d+like+to+receive+updates+from+us+that+way.%0APictures+and+updates+will+be+sent+to+you+that+way.+We+hope+that+you+are%0Aall+well.+Lily%2C+Oscar%2C+and+Marlene+and+now+myself+have+been+sick+with+a%0Acold+that+isn%C2%92t+too+fun.+Marlene%C2%92s+mom+is+out+for+the+week+and+that+has%0Abeen+a+blessing+for+us+as+I%C2%92ve+been+preparing+for+some+mid+term+exams+and%0Aworking+a+lot.+Marlene+is+doing+well.+She+is+a+wonderful+mother+and+is%0Aenjoying+her+time+with+the+kids+and+loving+the+time+when+I+come+home+to%0Ahelp+with+the+kids+since+I+pretty+much+am+a+slacker+around+the+house.%0A%0AI+am+busy+with+a+few+jobs+and+keeping+up+with+classes+and+clients+when%0Apossible.+Loving+the+time+and+moments+when+I+get+to+play+with+Oscar+and%0ALily+and+watch+a+movie+and+talk+with+Marlene.%0A%0AOscar+is+growing+up+and+speaking+so+well+for+a+two+year+old.+We+just+love%0Ato+hear+him+repeat+big+words+that+he%C2%92s+never+said+before+like+astronaut%2C%0Aor+word+groupings+like+%C2%93my+fire+truck%C2%94+or+%C2%93read+book%C2%94+or+%C2%93giggle%2C+giggle%2C%0Aquack.%C2%94%0A%0AHope+that+you+are+well.%0A%0APhil+Scoville%0A--%0APosted+by+Phil+Scoville+to+Marlene%0A++%26+Phil+Scoville%0AFamily+Blog+at+5%2F8%2F2005+09%3A40%3A14+PM
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %D1%81%D0%BD%D0%B8%D0%BC%D0%BA%D0%B0_cdae71fd_5295ab2d.jpg
+caption: 
+caption: 
+caption: This+photo+is+from+the+article+%3Ca+href%3D%22http%3A%2F%2Fwww.brisbaneishome.com%2Fphotoblogging-brisbanes-new-farm-park-8-types-of-roses-sculptures-and-memorials-huge-seed-pods-silver-gulls-and-private-poetry-at-the-powerhouse%2F%22%3EPhotoblogging+Brisbane%E2%80%99s+New+Farm+Park+-+8+types+of+roses%2C+sculptures+and+memorials%2C+huge+seed+pods%2C+silver+gulls+and+private+poetry+at+the+Powerhouse%3C%2Fa%3E%0A%0AYou+are+free+to+use+this+photo+for+any+reason%2C+including+commercial+reasons%2C+but+you+MUST+include+EITHER+a+link+to+%3Ca+href%3D%22http%3A%2F%2Fwww.brisbaneishome.com%22%3Ewww.brisbaneishome.com%3C%2Fa%3E+or%2C+%28ONLY+if+you+are+not+using+it+on+the+internet%29%2C+you+must+print+the+URL+%3Ca+href%3D%22http%3A%2F%2Fwww.brisbaneishome.com%22%3Ewww.brisbaneishome.com%3C%2Fa%3E+next+to+or+on+the+photo.%0A%0AIf+you+do+NOT+provide+this+credit%2C+in+this+way%2C+you+will+be+using+the+photo+ILLEGALLY.%0A%0AIf+you+do+use+the+correct+credit%2C+you+don%27t+have+to+contact+me+for+permission+-+but+if+you+can+let+me+know+where+you+are+using+it%2C+that+would+be+cool.
+caption: Home+Is+Where+The+Cat+Is
+caption: 
+caption: 
+caption: Wellness+Expo+in+Addison%2C+Texas.+October+2003.
+caption: 
+caption: 
+caption: Having+a+little+fun+with+my+knits+and+my+photos...%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E+-+%3Ci%3Efun+with+your+photos%3C%2Fi%3E
+caption: 
+caption: IMG_2010.JPG
+caption: 1968
+caption: 
+caption: 
+caption: 
+caption: 
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%2F2005_12_01_london-underground_archive.html%23113472136879260885%22+target%3D%22_blank%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %22LA+RUMANA%22+55X55%2C+2002%0D%0A%C3%B3leo+sobre+lienzo%0D%0A500%E2%82%AC
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%2F2006_03_01_london-underground_archive.html%23114255446395367349%22+target%3D%22_blank%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E
+caption: 
+caption: From+the+%3Ca+href%3D%22http%3A%2F%2Fnews.bbc.co.uk%2F1%2Fshared%2Fspl%2Fhi%2Fpop_ups%2F05%2Fmagazine_on_patrol_with_the_guardian_angels%2Fhtml%2F3.stm%22+target%3D%22_blank%22%3EBBC+site%3C%2Fa%3E+and+blogged+on+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%22+target%3D%22_blank%22%3ELondon+Underground+Blog%3C%2Fa%3E.
+caption: Isn%27t+she+pretty%3F
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Folsom+East%2C+NYC%2C+NY
+caption: 
+caption: Every+day+as+I+sit+in+front+of+my+PC+this+little+spider+appears+on+the+wall+from+behind+the+screen.+So+here+are+his+15+minutes+of+fame.%0D%0AI+do+not+possess+a+macro+lens+so+this+is+just+taken+with+my+point+and+shoot+and+severely+cropped.
+caption: %3Ca+href%3D%22http%3A%2F%2Fzenvlog.wordpress.com%2F2006%2F07%2F22%2Fmeta-anti-gravity-nano-sci-fi-verse-00%2F%22%3Ezenvlog.wordpress.com%2F2006%2F07%2F22%2Fmeta-anti-gravity-nano-s...%3C%2Fa%3E
+caption: Canterbury+Cathedral+Cloister
+caption: 
+caption: 
+caption: See+the+vlog+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenvlog.com%22%3Ewww.zenvlog.com%3C%2Fa%3E+using+Zen+Mix+vlogging+tool+to+put+Web+Video+over+a+picture+-+for+instance+from+Flickr+-+%3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%22%3Ewww.zenmix.com%3C%2Fa%3E.++%0A%0AThere+are+now+sites+like+%3Ca+href%3D%22http%3A%2F%2Fwww.vimeo.com%22%3Ewww.vimeo.com%3C%2Fa%3E+and+%3Ca+href%3D%22http%3A%2F%2Fwww.bliptv.com%22%3Ewww.bliptv.com%3C%2Fa%3E+that+let+you+post+videos+as+easily+as+you+post+pictures+on+flickr.++And+if+you+have+not+noticed%2C+most+digital+cameras+%28non-SLRs%29+shoot+and+upload+video+as+easily+as+you+take+a+picture.++%0A%0AVlogging+is+fun+-+interesting+with+Zen+Mix+-+fast+and+free.++I+am+a+busy+person+and+I+still+had+time+for+8+vlogs+today%21++Try+it+out%21%21%21%21%21++%3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%22%3Ewww.zenmix.com%3C%2Fa%3E
+caption: the+sun+rises+on+toronto.%0D%0A%0D%0Afrom+the+roofdeck+of+the+neill-wycik+cooperative%2C+where+i+live.
+caption: %3Ca+href%3D%22http%3A%2F%2Fen.wikipedia.org%2Fwiki%2FGreg_Inglis%22+rel%3D%22nofollow%22%3EGreg+Inglis+at+Wikipedia%3C%2Fa%3E%0A%0A%3Ca+href%3D%22http%3A%2F%2Fwww.google.com.au%2Fsearch%3Fq%3DGreg%2BInglis%26start%3D0%26ie%3Dutf-8%26oe%3Dutf-8%26client%3Dfirefox-a%26rls%3Dorg.mozilla%3Aen-US%3Aofficial%22+rel%3D%22nofollow%22%3EGoogle+Search+for+Greg+Inglis%3C%2Fa%3E%0A%0AMatch+Result+-+Australia+33+d+Great+Britain+10%0A%0AMatch+Reports%3A+%0A%0A%3Ca+href%3D%22http%3A%2F%2Fwww.abc.net.au%2Fsport%2Fcontent%2F200611%2Fs1791950.htm%22+rel%3D%22nofollow%22%3EABC+%28Australia%29%3C%2Fa%3E%0A%0A%3Ca+href%3D%22http%3A%2F%2Fwww.nrl.com%2FRepGames%2FTriNations%2FTriNationsNewsArticle%2Ftabid%2F361%2FNewsId%22+rel%3D%22nofollow%22%3Ewww.nrl.com%2FRepGames%2FTriNations%2FTriNationsNewsArticle%2Ftab...%3C%2Fa%3E%0A%0A%2F3633%2FDefault.aspx%0A%0A%3Ca+href%3D%22http%3A%2F%2Fwww.rleague.com%2Fdb%2Farticle.php%3Fid%3D27006%22+rel%3D%22nofollow%22%3ERugby+League+World%3C%2Fa%3E%0A%0AVia+%3Ca+href%3D%22http%3A%2F%2Fnews.google.com.au%2Fnews%3Fhl%3Den%26hs%3DAvt%26lr%3D%26client%3Dfirefox-a%26rls%3Dorg.mozi%0A%0Alla%3Aen-US%3Aofficial%26ct%3Dtitle%26ie%3DISO-8859-1%26ncl%3D1111323526%22%3EGoogle+News%3C%2Fa%3E+%0A%0AWikipedia%3A%0A%0A%3Ca+href%3D%22http%3A%2F%2Fen.wikipedia.org%2Fwiki%2FRugby_league%22+rel%3D%22nofollow%22%3ERugby+League%3C%2Fa%3E%0A%0A%3Ca+href%3D%22http%3A%2F%2Fen.wikipedia.org%2Fwiki%2F2006_Rugby_League_Tri-Nations%22+rel%3D%22nofollow%22%3E+2006+%0A%0ATri-Nations+tournament%3C%2Fa%3E%0A%0A%3Ca+href%3D%22http%3A%2F%2Fen.wikipedia.org%2Fwiki%2FLang_Park%22+rel%3D%22nofollow%22%3ELang+Park%3C%2Fa%3E%0A%0AARL.com%3A%0A%0A%3Ca+href%3D%22http%3A%2F%2Fwww.australianrugbyleague.com.au%2Findex.cgi%3Fdet%3D1%26intArticleID%3D418%26sID%3D%0A%0A21%22%3EAustralian+jersey+numbers%3C%2Fa%3E%0A%0A%0A%3Ca+href%3D%22http%3A%2F%2Fwww.roblog.com%2Fflickrfly.kml%22+rel%3D%22nofollow%22%3EFly+to+this+location%3C%2Fa%3E%0A%28Requires+%3Ca+href%3D%22http%3A%2F%2Fearth.google.com%22+rel%3D%22nofollow%22%3EGoogle+Earth%3C%2Fa%3E%29
+caption: 
+caption: Seoul+by+night%21
+caption: 
+caption: 
+caption: A+collaborative+piece+that+I+did+with+Gabe+%28%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fasifall%2F%22%3E%3A%3Aasifall%3A%3A%3C%2Fa%3E%29.
+caption: Yes%2C+they+do+lead+to+a+dentist%27s
+caption: 
+caption: Your+guess+is+as+good+as+ours%21++What+will+these+babies+grow+up+to+be%3F++Ostriches+clocking+in+at+60+MPH%3F++Or+turkeys+waddling+about%3F++These+are+some+of+the+rescued+babies+that+will+have+permanent+sanctuary+and+love+at+Rikki%E2%80%99s+Refuge%2C+no+kill%2C+multi+species%2C+animal+sanctuary.++Learn+all+about+us+%3Ca+href%3D%22http%3A%2F%2Fwww.RikkisRefuge.org%22%3Ewww.RikkisRefuge.org%3C%2Fa%3E+and+our+funny+stories+%3Ca+href%3D%22http%3A%2F%2Fwww.RikkisRefuge.BlogSpot.com%22%3Ewww.RikkisRefuge.BlogSpot.com%3C%2Fa%3E
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: Milk%2C+cheese%2C+gelatine%2C+cookies%2C+raspberry+jam%2C+chocolate%2C+lots+of+sugar%0A++and+a+little+of+geekism.
+caption: 
+caption: 
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%2F2006_06_01_london-underground_archive.html%23115103200326346806%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F392742406%2F%22%3ELe+Muids%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F391035979%2F%22%3EMoon%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F391035355%2F%22%3EFrom+Home%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F350777829%2F%22%3ESunset%3C%2Fa%3E%2C+5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F310200278%2F%22%3ESunrise+from+Home%3C%2Fa%3E%2C+6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F310200257%2F%22%3ESunrise+from+Home%3C%2Fa%3E%2C+7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F301822083%2F%22%3EView+from+Home%3C%2Fa%3E%2C+8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F298857459%2F%22%3ESunrise+from+home+with+the+clouds+on+the+Lake%3C%2Fa%3E%2C+9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F283271709%2F%22%3ESunrise+from+le+Muids+end+of+October+06%3C%2Fa%3E%2C+10.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F283271603%2F%22%3ESunrise+from+le+Muids+end+of+October+06%3C%2Fa%3E%2C+11.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F279183178%2F%22%3ESunset+in+October+from+Home%3C%2Fa%3E%2C+12.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F279183375%2F%22%3ESunset+in+October+from+Home%3C%2Fa%3E%2C+13.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F234845866%2F%22%3EMont+Blanc+from+Home%3C%2Fa%3E%2C+14.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F141418872%2F%22%3ELever+de+soleil+au+Muids%3C%2Fa%3E%2C+15.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F391035723%2F%22%3EMoon%3C%2Fa%3E%2C+16.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F336040203%2F%22%3ESunrise+from+home%3C%2Fa%3E%2C+17.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F279183235%2F%22%3ESunset+in+October+from+Home%3C%2Fa%3E%2C+18.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F234846008%2F%22%3EDSC02174%3C%2Fa%3E%2C+19.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F234845994%2F%22%3EDSC02173%3C%2Fa%3E%2C+20.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F231174399%2F%22%3EMont+Blanc%3C%2Fa%3E%2C+21.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F290715764%2F%22%3EFrom+home%3C%2Fa%3E%2C+22.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F279186327%2F%22%3ESunset+in+October+from+Home+with+Jespah+%21%21%3C%2Fa%3E%2C+23.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F392742511%2F%22%3EMont+Blanc%3C%2Fa%3E%2C+24.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F391035419%2F%22%3EFrom+Home%3C%2Fa%3E%2C+25.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F355596761%2F%22%3ESunrise+from+Home%3C%2Fa%3E%2C+26.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F309576188%2F%22%3EMont+Blanc%3C%2Fa%3E%2C+27.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F301821990%2F%22%3EView+from+Home%3C%2Fa%3E%2C+28.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F301821954%2F%22%3EView+from+Home%3C%2Fa%3E%2C+29.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F298857423%2F%22%3ESunrise+from+home+with+the+clouds+on+the+Lake%3C%2Fa%3E%2C+30.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F279183323%2F%22%3ESunset+in+October+from+Home%3C%2Fa%3E%2C+31.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F279183102%2F%22%3ESunset+in+October+from+Home%3C%2Fa%3E%2C+32.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F279183139%2F%22%3ESunset+in+October+from+Home%3C%2Fa%3E%2C+33.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F391035489%2F%22%3EFrom+Home%3C%2Fa%3E%2C+34.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F355596515%2F%22%3EMont+Blanc+from+Home%3C%2Fa%3E%2C+35.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F283271561%2F%22%3ESunrise+from+le+Muids+end+of+October+06%3C%2Fa%3E%2C+36.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F53007003%40N00%2F234845927%2F%22%3EDSC02164%3C%2Fa%3E%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fbighugelabs.com%2Fflickr%2F%22+rel%3D%22nofollow%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: Fireworks+at+the+Gaithersburg+Maryland+fairgrounds%2C+July+4th%2C+2005.
+caption: shot+in+esztergom%2C+hungary
+caption: 
+caption: Found+on+the+streets+of+Xi%27an%2C+this+species+of+half-hydrants+is+not+uncommon.
+caption: 
+caption: 
+caption: Is+that+where+the+world+ends%3F%3F
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.geobloggers.com%22%3EGeoTagged%3C%2Fa%3E
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%22+target%3D%22_blank%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: inspired+by+rollmeafatty
+caption: Broche+en+forma+de+Pica
+caption: 
+caption: shot+in+turony
+caption: 
+caption: Dixon+Modeling%0APolaroid+Spectra+Film
+caption: 
+caption: Hell+to+get+old--now+I+take+pills+regularly
+caption: 
+caption: 
+caption: for+EMBOUCANATION+%21%21%21+%28Smoke+n%27+Nudes%29
+caption: My+breath+is+so+bad%2C+I+can+warp+space+and+time+with+it%21++That%27s+right%21
+caption: The+tribble+and+the+button+were+gifts+from+David+Gerrold%2C+the+man+who+invented+tribbles.
+caption: Last+365+from+Maui.++Starting+tomorrow+I%27ll+be+taking+dedicated+pics+again.++Back+to+the+grind%21
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%2F2005_11_01_london-underground_archive.html%23113149592870359829%22+target%3D%22_blank%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E
+caption: Hitting+2+birds+with+one+stone%3A+squared+cirle+and+mirror+project.+%3D%29
+caption: erm%2C+it+should+be+accidental+exposure
+caption: ...
+caption: daveastatin+maybe%2C+the+fingerless+gloves+are+to+enable+dave+to+slave+away+at+his+turntable
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.justgiving.com%2Fnotafraid%22+target%3D%22_blank%22%3EGeoff%27s+fundraising+page%3C%2Fa%3E
+caption: 
+caption: Girl+with+a+pearl+earring.
+caption: Which+road+are+we+on%2C+again%3F
+caption: 
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F95171916%2F%22%3ECresent+with+cars%3C%2Fa%3E%0A2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F95172097%2F%22%3Efoggy+moon%3C%2Fa%3E%0A3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F95171770%2F%22%3Ecars+at+night+w%2F+moon%3C%2Fa%3E%0A4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F95171589%2F%22%3Epark+lit+fog%3C%2Fa%3E%0A5.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F86350341%2F%22%3Emoonrise%3C%2Fa%3E%0A6.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F35506246%2F%22%3EMoon+%26+clouds+with+trees%3C%2Fa%3E%0A7.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F95171311%2F%22%3Eroadway+lights+w%2F+moon%3C%2Fa%3E%0A8.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F74571642%2F%22%3Eone+street+away%3C%2Fa%3E%0A9.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F49196923%40N00%2F63008079%2F%22%3Emoon+tonight+in+yard%3C%2Fa%3E%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: Faith+lets+loose.
+caption: Alberg+30+%23158+%22Sabrina%22+sailing+off+of+Colonial+Beach%2C+VA+on+the+Potomac+River+in+2003.
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%2Fmix.php%2Fdanzen%2Fzm_feature_filename%22%3Ewww.zenmix.com%2Fmix.php%2Fdanzen%2Fzm_feature_filename%3C%2Fa%3E
+caption: Poster+for+a+classical+music+concert+at+Tokyo+International+Forum.
+caption: 
+caption: 
+caption: 
+caption: The+place+settings+in+the+dining+room.
+caption: 
+caption: Icon+for+the+13+part+series+on+Baron+Digbody%27s+Castle+-+a+creepy+caper+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenvlog.com%22%3Ewww.zenvlog.com%3C%2Fa%3E+using+the+Zen+Mix+vlogging+tool+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%22%3Ewww.zenmix.com%3C%2Fa%3E
+caption: This+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+egg%3C%2Fa%3E+was+created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: 
+caption: At+bottom%3A+the+assignment+I+should+be+doing.+At+top%3A+fireworks.+The+world+is+my+wallpaper.
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76312%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22United+for+Peace+and+Justice+%237%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: Read+More+About+These+Fascinating+Design+Objects+At+%3Ca+href%3D%22http%3A%2F%2Fdesigncrack.com%22+rel%3D%22nofollow%22%3Edesigncrack.com%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.radioblogclub.com%2Fopen%2F118924%2Fanatomy%2FGrey%27s+Anatomy+Theme%22%3EGrey%27s+Anatomy+Theme%3C%2Fa%3E%0A%0AEntrada+al+%3Ca+href%3D%22http%3A%2F%2Fcatmangirona.blogspot.com%22%3Eblog%3C%2Fa%3E+de+Poemas+y+a+todo+lo+dem%C3%A1s%21%21
+caption: early+FSM+cave+painting
+caption: 
+caption: Luke+Skywalker%2C+my+pet+cockatiel.+Did+I+mention+that+he+has+a+girlfriend+cockatiel%3F+Her+name+is+Princess+Leia+Organa%2C+of+course%21+Nymphicus+hollandicus+is+the+species.+Generally%2C+males+are+more+vocal+and+will+often+begin+to+talk+or+mimic+other+birds+as+early+as+12-16+weeks.
+caption: I%27m+responding+to+a+somewhat+ridiculous+question+from+the+audience.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F196088%2F%22+rel%3D%22nofollow%22%3ESee+the+%22Car+Fire%22+video%3C%2Fa%3E%0A%0AMotor+vehicle+fire+at+79th+St.+and+southbound+exit+ramp+of+West+Side+Highway.+April+10%2C+2007+at+approximately+22%3A00+hours.+FDNY+units+responded%3A+Battalion+Chief%2C+Engine+40%2C+Ladder+22%2C+and+Engine+76.+One+inch+and+three+quarter+handline+stretch+was+used+from+Engine+40%2C+using+booster+tank.+Truck+company+opened+up+vehicle+to+extinguish+fire+in+engine+compartment+and+passenger+cabin.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-nd%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-NoDerivs%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: 
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%2F2006_05_01_london-underground_archive.html%23114772358593531738%22+target%3D%22_blank%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E
+caption: 
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E+-+%3Ci%3Efun+with+your+photos%3C%2Fi%3E
+caption: endlich.
+caption: Clock+at+Carnforth+Station+where+Brief+Encounter+was+filmed
+caption: Set%C3%BAbal%2C+Portugal
+caption: 
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%2F2006_03_01_london-underground_archive.html%23114255446395367349%22+target%3D%22_blank%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E
+caption: Rory+dozing+on+the+new+bed.%0A%0ACropped+square+for+inclusion+in+a+2%22+lucite+cube+paperweight+photo+frame
+caption: lapush
+caption: Erste+Versuche+mit+meiner+Lochkamera.
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E+-+%3Ci%3Efun+with+your+photos%3C%2Fi%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: celebration+of+the+new+rolleiflex
+caption: Memoria+de+ferrita+de+un+m%C3%B3dulo+de+ampliaci%C3%B3n+para+la+calculadora+programable+IME+86S.%0D%0ACore+memory+of+an+accesory+for+an+IME+86S+programmable+calculator.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F120309%2F%22+rel%3D%22nofollow%22%3ESee+the+%22Merry+Christmas%22+video%3C%2Fa%3E%0A%0AThis+is+a+rerun.+Merry+Christmas+to+All.+Music+is+Handel%27s+Messiah+midi+pushed+thru+Garageband+1.+Times+Square%2C+NYC+2004.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: 
+caption: hezha+%26+hama
+caption: 
+caption: %E3%81%AA%E3%82%93%E3%81%A0%E3%81%8B%E3%81%84%E3%81%8F%E3%82%89%E3%81%A8%E3%81%8B%E3%81%99%E3%81%98%E3%81%93%E3%81%B0%E3%81%8B%E3%82%8A%E3%81%9F%E3%81%B9%E3%81%A6%E3%81%97%E3%81%BE%E3%81%86%E3%81%AE%E3%82%88%E3%81%AD%E3%81%88
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F187259%2F%22+rel%3D%22nofollow%22%3ESee+the+%22VideobloggingWeek07-Money%22+video%3C%2Fa%3E%0A%0AI+wanted+to+compare+Socially+Responsible+Investing+retirement+plans+so+I+went+to+Fool.com+for+help.+I+found+no+less+than+100+articles+on+the+subject.+I+want+to+be+pro-union+so+I+don%27t+want+to+invest+in+Walmart+and+union+busters.+I+don%27t+like+funding+wars+so+I+don%27t+want+to+place+my+money+in+certain+diamond+companies+and+weapons+contractors.+I+also+don%27t+want+to+destroy+the+environment.+What+caught+my+eyes+was+the+Domini+400+Social+Index.+The+Domini+400+fund+costs+more+to+maintain+compared+to+the+S%26P+500+Index+fund+because+the+stocks+are+reviewed+by+real+people+for+social+responsibility.+So+it+is+great+for+people+who+support+charities+and+would+like+to+do+more+thru+Socially+Responsible+Investing.+Apple+iMovie+4+and+Quicktime+Pro+7+for+video+editing.links%3A+Save+Darfur%2C+Voter+Reform%2C+The+World+Can%27t+WaitThis+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-NoDerivs%3C%2Fa%3E+license.
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76303%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22United+for+Peace+%26+Justice+%236%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: interna+%3AP
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fcronicasmadrilenas.blogspot.com%2F2006%2F02%2Fimgenes-atmicas.html%22%3E%0AIm%C3%A1genes+at%C3%B3micas%3C%2Fa%3E
+caption: Somerset+House+fountains-+refreshing+on+a+hot+day
+caption: %3Ca+href%3D%22http%3A%2F%2Fzenvlog.wordpress.com%2F2006%2F07%2F22%2Fcar-vlog-001-007-dawn-of-car-casting%2F%22%3Ezenvlog.wordpress.com%2F2006%2F07%2F22%2Fcar-vlog-001-007-dawn-of...%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: Agents+are+the+basis+of+many+models+of+complex+adaptive+systems%2C+and+in+today%27s+world%2C+the+%22network%22+paradigm%2C+as+depicted+in+the+figure+to+the+left%2C+is+predominant.%0A%0AThe+figure+to+the+right+is+the+outcome+of+a+cellular+automata+model%2C+which+simulates+multi-state+agent-based+systems+who+have+local+%28e.g.+geographic%29+influence.++Cellular+automata+have+been+shown+to+accurately+model+many+physical+and+social+systems.%0A%0AAn+excellent+CA+model+simulator+that+you+can+easily+run+on+any+computer+is+Mierk%27s+Java+Cellebration%2C+found+here%3A%0A%3Ca+href%3D%22http%3A%2F%2Fwww.mirekw.com%2Fca%2Fmjcell%2Fmjcell.html%22%3Ewww.mirekw.com%2Fca%2Fmjcell%2Fmjcell.html%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: Panning+for+gold
+caption: Me+with+a+goatee
+caption: Del.icio.us+screenshot
+caption: 
+caption: 
+caption: 
+caption: This+was+going+to+be+the+pic+on+my+present+CD%2C+but+my+Honey+advised+me+to+change+it%2C+but+I+luv+it+and+still+have+hopes+it+will+make+the+next+one+that+I+do..WWW.jahd.com
+caption: One+of+the+ghosts+at+the+Ripton+Halloween+event.++This+was+one+of+the+killer%27s+victims.++She+initially+lurked+behind+the+administrative+desk%2C+then+went+on+to+help+lead+the+tour.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Create+your+own+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+Egg%3C%2Fa%3E+at+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: 
+caption: Ahh%2C+ain%27t+she+a+beaut%3F%21
+caption: 
+caption: 
+caption: 
+caption: A+rainy+night+in+Sitges%2C+Spain%2C+winter+2004.
+caption: 
+caption: 
+caption: 12+pictures+of+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fpsd%2Ftags%2Fmemerge%2F%22%3EMe+Merged%3C%2Fa%3E
+caption: 
+caption: 
+caption: Photos+from+the+Tennessee+Iris+Garden+at+Ellington+Agricultural+Center%2C+Nashville.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Gesehen+bei+Markkauf+in+M%C3%BCnster+an+der+Hammer+Stra%C3%9Fe+direkt+hinter+der+Kasse.+Was+soll+mir+das+sagen%3F%0ADenk+dran+du+wolltest+noch+das+Kind+erschie%C3%9Fen%2C+das+grade+so+um+S%C3%BC%C3%9Figkeiten+gebettelt+hat.
+caption: Bubble
+caption: This+is+the+original+church+building+that+burned+down+in+about+1966.+This+photo+was+taken+in+the+1950s+while+the+building+was+getting+a+new+copper+roof.
+caption: 
+caption: 
+caption: 
+caption: Lamp+and+Window+at+the+Las+Vetas+Lounge+In+Fairfield+CT.%0A%0ATaken+with+a+Zero2000+on+Fuji+400NPH.
+caption: 
+caption: 
+caption: Submission+to+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2Fcircle%2F%22%3ESquared+Circle+Group%3C%2Fa%3E
+caption: 
+caption: 
+caption: Two+bridges+over+the+Housatonic+River+in+Connecticut.++Shelton+on+your+left%2C+Derby+on+your+right.
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphoto.gne%3Fid%3D120983%22%3E%3C%3C+previous+page%3C%2Fa%3E+%7C+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphoto.gne%3Fid%3D129486%22%3Enext+page+%3E%3E%3C%2Fa%3E%0D%0A%0D%0A%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphoto.gne%3Fid%3D67035%22%3Efirst+page%3C%2Fa%3E%0D%0A%0D%0Aflickr%27s+first+daily+updated+comic%2C+a+panel+per+day.
+caption: 
+caption: 
+caption: this+is+the+logo+I+whipped+up+for+our+vollleyball+team+in+Canberra.+Most+of+the+players+%28all+except+me%29+were+german.
+caption: This+is+a+jar+of+ginger+that+a+friend+brought+us+back+from+Nepal.++She+had+been+with+the+Peace+Corps+and+helped+the+people+she+was+working+with+manufacture+these+jars.
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76286%2F%22%3ESee+all+the+%22United+for+Peace+%26+Justice+5%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Created+using+dumpr.net%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E+-+%3Ci%3Efun+with+your+photos%3C%2Fi%3E
+caption: Take+the+Tapoll+predict-a-poll+at+%3Ca+href%3D%22http%3A%2F%2Fwww.tapoll.com%2Fpoll%2Fid%2F628766020%22%3Ewww.tapoll.com%2Fpoll%2Fid%2F628766020%3C%2Fa%3E+and+then+see+the+vlog+at+%3Ca+href%3D%22http%3A%2F%2Fzenvlog.wordpress.com%2F%22%3Ezenvlog.wordpress.com%2F%3C%2Fa%3E+for+the+answer%21%0A%0AThe+vlog+uses+the+Zen+Mix+vlogging+tool+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%22%3Ewww.zenmix.com%3C%2Fa%3E
+caption: 
+caption: At+the+Baker+rally+before+the+election%2C+it+seemed+Preval+still+held+a+majority+of+the+attendees+hearts.
+caption: Informa%C3%A7%C3%B5es+em+riscas_vb%40yahoo.com.br
+caption: 
+caption: Kuching+Tower+Kuching+Tower+Kuching+Tower+Kuching+Tower+Kuching+Tower+Kuching+Tower+Kuching+Tower+Kuching+Tower+%7E%21%21%21+I+wait+wait+and+wait+wait%0A%0A*note+-+not+my+pic%2C+and+don%27t+sue+me+%5Buse+the+pic+coz+I+LIKE+KUCHING%21%5D
+caption: On+Cheneies+Street+in+Bloomsbury%2C+there%27s+a+building+with+four+greenmen+on+it--three+are+serious+like+this+one%2C+and+one+is+laughing.
+caption: Teh+fruit
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fmgdtasie.blogspot.com%22%3Emgdtasie.blogspot.com%3C%2Fa%3E
+caption: No+trolls
+caption: 
+caption: 
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F40911451%40N00%2F318478658%2F%22%3Edscn7184+soir%C3%A9e+%22arts+du+feu%22%2C+lyc%C3%A9e+Jean+MONNET+%28YZEURE%2CFR03%29%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F40911451%40N00%2F318476312%2F%22%3Edscn7181+soir%C3%A9e+%22arts+du+feu%22%2C+lyc%C3%A9e+Jean+MONNET+%28YZEURE%2CFR03%29%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F40911451%40N00%2F318474019%2F%22%3Edscn7176+soir%C3%A9e+%22arts+du+feu%22%2C+lyc%C3%A9e+Jean+MONNET+%28YZEURE%2CFR03%29%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F40911451%40N00%2F318461779%2F%22%3Edscn7141+soir%C3%A9e+%22arts+du+feu%22%2C+lyc%C3%A9e+Jean+MONNET+%28YZEURE%2CFR03%29%3C%2Fa%3E%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fbighugelabs.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: 
+caption: use+picasa2
+caption: 13+seconds+off+my+EXIF.%0D%0A%0D%0Athe+squared+circle+i+carry+around+with+me+each+day.
+caption: 
+caption: 
+caption: A+nice+thought
+caption: 
+caption: %E5%A5%A5%E6%A7%98%E3%81%AE%E6%96%B9
+caption: 
+caption: covered+with+water+in+preparation+for+planting+rice
+caption: Dos+se%C3%B1ores+vestidos+como+muchos+otros+en+el+parque+de+rionegro.+Todav%C3%ADa+se+ve+la+retreta+de+hombres+con+bast%C3%B3n+y+sombrero+a+la+salida+de+la+iglesia.
+caption: The+Moon
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Anillo+realizado+con+base+de+facetadas+de+cristal+checo%2C+sobre+ella+Cristal+de+Swarovski+formando+flores.%0A%0AUnido+a+una+base+regulable+para+evitar+problemas+de+tallas.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Canterbury+Cathedral+Cloister
+caption: 
+caption: 
+caption: Sock+yarn%21%0AYarn+shop+in+St.+Helena%2C+California
+caption: Madonna+-+Wembley+Arena+-+9th+August+2006
+caption: 
+caption: 
+caption: 
+caption: 
+caption: shot+in+nagypall%2C+hungary%0D%0Atuggya+valaki%2C+mi+az+a+b%C3%A9l%C3%A1s%3F%21+%C3%A9s+mennyit+%C3%A9rt%3F+1+sajtos-parizeres+zs%C3%B6ml%C3%A9t+lehetett+%C3%A9rte+kapni+a+lajos+b%C3%BCf%C3%A9ben.
+caption: 
+caption: i+need+my+ocean.+%0A%0Ataken+with+a+seagull+camera+with+portra+film+during+the+summer+of+2003+in+wiscasett+or+some+beach+near%0A%0Aseagull+cameras%3A+%3Ca+href%3D%22http%3A%2F%2Fwww.amazon.com%2Fexec%2Fobidos%2Fexternal-search%2F103-1094125-1777413%3Ftag%3Dthemusicsource1355-20%26keyword%3Dseagull%2Bcamera%26mode%3Dphoto%22+rel%3D%22nofollow%22%3Ewww.amazon.com%2Fexec%2Fobidos%2Fexternal-search%2F103-1094125-17...%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: From+my+daily+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%22+target%3D%22_blank%22%3ELondon+Underground+Blog%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: This+huge+spike+in+my+gas+usage+%28and+the+corresondingly+large+bill%29+alarmed+me+at+first.+Then+I+called+Entergy+and+realized+I+haven%27t+paid+a+bill+or+had+an+actual+meter+reading+since+August+2005%2C+because+of+Katrina.+So+the+February+reading+actually+reflects+our+cumulative+usage+since+then.
+caption: album+cover+done+as+an+assignment+for+my+graphics+design+class%2C+but+i+used+my+own+band%2C+and+will+probably+keep+this+one+for+an+ep...
+caption: 
+caption: From+my+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%2F2006_05_01_london-underground_archive.html%23114799571460671529%22+target%3D%22_blank%22%3ELondon+Underground+Tube+Diary%3C%2Fa%3E
+caption: The+hills+are+alive...%0A%0AIf+you+wish+to+find+bliss%3F+why+not+come+and+join+us+in+the+flickr+group+blissful+thinking...
+caption: All+of+the+pictures+from+this+particular+set+have+light+leaks+in+the+same+place.+I%27ve+plugged+the+leak%2C+don%27t+worry.+I+think+it%27s+cool+in+some+shots+but+for+most+it+just+sucks.%0A%0AThis+was+taken+in+the+courtyard+next+to+the+upper+level+of+the+J.+Willard+Marriott+Library+on+the+campus+of+the+University+of+Utah.+I+think+the+girl+off+in+the+distance+thought+I+was+stalking+her.+I+wasn%27t.
+caption: At+Jackson+Bottom+Wetlands+Preserve.+A+couple+swallows+resting+before+the+took+flight+and+buzzed+me%21
+caption: 
+caption: My+grams+flowers+are+beautiful+yet+again%2C+here+a+blue+morning+glory.+Only+diffused+with+photoshop.
+caption: Raphael%27s+beautiful+dome+for+the+Chigi+chapel+in+S.+Maria+del+Popolo.
+caption: A+lone+concrete+celtic+cross+visible+from+the+Digby+ferry+terinal
+caption: 1.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F13194817%40N00%2F360805760%2F%22%3EOstaria%3C%2Fa%3E%2C+2.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F13194817%40N00%2F360804302%2F%22%3EBoardwalk%3C%2Fa%3E%2C+3.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F13194817%40N00%2F360803315%2F%22%3EDark+During+The+day%3C%2Fa%3E%2C+4.+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2F13194817%40N00%2F360773383%2F%22%3ERialto+Means+SHOPPING%3C%2Fa%3E%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fbighugelabs.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.%0A%0A%3Ca+href%3D%22http%3A%2F%2Fmaps.google.com%3Fq%3D45.44134445115738%2C12.328720092773438%28Late+In+The+Day+-+Streets+Of+Venice%29%26t%3Dh%22%3ESee+where+this+picture+was+taken.%3C%2Fa%3E+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2Fgeotagging%2Fdiscuss%2F72157594165549916%2F%22%3E%5B%3F%5D%3C%2Fa%3E
+caption: I+tried+to+get+a+shot+of+bubbles+being+blown+out+of+the+bubble+maker+for+Striatic.+Alas%2C+did+not+happen.
+caption: It+looks+like+something+one+would+use+in+a+memorial+of+some+kind+or+a+specimen+under+an+electron+microscope.+The+color+version+doesn%27t+look+as+good+to+me+as+this+does.+Enjoy%21
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Fluisa%2F%22%3Eluisa%3C%2Fa%3E+is+one+of+my+favourite+photographers+on+flickr%2C+and+she+can+also+draw+very+well%2C+and+occasionally+makes+icons+for+people%2C+and+she+made+a+wonderful+one+for+me.%0D%0A%0D%0Afriendlier+than+my+default+one%2C+don%27t+you+agree%3F%0D%0A%0D%0Amore+of+*L%27s+icons+here+%3A+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Fluisa%2Ftags%2Ficons%2F%22%3Eflickr.com%2Fphotos%2Fluisa%2Ftags%2Ficons%2F%3C%2Fa%3E
+caption: Helen+Humes+at+the+Village+Lounge%2Cdisneyworld
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: shot+in+vill%C3%A1nyk%C3%B6vesd%2C+hungary
+caption: 
+caption: awww
+caption: Katie+came+with+Tom+to+Aberdeen.+She+was+very+sweet%2C+and+talked+to+people+while+she+signed+autographs.
+caption: Fiddling+with+her+necklace+before+leaving+the+house.
+caption: 
+caption: I+wonder+what+she+was+praying+for...%0D%0AA+decade+of+dance%21++The+Monkey+10th+anniversary+show+was+at+The+Blank+Club+in+San+Jose+on+Friday%2C+January+27%2C+2006.++NVS%2C+FTB%2C+and+Firme+opened.++Shots+of+the+musicians+and+stage+are+part+of+another+set+on+Flickr.
+caption: Henra+was+sunning+herself%2C+here+on+top+of+the+bureau%2C+near+the+wall-in-process.++Said+sun+was+really+there%2C+offscreen%2C+to+the+left.
+caption: 
+caption: 
+caption: Louis+has+an+old+pal+drop+by+for+a+smoke+and+a+chat...
+caption: 
+caption: shot+in+sint-niklaas%2C+belgium
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2Futata%2Fdiscuss%2F72157594218400703%2F72157594218470920%2F%22%3Efor+Shari+DeAngelo%3C%2Fa%3E
+caption: This+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+egg%3C%2Fa%3E+was+created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: 
+caption: Here%27s+a+swallow+in+his+birdhouse.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 15+October+05
+caption: from+Waikoloa+HI
+caption: 
+caption: Same+bottle+as+the+petting+-+opening+it+with+your+teeth+is+a+no-no%21
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Thanks+to+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphotos%2Feclectic1one%2F211466631%2F%22%3Eeclectic1one2004%3C%2Fa%3E+for+the+%3Ca+href%3D%22http%3A%2F%2Fwww.sp-studio.de%2F%22%3Elink%3C%2Fa%3E.
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F106943%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22Post+%26+Back+To+Work%22+media%3C%2Fa%3E%0A%0ABack+to+work%2C+Monday.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: Im000122.Jpg
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: shot+in+p%C3%A9cs%2C+hungary
+caption: The+logo+for+the+yahoo+group+I+run+for+soccer+fans+in+the+Raleigh-Durham+area.
+caption: 
+caption: %E7%B4%85%E3%81%84%E3%81%AE%E3%83%87%E3%82%BF%E3%80%9C%0D%0A%0D%0A%E3%81%84%E3%81%A3%E3%81%B1%E3%81%84%E5%87%BA%E3%81%A6%E3%81%8D%E3%81%9F%E3%81%91%E3%81%A9%EF%BC%99%E5%89%B2%E3%81%8C%E3%81%9F%E7%99%BD%E3%81%84%E3%81%AE%E3%80%82%E3%81%82%E3%81%A8%E9%BB%92%E3%81%A8%E9%BB%84%E8%89%B2%E3%81%84%E3%81%AE%E3%82%82%E4%B8%80%E6%9C%AC%E3%81%9A%E3%81%A4%E5%87%BA%E3%81%9F%E3%80%82%E6%A1%88%E5%A4%96%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%A7%E6%A5%BD%E3%81%97%E3%81%84%E3%81%A3%E3%81%99%E3%80%82
+caption: 
+caption: ...off
+caption: 
+caption: Flicking+through+%3Ca+href%3D%22http%3A%2F%2Fwww.dates-4-mates.co.uk%2Fbarking-book%2Findex.htm%22%3EOne+Stop+Short+of+Barking%3C%2Fa%3E+at+Tate+Modern.++From+my+daily+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%22+target%3D%22_blank%22%3ELondon+Underground+Blog%3C%2Fa%3E
+caption: shot+in+graz
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: ...+and+must+be+kept+closed.+Don%27t+even+think+about+opening+it.+Especially+during+a+fire.
+caption: 
+caption: 
+caption: refinery+two
+caption: 
+caption: I+found+it+to+be+tragically+beautiful%2C+this+grain+elevator.
+caption: 
+caption: My+sisters+house+in+SE+ohio.
+caption: I+believe+this+is+an+eagle.+I+scanned+the+B%26W+negative+to+produce+this+picture.+It+was+taken+in+about+1958+in+Valdez%2C+Alaska
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76250%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22United+for+Peace+%26+Justice+%232%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%2Fmix.php%2Fdanzen%2Fwoods1%22%3Ewww.zenmix.com%2Fmix.php%2Fdanzen%2Fwoods1%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: iTunes+logo+for+the+%3Ca+href%3D%22http%3A%2F%2Fthemetourism.blogspot.com%22%3ETheme+Tourism%3C%2Fa%3E+podcast
+caption: CW+as+a+South+Park+character
+caption: 
+caption: Background+tile
+caption: 
+caption: The+Moon%2C+as+seen+from+Kings+Heath%2C+Birmingham+around+8PM.
+caption: 
+caption: 
+caption: 
+caption: He+didn%27t+want+his+picture+taken.
+caption: %3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphoto.gne%3Fid%3D69801%22%3E%3C%3C+previous+page%3C%2Fa%3E+%7C+%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphoto.gne%3Fid%3D69803%22%3Enext+page+%3E%3E%3C%2Fa%3E%0D%0A%0D%0A%3Ca+href%3D%22http%3A%2F%2Fflickr.com%2Fphoto.gne%3Fid%3D67035%22%3Efirst+page%3C%2Fa%3E%0D%0A%0D%0Aflickr%27s+first+daily+updated+comic%2C+a+panel+per+day.
+caption: 
+caption: Magnetic+poetry+from+College+Perk.
+caption: 
+caption: A+Photoshop-enhanced+image+of+shoe+boxes+on+display+in+a%2C+errrr...+shoe+shop
+caption: This+grain+elevator+sits+in+downtown+Derby.++Bustling%2C+modern%2C+cosmopolitan+Derby.
+caption: shot+in+fels%C5%91pakony
+caption: Mother+and+baby+monkey.++Ubud%2C+Bali.
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.swcc.net%22%3ESWCC%3C%2Fa%3E+sermon+series.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76326%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22United+for+Peace+%26+Justice+%238%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: My+wedding+ring%2C+the+morning+after+the+ceremony.
+caption: 
+caption: This+photo+was+taken+c.+1965+by+my+dad+at+the+house+in+Reseda.+My+brother%2C+Matthew%2C+just+had+surgery+to+correct+his+club+foot.
+caption: 
+caption: 
+caption: Filled+version%2C+with+the+aid+of+Paint...
+caption: See+More+Fascinating+Design+Objects+at+%3Ca+href%3D%22http%3A%2F%2Fdesigncrack.com%22+rel%3D%22nofollow%22%3Edesigncrack.com%3C%2Fa%3E
+caption: How+many+of+you+can+resist+a+full+moon+on+an+cloudless+night+just+after+you+got+you+new+camera+and+300mm+lens%3F%0D%0AI+couldn%27t.%0D%0ANot+much+of+artistic+value%2C+just+plain+nature.
+caption: The+Rocksteady+Lounge%0D%0A++++++++++++The+NEW+center+for+the+NORCAL+Ska+scene%0D%0ASkanking+to+ska%2C+punk%2C+reggae%2C+rockabilly%2C+and+reggae+sounds%0D%0A%0D%0AEpisode+%231%3A+Friday+April+21%2C+2001%0D%0ANick+Ugly%2C+Minus+Vince%2C+Monkey%2C+Los+Hooligans+at+The+Palms+Restaurant+and+Bar+in+Milpitas%2C+California.%0D%0A%0D%0AMonkey+drummer.
+caption: Morning+sun%2C+chain-link+fence%2C+oil+drums....+What+could+be+sweeter%3F
+caption: 
+caption: 
+caption: Atlanta%2C+USA
+caption: 
+caption: taken+on+saturday%2C+may+20%2C+the+day+before+the+former+trojan+power+plant+cooling+tower+was+demolished+by+implosion.
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76238%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22United+for+Peace+%26+Justice+%231%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76374%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22United+for+Peace+%26+Justice+%2311%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F125404%2F%22+rel%3D%22nofollow%22%3ESee+the+%22Net+Neutrality%22+video%3C%2Fa%3E%0A%0AUS+Bill+of+Rights+Amendment+ICongress+shall+make+no+law+respecting+an+establishment+of+religion%2C+or+prohibiting+the+free+exercise+thereof%3B+or+abridging+the+freedom+of+speech%2C+or+of+the+press%3B+or+the+right+of+the+people+peaceably+to+assemble%2C+and+to+petition+the+government+for+a+redress+of+grievances.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-nd%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-NoDerivs%3C%2Fa%3E+license.
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76262%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22United+for+Peace+%26+Justice+%233%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: 
+caption: Manipulation+of+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2F96697435%40N00%2F206199180%2F%22%3Ethis+photo%3C%2Fa%3E.+Back+of+the+Red+Fave+2+compilation.
+caption: 
+caption: MADE+WITH+VEXER+%28a+drawing+program+I+wrote%29%0A%0A%3Ca+href%3D%22http%3A%2F%2Fmeblar.org%2Fvexer%22%3Emeblar.org%2Fvexer%3C%2Fa%3E%0A%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2Fvexer%2F%22%3EVEXER+-+by+Flikr%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Thought+I+would+take+the+time+to+show+my+storage.+The+set+boxes+are+full+of+unsorted+pieces.%0A%0AYeah%2C+I+know%2C+it+ain%27t+that+much.+But+I%27m+grateful+for+what+I+have%2C+and+try+to+do+my+best+with+it.+The+organization+system+may+seem+messy%2C+but+since+it%27s+such+a+small+collection%2C+I+can+still+keep+track+of+it.+This+is+sitting+high+atop+a+wardrobe%2C+so+everytime+I+want+to+build+I+have+to+carry+it+all+down.+That%27s+just+one+of+the+things+you+have+to+deal+with+when+living+small.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E%2C+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EHappy+Easter%21%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.inkscape.org%22%3Einkscape%3C%2Fa%3E.
+caption: ...
+caption: shot+in+sint-niklaas%2C+belgium
+caption: Designed+by+Me+between+July+27+-+August+3%2C+2005%0A%0AYou+can+visit+the+FUSE+FM+website+at+%3Ca+href%3D%22http%3A%2F%2Fwww.wqhu.net%22%3Ewww.wqhu.net%3C%2Fa%3E.+We+have+a+live+stream%2C+so+feel+free+to+listen+anytime%21
+caption: 
+caption: This+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+egg%3C%2Fa%3E+was+created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: 
+caption: 
+caption: Going+from+decay+to+anachronism+within+forty+yards.
+caption: Graffiti+with+soul.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Barnett+Reservoir%2C+24+July+05.
+caption: Eggs+%2B++Easter+%3D+%3F%0A%0ACreated+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22%3Ewww.dumpr.net%3C%2Fa%3E+-+%3Ci%3Efun+with+your+photos%3C%2Fi%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Where+it+all+comes+together+and+the+trees+speak.
+caption: 
+caption: 
+caption: This+is+my+attempt+to+summarize+the+essence+of+the+%22complexity+paradigm%22.
+caption: shot+in+p%C3%A9cs%2C+hungary
+caption: Stencil+based+on+photo+of+my+one-time+flatmate%2C+one-time+co-worker+and+all-time+tornado+partner%2C+Pontus.
+caption: 
+caption: The+theme+of+%3Ca+href%3D%22http%3A%2F%2Fvideobloggingweek2006.blogspot.com%2F%22%3EVideo+Blogging+Week+2006%3C%2Fa%3E+is+Vlogging+Dangerously%2C+and+so+we+decided+to+kick-start+our+week+with+this+piece+on+%3Ca+href%3D%22http%3A%2F%2Fjen.blip.tv%2Ffile%2Fget%2FJen-TellMeASecret355.mov%22%3Etelling+secrets.%3C%2Fa%3E
+caption: ...
+caption: 
+caption: Graffiti+with+%28split%29+personality.
+caption: Thousand+years+egg%0A%0AThis+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+egg%3C%2Fa%3E+was+created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: 
+caption: In-camera+sharpening+set+to+0
+caption: 
+caption: Me+in+my+pink+wig...in+black+%26+white%21
+caption: 
+caption: shot+in+nagytarcsa%2C+hungary
+caption: I+was+quite+surprised+to+find+a+Star+of+David+on+a+Kosher+Seal+%28seal+of+approval+that+the+food+is+edible+for+an+Orthodox+Jew%29.+%0AThere+are+Israeli+Orthodox+Jews+who+don%27t+like+the+Star+of+David+because+it+represents+the+%22secular%22+state%2C+but+in+this+case+it+seems+that+the+religious+and+the+non-religious+meanings+of+the+symbol+can+live+in+a+harmony+on+the+same+box+of+mushrooms.
+caption: Created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E%2C+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EHappy+Easter%21%3C%2Fa%3E
+caption: This+was+the+first+book+I+made+with+the+first+of+my+hand-painted+silk+ever+made+into+bookcloth+%28with+the+ingenious+aid+of+a+950+Xyron+and+some+backing+paper%3A+you+put+the+%3Ci%3Epaper%3C%2Fi%3E+through+the+Xyron+stickum+machine%29.+%0A%0AI+believe+this+is+also+the+very+first+instance+of+anyone+creating+and+using+the+Flickr+tag+%22handboundbook%22+-+may+there+be+many+more.
+caption: 
+caption: I+bought+one+of+these+today.+While+they+aren%27t+WOW%2C+the+sound+quality+is+pretty+nice.%0A%0AThe+bass+is+pretty+loud+and+%22aggresive%22%2C+use+with+caution+%28that+is%2C+use+proper+EQ+settings+on+your+computer%2C+and+better+yet%2C+a+kewl+soundcard+like+Sound+Blaster%2C+on-board+soundcards+just+sux%21%29.+On+my+iPod+Nano+it%27s+just+sounds+perfect%2C+however+they+are+pretty+big+in+size+to+carry+them+out+while+walking+on+the+streets+...+so+I+use+some+SONY+earphones+%28the+ones+that+came+with+the+Nano+sux+hard+and+I+broke+them+%3A%2F%29.
+caption: 
+caption: This+is+the+Google+gadget+for+hot+items.++Uses+PatREST+as+its+data+source.+Option%27s+pane+is+open.
+caption: 
+caption: 
+caption: North+Carolina+Congressman+Brad+Miller+at+the+NC+Democratic+Party%27s+political+blogger%27s+forum+in+Raliegh%2C+NC%2C+January+27%2C+2007
+caption: 
+caption: 
+caption: Zen+Vlog+about+how+large+a+space+all+the+people+in+the+world+will+fit+standing+side+by+side+front+to+back+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenvlog.com%22%3Ewww.zenvlog.com%3C%2Fa%3E.++Zen+Mix+is+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%22%3Ewww.zenmix.com%3C%2Fa%3E+-+try+it+out+-+all+you+need+is+your+digital+camera+if+it+captures+movies+which+it+probably+does.++This+stuff+is+as+easy+as+posting+pictures+now%21
+caption: 
+caption: Compare+the+size+of+the+caterpillar+to+the+fibers+of+my+pants.
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F76341%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22United+for+Peace+%26+Justice+%239%22+media%3C%2Fa%3E%0A%0ASept.19%2C+2006+Tuesday+United+for+Peace+and+Justice+march+and+rally+to+the+UN.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: New+Year%27s+Eve+%28special+thanks+to+Valerisings+for+the+crop%21%29
+caption: Thanks+for+the+tip+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Farne%2F%22%3EArne%3C%2Fa%3E%21+This+is+an+extreme+crop+of++%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2F40467171%40N00%2F92977479%2F%22%3E%0A%22Okay%2C+Who+Grunted%3F%22%3C%2Fa%3E%0A%0AA+funny+face+is+revealed+in+the+school.+I%27ve+looked+at+this+picture+hundreds+of+times+and+I%27ve+never+seen+it.
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F102876%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22Petro%22+media%3C%2Fa%3E%0A%0AFun+with+the+Archive+and+Garageband+1.+As+with+the+post+before+this%2C+it+is+CC+Attribution-NonCommercial-ShareAlike%3B+because+not+everything+is+about+the+money.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: The+Lorenz+attractor+near+an+intermittent+cycle%3A+much+of+the+time+the+trajectory+is+close+to+a+nearly+periodic+orbit%2C+but+diverges+and+returns.+Change+the+parameters+slightly+and+the+intermittency+will+either+dissolve+or+turn+into+a+real+attractive+periodic+cycle.%0D%0A%0D%0AMade+with+Chaoscope.
+caption: %22DELIA%22+%0D%0A%C3%93leo+sobre+lienzo%0D%0A65X54%0D%0A2003%0D%0A400%E2%82%AC%0D%0AADQUIRIDO
+caption: 
+caption: 
+caption: It%27s+the+dark+star%21%0A%0A%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2Fmanipulatethis%2Fdiscuss%2F138224l%22%3Ewww.flickr.com%2Fgroups%2Fmanipulatethis%2Fdiscuss%2F138224l%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: This+is+just+at+the+start+of+a+lunar+eclipse.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: shot+in+nagypall%2C+hungary
+caption: El+limonero+de+mi+jard%C3%ADn.%0D%0AThe+lemon+tree+of+my+garden
+caption: 
+caption: 
+caption: 
+caption: Tag%2C+you%27re+it.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 1981
+caption: display+%40+housewerks.
+caption: 
+caption: 
+caption: 
+caption: shot+in+kecskem%C3%A9t
+caption: 
+caption: shot+in+bal%C3%A1stya%2C+hungary
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fzenvlog.wordpress.com%2F2006%2F09%2F26%2Fnew-media-predictions-ala-1974%2F%22%3Ezenvlog.wordpress.com%2F2006%2F09%2F26%2Fnew-media-predictions-al...%3C%2Fa%3E%0D%0A%0D%0ANew+Media+predictions+recorded+at+the+International+Symposium+on+New+Media+held+in+the+spaceship+at+the+Dundas+Drive-in+Park+in+Canada%2C+1974.++%0D%0A%0D%0APresented+in+a+Zen+Mix+vlogging+tool+from+%3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%22%3Ewww.zenmix.com%3C%2Fa%3E
+caption: %3Ca+href%3D%22http%3A%2F%2Fzenvlog.wordpress.com%2F2006%2F07%2F02%2Fpsychedelic-dancing-as-exercise-with-dan-zen%2F%22%3Ezenvlog.wordpress.com%2F2006%2F07%2F02%2Fpsychedelic-dancing-as-e...%3C%2Fa%3E
+caption: Made+with+f%27d+Flickr+toys
+caption: Crop+Walk+at+Exploris+in+Raleigh%0Aputting+my+son+in+a+headlock
+caption: 
+caption: -+Taken+at+2%3A17+AM+on+November+06%2C+2006+-+cameraphone+upload+by+ShoZu
+caption: 
+caption: shot+in+budapest%2C+hungary
+caption: Love+is+in+the+air.++And+it%27s+fragile.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Visit+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fgroups%2F82643767%40N00%2F%22%3EWIT%3C%2Fa%3E+for+your+comments.
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F69735%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22For+Tom+Cruise%22+media%3C%2Fa%3E%0A%0A20+MB+4+min+This+episode+is+dedicated+to+Tom+Cruise%2C+the+DVD+royalties+champion.+Sources+used%3A+freedictionary.com%2C+first+song+%22Places+I%27ve+Lived%22+by+Francisco+Daum%2C+second+song+%22Get+Off+This%22+by+Cracker+from+the+Internet+Archive+Live+Music+Collection.This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc-sa%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial-ShareAlike%3C%2Fa%3E+license.
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%2Fmix.php%2Fdanzen%2Fzm_introduction0%7Ezm_introduction1%7Ezm_introduction2%22%3Ewww.zenmix.com%2Fmix.php%2Fdanzen%2Fzm_introduction0%7Ezm_introdu...%3C%2Fa%3E
+caption: Evening+at+Russian+Beach+in+Stratford.
+caption: 
+caption: preciso+ir+no+espa%C3%A7o+gastar+esta+ficha...
+caption: 
+caption: Read+about+this+and+hundreds+of+other+fascinating+design+objects+at+%3Ca+href%3D%22http%3A%2F%2Fdesigncrack.com%22+rel%3D%22nofollow%22%3Edesigncrack.com%3C%2Fa%3E.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: This+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+egg%3C%2Fa%3E+was+created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: 
+caption: 
+caption: Notice+on+Riordon%27s+door.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.pohflepp.de%2Fflickr.html%22%3Ewww.pohflepp.de%2Fflickr.html%3C%2Fa%3E
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%2Fmix.php%2Fdanzen%2Fvlogging_intro3%22%3Ewww.zenmix.com%2Fmix.php%2Fdanzen%2Fvlogging_intro3%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 1966
+caption: 
+caption: pin+design+for+our+last+december
+caption: 
+caption: 
+caption: The+Lorenz+attractor.+This+image+shows+the+fun+topology+of+the+attractor+for+these+slightly+nonstandard+parameter+values.+%0D%0A%0D%0AMade+with+Chaoscope.
+caption: 
+caption: Cabrini+College+is+located+in+Radnor%2C+Pa.%2C+USA.+It+was+founded+by+Sister+Ursula+Infante+of+the+Missionary+Sisters+of+the+Sacred+Heart%2C+also+known+as+the+Cabrini+Sisters.
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Feltelendro.blogspot.com%2F2005%2F07%2Fspam-report-en-adsense.html%22+target%3D%22_blank%22%3EM%C3%A1s+informaci%C3%B3n+en+El+Telendro%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: Age+sporting+her+new+earings+hand+made+in+and+carried+out+by+Jesse+from+Tatopani%21
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: This+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+egg%3C%2Fa%3E+was+created+with+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: S%2FT%0D%0A%C3%93leo+sobre+lienzo%0D%0A24X24%0D%0A600%E2%82%AC%0D%0AADQUIRIDO
+caption: 
+caption: 
+caption: 
+caption: John+Cena+%40+Adelaide%2C+South+Australia+%27Smackdown%27+house+show+on+the+10th+of+April+%2705
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Ffile%2F57716%2F%22+rel%3D%22nofollow%22%3ESee+all+the+%22Charity%2C+Aug.+6%2C+2006%22+media%3C%2Fa%3E%0A%0A%3F26+MB+5+min+%22Happy+are+they+who+are+charitable+at+all+times.%22+Psalms+106%3A3.+Just+a+quick+post+for+my+vlog+featuring+the+Venice+firefighters+and+what+I+could+do+with+%24500.+This+video+was+originally+shared+on+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%22+rel%3D%22nofollow%22%3Eblip.tv%3C%2Fa%3E+by+%3Ca+href%3D%22http%3A%2F%2Fblip.tv%2Fusers%2Fview%2FFrancisco+Daum%22+rel%3D%22nofollow%22%3EFrancisco+Daum%3C%2Fa%3E+with+a+%3Ca+href%3D%22http%3A%2F%2Fcreativecommons.org%2Flicenses%2Fby-nc%2F2.0%2F%22+rel%3D%22nofollow%22%3ECreative+Commons+Attribution-NonCommercial%3C%2Fa%3E+license.
+caption: 
+caption: Before...+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Falibree%2F232721991%2Fin%2Fphotostream%2F%22%3E+After...%3C%2Fa%3E%0A%0ALong+hair+doesn%27t+suit+me.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Here%27s+hoping+all+your+chocolate+stays+solid.%0A%0ACreate+your+own+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+Egg%3C%2Fa%3E+at+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: Screenshots+of+my+frontend+to+Gregory+Spath%27s+perl+program%2C+%22Envelope%2C%22+available+from+%3Ca+href%3D%22http%3A%2F%2Ffreefall.homeip.net%2Fcode%2Fenvelope%2F%22%3Efreefall.homeip.net%2Fcode%2Fenvelope%2F%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: A+chat+with+the+creators+of+cryingwhileeating.com
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: who%27s+the+only+one+camera+ready%3F
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fzenvlog.wordpress.com%2F2006%2F07%2F25%2Fpsychedelic-surf-dancing-for-exercise-with-dan-zen%2F%22%3Ezenvlog.wordpress.com%2F2006%2F07%2F25%2Fpsychedelic-surf-dancing...%3C%2Fa%3E
+caption: shot+in+fels%C5%91pakony%2C+hungary
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%2Fmix.php%2Fdanzen%2Fzenmix_file_not_found%22%3Ewww.zenmix.com%2Fmix.php%2Fdanzen%2Fzenmix_file_not_found%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Just+for+you+Haven.
+caption: From+my+daily+%3Ca+href%3D%22http%3A%2F%2Flondon-underground.blogspot.com%22+target%3D%22_blank%22%3ELondon+Underground+Blog%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Photo+is+courtesy+of+Mrs.+Mira+Dror%2C+the+curator+of+the+Jerusalem+Tax+Museum.+%0A%0AThe+shape+of+the+Star+of+David+on+a+handle+of+a+clay+jar+from+Kibbutz+Ramat+Rachel++from+the+hellenistic+period+4-1+century+BCE.+This+is+one+of+the+first+Israeli+Star+of+David+artifacts%21%0AMore+about+Stars+of+David+on+%3Ca+href%3D%22http%3A%2F%2Fstar-of-david.blogspot.com%2F%22%3Estar-of-david.blogspot.com%2F%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: Yet+another+cool+design+from+our+image+collection+for+April+at+%3Ca+href%3D%22http%3A%2F%2Fwww.designcrack.com%2Fv2%2F%22+rel%3D%22nofollow%22%3Ewww.designcrack.com%2Fv2%2F%3C%2Fa%3E
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%2Fmix.php%2Fdanzen%2Fzm_lovemash%22%3Ewww.zenmix.com%2Fmix.php%2Fdanzen%2Fzm_lovemash%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: A+quick+badge+design+knocked+out+in+photoshop+for+the+Leeds+flickr+group.+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Frusselljsmith%2F101578890%2F%22%3EOrigional+photo+taken+on+Marshall+Street+in+Holbeck%3C%2Fa%3E.
+caption: 
+caption: 
+caption: 
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/create_caption_from_image.py", line 202, in <module>
+    main()
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/create_caption_from_image.py", line 184, in main
+    tmp = generate_captions(images)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/create_caption_from_image.py", line 72, in generate_captions
+    generated_ids = fluo_model.generate(
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/.cache/huggingface/modules/transformers_modules/multimodalart/Florence-2-large-no-flash-attn/8db3793cf5b453b2ccfb3a4f613b403b2e6b7ca2/modeling_florence2.py", line 2803, in generate
+    image_features = self._encode_image(pixel_values)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/.cache/huggingface/modules/transformers_modules/multimodalart/Florence-2-large-no-flash-attn/8db3793cf5b453b2ccfb3a4f613b403b2e6b7ca2/modeling_florence2.py", line 2613, in _encode_image
+    x = self.vision_tower.forward_features_unpool(pixel_values)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/.cache/huggingface/modules/transformers_modules/multimodalart/Florence-2-large-no-flash-attn/8db3793cf5b453b2ccfb3a4f613b403b2e6b7ca2/modeling_florence2.py", line 687, in forward_features_unpool
+    x, input_size = block(x, input_size)
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/.cache/huggingface/modules/transformers_modules/multimodalart/Florence-2-large-no-flash-attn/8db3793cf5b453b2ccfb3a4f613b403b2e6b7ca2/modeling_florence2.py", line 246, in forward
+    inputs = module(*inputs)
+             ^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/.cache/huggingface/modules/transformers_modules/multimodalart/Florence-2-large-no-flash-attn/8db3793cf5b453b2ccfb3a4f613b403b2e6b7ca2/modeling_florence2.py", line 246, in forward
+    inputs = module(*inputs)
+             ^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/.cache/huggingface/modules/transformers_modules/multimodalart/Florence-2-large-no-flash-attn/8db3793cf5b453b2ccfb3a4f613b403b2e6b7ca2/modeling_florence2.py", line 422, in forward
+    x, size = self.conv1(x, size)
+              ^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo/home/userexternal/hraj0000/.cache/huggingface/modules/transformers_modules/multimodalart/Florence-2-large-no-flash-attn/8db3793cf5b453b2ccfb3a4f613b403b2e6b7ca2/modeling_florence2.py", line 269, in forward
+    x = shortcut + x
+        ~~~~~~~~~^~~
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 108.00 MiB. GPU 
+caption: 
+caption: Create+your+own+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%2Feaster-egg.php%22+rel%3D%22nofollow%22%3EEaster+Egg%3C%2Fa%3E+at+%3Ca+href%3D%22http%3A%2F%2Fwww.dumpr.net%22+rel%3D%22nofollow%22%3Ewww.dumpr.net%3C%2Fa%3E
+caption: Brad+%26+Ed+Presenting+the+Meat.+It%27s+almost+midnight+and+the+brisket+is%0Asorted+out.++Lots+of+garlic+and+Seth%27s+special+rub.++If+you+like+meat+your%0Atummy+will+be+pleased.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Vlog+about+pshycedelic+dancing+as+exercise+that+superimposes+dancing+with+video+feedback+using+the+online+tool+Zen+Mix.++Vlog+is+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenvlog.com%22%3Ewww.zenvlog.com%3C%2Fa%3E+and+Zen+Mix+is+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%22%3Ewww.zenmix.com%3C%2Fa%3E
+caption: 
+caption: March+16th
+caption: 
+caption: Taken+at+approx.+75mph+on+the+91+W+freeway+in+So+Cal
+caption: 
+caption: 
+caption: I+have+a+picture+of+me+in+this+same+lab+almost+ten+years+later%2C+%3Ca+href%3D%22http%3A%2F%2Fwww.flickr.com%2Fphotos%2Fmrbill%2F106055947%2Fin%2Fset-72057594072351596%2F%22%3Ehere%3C%2Fa%3E.
+caption: Full+feature+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenvlog.com%22%3Ewww.zenvlog.com%3C%2Fa%3E+using+the+Zen+Mix+vlogging+tool+at+%3Ca+href%3D%22http%3A%2F%2Fwww.zenmix.com%22%3Ewww.zenmix.com%3C%2Fa%3E
+caption: 
+caption: The+attractor+shown+in+black+is+actual+data+representing+the+time+between+arrivals+in+a+particular+%28real%29+manufacturing+shop.++You+can+see+the+essentially+random+arrivals+as+represented+in+the+middle+blob%2C+and+the+%22stars%22+represent+particularly+early+or+late+interarrival+times.++The+red+background+is+the+attractor+of+a+high-dimensional+chaotic+system+as+simulated+in+Excel%2C+and+then+put+through+the+%22swirl%22+effect.
+caption: 
+caption: 
+caption: When+teaching+statistics%2C+there+is+a+famous+tool+called+the+%22Quincunx%22%2C+where+a+set+of+marbles+can+be+dropped+through+a+series+of+%22pins%22.++The+ball+bounces+to+the+left+or+right+of+any+given+pin+in+a+%22chaotic%22+manner+%28e.g.+it+is+highly+sensitive+to+small+variations+in+initial+conditions%29%2C+and+where+%28left+to+right%29+it+ends+up+on+the+bottom+is+essentially+a+random+%28or+high+dimensional%29+outcome.++Aggregated+together%2C+the+quincunx+produces+a+normal-shaped+bell+curve+of+outcomes%2C+which+can+be+shown+visually+with+the+marbles.%0A%0AThe+same+idea+is+behind+Lorenz%27s+model+of+ski-hill+moguls+%28from+his+book+%22The+essence+of+chaos%22%29%2C+and+is+described+nicely+in+this+pdf%3A+%3Ca+href%3D%22http%3A%2F%2Fnature.berkeley.edu%2F%7Ebingxu%2FUU%2Fgeocomp%2FWeek8%2FChaos.pdf%22%3Enature.berkeley.edu%2F%7Ebingxu%2FUU%2Fgeocomp%2FWeek8%2FChaos.pdf%3C%2Fa%3E
+caption: 2+years+ago.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Professional+Bill.
+caption: The+model+that+made+me+recover+interest+in+origami.+Thanks+Peter+Engel+and+Andres+Pati%C3%B1o
+caption: The+stroke+of+midnight%21+The+dawn+of+a+new+millenium%21+My+watch+still+works%21%21
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Local+merchant+sells+her+wares+in+Downtown+Nassau%2C+Bahamas
+caption: 
+caption: 
+caption: a+double+hole+on+a+playground+toy.%0D%0Ashot+in+nagypall%2C+hungary
+caption: 
+caption: %3Cb%3ENo+A+281%21%3C%2Fb%3E%0A%3Ca+href%3D%22http%3A%2F%2Fwww.gruene-neustadt.de%22%3Ewww.gruene-neustadt.de%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Agora+mais+apertado+e+preto%21
+caption: 
+caption: 
+caption: An+idea+for+painting+%3Ca+href%3D%22http%3A%2F%2Fwww.target.com%2Fgp%2Fdetail.html%2Fref%3Dbr_1_17%2F601-6176120-9363304%3Fie%3DUTF8%26asin%3DB0002I265W%26frombrowse%3D1%22%3Estorage+cubes%3C%2Fa%3E.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Close-up+of+the+moon.+Best+I+could+do+with+the+instrument+available.
+caption: This+is+what+happens+when+you+try+to+take+a+picture+of+a+star%2C+using+a+camera+not+meant+for+astronomy%2C+without+the+assistance+of+a+tripod.+It+could+also+be+a+planet+for+all+I+know.
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 20+months%0D%0A12%2F2005
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Betsy+Weber%2C+Chief+Evangelist
+caption: 
+caption: Yet+another+cool+product+from+our+image+collection+for+April+at+%3Ca+href%3D%22http%3A%2F%2Fwww.designcrack.com%2Fv2%2F%22+rel%3D%22nofollow%22%3Ewww.designcrack.com%2Fv2%2F%3C%2Fa%3E
+caption: 
+caption: I+shot+dingo+with+baby
+caption: 
+caption: Created+by+Jed+with+%3Ca+href%3D%22http%3A%2F%2Fflagrantdisregard.com%2Fflickr%2F%22%3Efd%27s+Flickr+Toys%3C%2Fa%3E.
+caption: 
+caption: 
+caption: Yet+another+cool+product+from+our+image+collection+for+April+at+%3Ca+href%3D%22http%3A%2F%2Fwww.designcrack.com%2Fv2%2F%22+rel%3D%22nofollow%22%3Ewww.designcrack.com%2Fv2%2F%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: Ru2boy-Wear+et+Rapelite.info%0D%0APlus+d%27infos+sur+%3A+%3Ca+href%3D%22http%3A%2F%2Fwww.spreadshirt.net%2Fshop.php%3Fsid%3D86437%22%3Ewww.spreadshirt.net%2Fshop.php%3Fsid%3D86437%3C%2Fa%3E+%3B+%3Ca+href%3D%22http%3A%2F%2Fkifran.spreadshirt.net%22%3Ekifran.spreadshirt.net%3C%2Fa%3E+%3B+%3Ca+href%3D%22http%3A%2F%2Fcomboutique.com%2Fru2boy%22%3Ecomboutique.com%2Fru2boy%3C%2Fa%3E
+caption: A+collection+of+flying+saucers%2C+full+of+sugar+and+artifical+colourings.+Yummy%21+%0A%0ACaptured+somewhat+fuzzily+on+my+iSight.
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fwww.duesentrieb.org%22%3Eget+tracks%3C%2Fa%3E
+caption: 
+caption: Is+there+a+terrorist+in+my+coffee%3F
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %3Ca+href%3D%22http%3A%2F%2Fcronicasmadrilenas.blogspot.com%2F2006%2F09%2Fpilas-usb.html%22%3E%0APilas+USB%3C%2Fa%3E
+caption: 
+caption: See+More+Fascinating+Design+Objects+at+%3Ca+href%3D%22http%3A%2F%2Fdesigncrack.com%22+rel%3D%22nofollow%22%3Edesigncrack.com%3C%2Fa%3E
+caption: %3Ca+href%3D%22http%3A%2F%2Fen.wikipedia.org%2Fwiki%2FRemembrance_day%22%3Eremembrance+day%3C%2Fa%3E
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: %E7%B4%A0%E6%9D%90%EF%BC%9A%E3%81%AD%E3%82%8A%E3%81%91%E3%81%97
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+caption: 
+len(images): 12
+srun: error: lrdn2583: task 0: Exited with exit code 1

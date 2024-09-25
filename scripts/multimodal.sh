@@ -32,12 +32,13 @@ export TRANSFORMERS_OFFLINE=1
 source ~/miniconda3/bin/activate
 
 cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache"
-input_dir="/leonardo_work/EUHPC_E03_068/safellm/data/test-commoncatalog-cc-by/0/least_dim_range=256-512/aspect_ratio_bucket=1-1"
+input_dir="/leonardo_work/EUHPC_E03_068/safellm/data/test-commoncatalog-cc-by"
 
 srun python -m src.purpleteam.create_caption_from_image \
     --cache_dir $cache_dir \
     --input_dir $input_dir \
-    --output_path data/multimodal/commoncatalog-out-test.jsonl
+    --output_path data/multimodal/commoncatalog-out-test.jsonl \
+    --batch_size 4
 
 # srun python -m src.purpleteam.create_imgs_and_captions \
 #     --cache_dir $cache_dir \
@@ -45,10 +46,10 @@ srun python -m src.purpleteam.create_caption_from_image \
 #     --output_path $output_file_path \
 #     --score_cutoff $score_cutoff
 
-srun python -m src.purpleteam.create_captions_from_instr \
-    --cache_dir $cache_dir \
-    --input_path data/purpleteam-teknium-OpenHermes-2.5-Mistral-7B-teknium-OpenHermes-2.5-Mistral-7B.jsonl \
-    --output_path data/multimodal/step-1-test.jsonl
+# srun python -m src.purpleteam.create_captions_from_instr \
+#     --cache_dir $cache_dir \
+#     --input_path data/purpleteam-teknium-OpenHermes-2.5-Mistral-7B-teknium-OpenHermes-2.5-Mistral-7B.jsonl \
+#     --output_path data/multimodal/step-1-test.jsonl
 # srun python -m src.purpleteam.create_imgs_and_captions \
 #     --cache_dir $cache_dir \
 #     --input_path data/multimodal/step-1-test.jsonl \

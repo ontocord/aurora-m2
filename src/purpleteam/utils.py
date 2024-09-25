@@ -54,6 +54,56 @@ def remove_quotes(text):
   text = text.replace(" @s@ ", "'s ").replace(" @ve@ ", "'ve ").replace( " @m@ ", "'m ").replace(" @t@ ", "'t ").strip()
   return text
 
+def add_img_context_to_question(question):
+    added_text = ""
+    prefix = suffix = False
+    if random.randint(0,1) and "scene" not in question and "image" not in question and "picture" not in question:
+        prefix = True
+        added_text = random.choice(["Given the image, ", "Look at the image and ", "Ok, given the image, ", "Please look at the image and ", "Can you tell me from the image: ", "Next, can you tell me from the image: ", "Now let's examine this image. ", "I want you to act as an expert image analyzer, here. "])
+    elif "scene" not in question and "image" not in question and "picture" not in question:
+        suffix = True
+        added_text = random.choice([ "given the image", "Please look at the image and answer.", "Can you tell me the answer from the image?", "Now let's examine this image. ", "I want you to act as an expert image analyzer, here. "])
+    if random.randint(0,1): added_text = added_text.replace("image", "picture")
+    if random.randint(0,1): added_text = added_text.replace("image", "scene")
+    if random.randint(0,1): added_text = added_text.replace("I want you to act", "Act")
+    if random.randint(0,1): added_text = (added_text + " please ").replace(". please", ", please")
+    if random.randint(0,1): added_text = added_text.replace("Given", "Here is")
+    if random.randint(0,1): added_text = added_text.replace("Given", "You have")
+    if random.randint(0,1): added_text = added_text.replace("Given", "Inspect")
+    if random.randint(0,1): added_text = added_text.replace("Given", "Analyze")
+    if random.randint(0,1): added_text = added_text.replace("Look at", "Here is")
+    if random.randint(0,1): added_text = added_text.replace("Look at", "You have")
+    if random.randint(0,1): added_text = added_text.replace("Look at", "Inspect")
+    if random.randint(0,1): added_text = added_text.replace("Look at", "Analyze")
+    if random.randint(0,1): added_text = added_text.replace("Can you", "Will you")
+    if random.randint(0,1): added_text = added_text.replace("Can you", "Please")
+    if random.randint(0,1): added_text = added_text.replace("given", "here is")
+    if random.randint(0,1): added_text = added_text.replace("given", "inspect")
+    if random.randint(0,1): added_text = added_text.replace("given", "analyze")
+    if random.randint(0,1): added_text = added_text.replace("look at", "here is")
+    if random.randint(0,1): added_text = added_text.replace("look at", "you have")
+    if random.randint(0,1): added_text = added_text.replace("look at", "inspect")
+    if random.randint(0,1): added_text = added_text.replace("look at", "analyze")
+    if random.randint(0,1): added_text = added_text.replace("can you", "will you")
+    if random.randint(0,1): added_text = added_text.replace("can you", "please")
+    if random.randint(0,1): added_text = added_text.replace("examine", "analyze")
+    if random.randint(0,1): added_text = added_text.replace("examine", "deleve into")
+    if random.randint(0,1): added_text = added_text.replace("analyzer", "AI image understander")
+    if random.randint(0,1): added_text = added_text.replace("analyzer", "multimodal AI")
+    if prefix:
+      if added_text.endswith(".") or added_text.endswith(". "):
+        question = added_text + " "+ question
+      else:
+        question = added_text + " "+ question[0].upper()+question[1:]
+    elif suffix:
+      if added_text[0] == added_text[0].upper():
+        question = question + " " + added_text
+      else:
+        question = question[:-1] + " " + added_text + question[0]
+
+    question = question.replace("  ", " ")
+    return question
+    
 def tokenize_with_assistant_continuation(tokenizer, messages):
   if not hasattr(tokenizer, "assistant_ending"):
     msg = tokenizer.apply_chat_template([{"role": "user", "content": ""}, {"role": "assistant", "content": "@@@@@@"}], tokenize=False)

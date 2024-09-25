@@ -37,6 +37,7 @@ def setup(args):
 
   fluo_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir=args.cache_dir).to(accelerator.device).eval()
   fluo_processor = AutoProcessor.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir=args.cache_dir)
+  fluo_model = accelerator.prepare(fluo_model)
 
   purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_generative_model_path, cache_dir=args.cache_dir)
   purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval()
@@ -173,7 +174,7 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
                                                                                                 {"role": "assistant", "content": "Modified Caption:"}]))
         images_idxs.append(image_idx)
     outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=1)
-    outputs = [o.split("assistant\n",1)[-1]  if o.startswith("assistant\n") else o for o in outputs]
+    outputs = [o.split("Modified Caption:",1)[-1] else o for o in outputs]
     outputs = [o.replace("Caption:", "").replace("caption:", "").replace("Modified Caption:", "").replace("Modified caption:", "").replace("modified caption:", "").strip() for o in outputs]
     return_text.extend(outputs)
 

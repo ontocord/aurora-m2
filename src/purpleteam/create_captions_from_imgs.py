@@ -1,6 +1,7 @@
 import json
 import argparse
 import spacy
+import glob
 import numpy as np
 from src.purpleteam.utils import get_element_to_img, pil_image_to_base64
 
@@ -41,6 +42,7 @@ def setup(args):
 
   fluo_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir=args.cache_dir).to(accelerator.device).eval()
   fluo_processor = AutoProcessor.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir=args.cache_dir)
+  fluo_model = accelerator.prepare(fluo_model)
 
   purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_generative_model_path, cache_dir=args.cache_dir)
   purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval()
@@ -82,11 +84,9 @@ def generate_captions(images, suffix: str = "", score_cutoff: int = 0.2):
     images_idxs = []
 
     # save away a reference of the image->various text  
-    for prompt, generated_text, image_idx in zip(prompt_array, generated_texts, range(len(images))):
-      return_text.append(prompt)
+    for generated_text, image_idx in zip(generated_texts, range(len(images))):
       return_text.append(generated_text)
       images_idxs.append(image_idx)
-      
 
     # Remove digits as words
     working_prompt2 = []
@@ -166,7 +166,7 @@ def main():
     
     # TODO: load jsonl till batch_size
     with open(args.output_path, "w") as outfile: 
-      for file in glob.glob(args.input_dir.rstrip("/")+"/*/*/*/*):
+      for file in glob.glob(args.input_dir.rstrip("/")+"/*/*/*/*"):
         df = parquet.read_table(file)
         idx = 0
         all_data = []
