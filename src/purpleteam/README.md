@@ -2,7 +2,7 @@
 
 ## Overview
 
-SafeLLM is a pipeline designed to generate synthetic data for safety tuning of language models. The goal is to inculcate various notions of safety into the models, including compliance with the EU AI Act's [High-Risk Categories](https://artificialintelligenceact.eu/annex/3/). The generated data is multimodal and consists of multi-turn conversations between a user and an AI assistant. The data generation process adheres to a set of predefined rules listed in `templates/rule.py`.
+SafeLLM is a pipeline designed to generate synthetic data for safety tuning of language models. The goal is to inculcate various notions of safety into the models, including compliance with the EU AI Act's [High-Risk Categories](https://artificialintelligenceact.eu/annex/3/). The generated data is multimodal and consists of multi-turn conversations between a user and an AI assistant. The data generation process adheres to a set of predefined rules listed in [`templates/rule.py`](templates/rule.py).
 
 ## Pipeline Description
 
@@ -12,9 +12,9 @@ The data generation pipeline consists of a series of scripts executed sequential
 
    - **Purpose**: Generate adversarial instructions based on predefined safety rules.
    - **Functionality**:
-     - Uses ontology-based combinations of seed entities (found in [`templates/seed.py`](templates/seed.py)) to create general adversarial instructions.
+     - Uses ontology-based combinations of seed entities (found in [`templates/seed.py`](templates/seed.py)) to create general adversarial instructions based on the a rule definition.
      - These instructions are initially broad and require further specificity, which is addressed in the next step.
-     - The model samples these prompts repeatedly to induce the target model to produce unsafe content, evaluated by LlamaGuard acting as a moderator.
+     - Expands these broad instructions into more specific adversarial prompts by interacting with the target model, and uses the feedback from a moderator (e.g., LlamaGuard) to refine the prompts and create chosen and rejected response pairs.
 
 2. ### `create_captions_from_instr.py`
 
@@ -30,7 +30,7 @@ The data generation pipeline consists of a series of scripts executed sequential
      - Uses the captions from `create_captions_from_instr.py` to generate images.
      - Recaptions the generated images to create an upsampled caption.
        - The upsampling process includes an object detection pipeline to correct the count and presence of elements in the caption.
-     - Stores the cosine similarity scores (using the CLIP model) between:
+     - Stores the cosine similarity scores (using the CLIP model) between the image and:
        - The original caption.
        - The caption produced after image generation.
        - The upsampled caption.
