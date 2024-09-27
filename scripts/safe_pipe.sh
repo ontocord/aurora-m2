@@ -22,29 +22,64 @@ purpleteam_model_path="teknium/OpenHermes-2.5-Mistral-7B"
 target_model_path="teknium/OpenHermes-2.5-Mistral-7B"
 cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache"
 
-output_file="/leonardo_work/EUHPC_E03_068/safellm/data/purpleteam-${purpleteam_model_path//\//-}-${target_model_path//\//-}.jsonl"
+directory="data/autoredteam"
+mkdir -p $directory
 
-echo 'running autoredteam'
-srun python -m src.purpleteam.autoredteam \
-  --llamaguard_path llamas-community/LlamaGuard-7b \
-  --purpleteam_model_path $purpleteam_model_path \
-  --target_model_path $target_model_path \
-  --output_path $output_file \
-  --cache_dir $cache_dir \
+# output_file="$directory/purpleteam-${purpleteam_model_path//\//-}-${target_model_path//\//-}.jsonl"
+
+# echo 'running autoredteam'
+# srun python -m src.purpleteam.autoredteam \
+#   --llamaguard_path llamas-community/LlamaGuard-7b \
+#   --purpleteam_model_path $purpleteam_model_path \
+#   --target_model_path $target_model_path \
+#   --output_path $output_file \
+#   --cache_dir $cache_dir \
 #   --verb_types_to_include EU_Act_and_transparency_violations_against_people,adversarial_EU_Act_and_transparency_violations_against_people,exercise_of_rights_by_and_with_adults,adversarial_exercise_of_rights_by_and_with_adults,EU_Act_and_transparency_violations_using_EU_tools,adversarial_EU_Act_and_transparency_violations_using_EU_tools \
 #   --obj_types_to_include EU_Act_high_risk_EU_tools
 
-srun python -m src.purpleteam.create_captions_from_instr \
-    --cache_dir $cache_dir \
-    --input_path data/purpleteam-teknium-OpenHermes-2.5-Mistral-7B-teknium-OpenHermes-2.5-Mistral-7B.jsonl \
-    --output_path data/multimodal/step-1.jsonl
+# echo 'running create_caption_from_instr'
+# srun python -m src.purpleteam.create_caption_from_instr \
+#     --cache_dir $cache_dir \
+#     --input_path $output_file \
+#     --output_path $directory/step-1.jsonl
 
-srun python -m src.purpleteam.create_imgs_and_captions \
-    --cache_dir $cache_dir \
-    --input_path data/multimodal/step-1.jsonl \
-    --output_path data/multimodal/step-2.jsonl
+# echo 'running create_img_and_caption'
+# srun python -m src.purpleteam.create_img_and_caption \
+#     --cache_dir $cache_dir \
+#     --input_path $directory/step-1.jsonl \
+#     --output_path $directory/step-2.jsonl
 
-srun python -m src.purpleteam.create_instr_response_captions \
+# echo 'running create_revised_instr_response'
+# srun python -m src.purpleteam.create_revised_instr_response \
+#     --cache_dir $cache_dir \
+#     --input_path $directory/step-2.jsonl \
+#     --output_path $directory/step-3.jsonl
+
+echo 'running create_multiturn_conv'
+srun python -m src.purpleteam.create_multiturn_conv \
     --cache_dir $cache_dir \
-    --input_path data/multimodal/step-2.jsonl \
-    --output_path data/multimodal/processed.jsonl
+    --input_path $directory/step-3.jsonl \
+    --output_path $directory/processed.jsonl
+
+
+
+# directory="data/commoncatalog"
+# mkdir -p $directory
+
+# echo 'running create_caption_from_img'
+# srun python -m src.purpleteam.create_caption_from_img \
+#     --cache_dir $cache_dir \
+#     --input_dir data/test-commoncatalog-cc-by \
+#     --output_path $directory/commoncatalog_recaption.jsonl \
+
+# echo 'running create_revised_instr_response'
+# srun python -m src.purpleteam.create_revised_instr_response \
+#     --cache_dir $cache_dir \
+#     --input_path $directory/commoncatalog_recaption.jsonl \
+#     --output_path $directory/step-3.jsonl
+
+# echo 'running create_multiturn_conv'
+# srun python -m src.purpleteam.create_multiturn_conv \
+#     --cache_dir $cache_dir \
+#     --input_path $directory/step-3.jsonl \
+#     --output_path $directory/processed.jsonl

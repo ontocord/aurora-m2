@@ -54,13 +54,13 @@ def remove_quotes(text):
   text = text.replace(" @s@ ", "'s ").replace(" @ve@ ", "'ve ").replace( " @m@ ", "'m ").replace(" @t@ ", "'t ").strip()
   return text
 
-def add_img_context_to_question(question):
+def add_img_context_to_instruction(instruction):
     added_text = ""
     prefix = suffix = False
-    if random.randint(0,1) and "scene" not in question and "image" not in question and "picture" not in question:
+    if random.randint(0,1) and "scene" not in instruction and "image" not in instruction and "picture" not in instruction:
         prefix = True
         added_text = random.choice(["Given the image, ", "Look at the image and ", "Ok, given the image, ", "Please look at the image and ", "Can you tell me from the image: ", "Next, can you tell me from the image: ", "Now let's examine this image. ", "I want you to act as an expert image analyzer, here. "])
-    elif "scene" not in question and "image" not in question and "picture" not in question:
+    elif "scene" not in instruction and "image" not in instruction and "picture" not in instruction:
         suffix = True
         added_text = random.choice([ "given the image", "Please look at the image and answer.", "Can you tell me the answer from the image?", "Now let's examine this image. ", "I want you to act as an expert image analyzer, here. "])
     if random.randint(0,1): added_text = added_text.replace("image", "picture")
@@ -92,23 +92,72 @@ def add_img_context_to_question(question):
     if random.randint(0,1): added_text = added_text.replace("analyzer", "multimodal AI")
     if prefix:
       if added_text.endswith(".") or added_text.endswith(". "):
-        question = added_text + " "+ question
+        instruction = added_text + " "+ instruction
       else:
-        question = added_text + " "+ question[0].upper()+question[1:]
+        instruction = added_text + " "+ instruction[0].upper()+instruction[1:]
     elif suffix:
       if added_text[0] == added_text[0].upper():
-        question = question + " " + added_text
+        instruction = instruction + " " + added_text
       else:
-        question = question[:-1] + " " + added_text + question[0]
+        instruction = instruction[:-1] + " " + added_text + instruction[0]
 
-    question = question.replace("  ", " ")
-    return question
+    instruction = instruction.replace("  ", " ")
+    return instruction
+
+  
+def generate_image_aware_instruction(captions, instructions, model, tokenizer):
+  if random.randint(0, 1):
+    instr_revision_prompts = [tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"You are given the below image:\n{caption}\n===\nRevise the below instruction such that events, physical conditions, attributes, color, actions, feelings, objects, people or other information from the image are removed from the instruction, and the instruction refers to those things in the image instead. Do not refer to proper names in the instruction if those names are already in the image. Do not refer to any context document. Do not refer to the 'description' of the image. Retain the theme of the instruction. Do not repeat this instruction or the information from the image in your revised instruction. The instruction is:\n{instruction}"}, 
+                                                                              {"role": "assistant", "content": "Revised Instruction:"}]) for caption, instruction in zip(captions, instructions)]
+    revised_instructions = generate_with_batching(model, tokenizer, instr_revision_prompts, accelerator.device)
+    revised_instructions = [
+        revised_instruction.split("instruction:", 1)[-1]
+        .split("Instruction:", 1)[-1]
+        .split("Revised Instruction:", 1)[-1]
+        .split("Revised instruction:", 1)[-1]
+        .split("assistant\n", 1)[-1]
+        .replace("caption", "image").strip()
+        for revised_instruction in revised_instructions
+        if "answer:" not in revised_instruction.lower()
+    ]
+  else:
+    captions_concepts_list = [set([a.strip(",.\'\"?").lower() for a in caption.split() if (a.endswith("ly") or a.endswith("ion") or a.endswith("ing") or a.endswith("ity")) and len(a) > 5]) for caption in captions]
     
+    captions_concepts = [set([a.strip(",.\'\"?").lower()[:-3] for a in caption.split() if (a.endswith("ly") or a.endswith("ion") or a.endswith("ing") or a.endswith("ity")) and len(a) > 5]) for caption in captions]
+    instructions_concepts = [list(set([a.strip(",.\'\"?").lower() for a in instruction.split() if (a.endswith("ly") or a.endswith("ion") or a.endswith("ing") or a.endswith("ity")) and len(a) > 5 if a.strip(",.\'\"?").lower()[:-3] not in caption_concepts])) for caption_concepts, instruction in zip(captions_concepts, instructions)]
+    instructions_concepts = [", ".join(instruction_concepts) for instruction_concepts in instructions_concepts]
+    captions_concepts_list = [", ".join(caption_concepts_list) for caption_concepts_list in captions_concepts_list]
+    if instructions_concepts:
+      if captions_concepts_list:
+        prompts = [tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"You are given the below image:\n{caption}\n===\nRevise the below instruction such that events, physical conditions, attributes, color, actions, feelings, objects, people or other concepts from the image are removed from the instruction, and the instruction refers to those things in the image instead. DO NOT re-use words from the image description into the revised instruction. Do not refer to the 'description' of the image. Retain the theme of the instruction.\nDo not simply repeat or paraphrase the instruction or the information from the image such as {caption_concepts_list}.\nThe instruction is:\n{instruction}\n===\nBe sure to keep these concepts in the revised instruction: {instruction_concepts}. When referring the image, use phrases like 'the <genric term like boy, girl, man, woman ... > in the image'."},
+                                                                  {"role": "assistant", "content": "Revised question: Referring to this image"}]) for caption, caption_concepts_list, instruction, instruction_concepts in zip(captions, captions_concepts_list, instructions, instructions_concepts)]
+      else:  
+        prompts = [tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"You are given the below image:\n{caption}\n===\nRevise the below instruction such that events, physical conditions, attributes, color, actions, feelings, objects, people or other concepts from the image are removed from the instruction, and the instruction refers to those things in the image instead. DO NOT re-use words from the image description into the revised instruction. Do not refer to the 'description' of the image. Retain the theme of the instruction\nDo not simply repeat or paraphrase the instruction or the information from the image in your revised instruction.\nThe instruction is:\n{instruction}\n===\nBe sure to keep these concepts in the revised instruction: {instruction_concepts}. When referring the image, use phrases like 'the <genric term like boy, girl, man, woman ... > in the image'."},
+                                                                  {"role": "assistant", "content": "Revised question: Referring to this image"}]) for caption, instruction, instruction_concepts in zip(captions, instructions, instructions_concepts) ]
+    else:
+      prompts = [tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"You are given the below image:\n{caption}\n===\nRevise the below instruction such that events, physical conditions, attributes, color, actions, feelings, objects, people or other concepts from the image are removed from the instruction, and the instruction refers to those things in the image instead. DO NOT re-use words from the image description into the revised instruction. Do not refer to any context document. Do not refer to the 'description' of the image. Retain the theme of the instruction.\nDo not simply repeat or paraphrase the instruction or the information from the image in your revised instruction.\nThe instruction is:\n{instruction}\n===\nWhen referring the image, use phrases like 'the <genric term like boy, girl, man, woman ... > in the image'."},
+                                                                {"role": "assistant", "content": "Revised instruction: Referring to this image"}]) for caption, instruction in zip(captions, instructions)]
+      
+    revised_instructions = generate_with_batching(model, tokenizer, prompts, accelerator.device)
+    revised_instructions = [revised_instruction.split("Revised instruction:",1)[-1].strip() for revised_instruction in revised_instructions]
+
+  if random.randint(0, 1):
+    return [add_img_context_to_instruction(revised_instruction) for revised_instruction in revised_instructions] 
+  else:
+    return revised_instructions
+
+
 def tokenize_with_assistant_continuation(tokenizer, messages):
   if not hasattr(tokenizer, "assistant_ending"):
     msg = tokenizer.apply_chat_template([{"role": "user", "content": ""}, {"role": "assistant", "content": "@@@@@@"}], tokenize=False)
     tokenizer.assistant_ending = msg.split("@@@@@@")[-1]
   return tokenizer.apply_chat_template(messages, tokenize=False)[:-len(tokenizer.assistant_ending)]
+
+def tokenize_with_user_continuation(tokenizer, messages):
+  if not hasattr(tokenizer, "user_ending"):
+    msg = tokenizer.apply_chat_template([{"role": "user", "content": "@@@@@@"}], tokenize=False)
+    tokenizer.user_ending = msg.split("@@@@@@")[-1]
+  return tokenizer.apply_chat_template(messages, tokenize=False)[:-len(tokenizer.user_ending)]
 
 def strip_left_stopwords(e_text):
   e_text2 = []

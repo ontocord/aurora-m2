@@ -34,7 +34,7 @@ source ~/miniconda3/bin/activate
 cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache"
 input_dir="/leonardo_work/EUHPC_E03_068/safellm/data/test-commoncatalog-cc-by"
 
-srun python -m src.purpleteam.create_caption_from_image \
+srun python -m src.purpleteam.create_caption_from_img \
     --cache_dir $cache_dir \
     --input_dir $input_dir \
     --output_path data/multimodal/commoncatalog-out-test.jsonl \

@@ -4,6 +4,8 @@
 
 SafeLLM is a pipeline designed to generate synthetic data for safety tuning of language models. The goal is to inculcate various notions of safety into the models, including compliance with the EU AI Act's [High-Risk Categories](https://artificialintelligenceact.eu/annex/3/). The generated data is multimodal and consists of multi-turn conversations between a user and an AI assistant. The data generation process adheres to a set of predefined rules listed in [`templates/rule.py`](templates/rule.py).
 
+Basically, it's the use of N models to do adversarial data generation, with a policy, where things satisfying the policy and things not satisfying the policy are generated and classified and evaluated.
+
 ## Pipeline Description
 
 The data generation pipeline consists of a series of scripts executed sequentially. Each script performs a specific function in the pipeline:
