@@ -19,3 +19,12 @@ pyspellchecker==0.8.1
 bitsandbytes==0.43.3
 einops==0.8.0
 diffusers==0.30.1
+spacy
+opencv-python
+autocorrect
+sentencepiece
+whoosh
+fasttext
+einops
+trafilatura
+json_repair
