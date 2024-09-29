@@ -28,3 +28,4 @@ trafilatura
 json_repair
 wn
 scispacy
+protobuf
