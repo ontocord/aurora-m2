@@ -148,15 +148,17 @@ def generate_image_aware_instruction(captions, instructions, model, tokenizer):
 
 
 def tokenize_with_assistant_continuation(tokenizer, messages):
-  if not hasattr(tokenizer, "assistant_ending"):
+  if not hasattr(tokenizer, "user_assistant"):
     msg = tokenizer.apply_chat_template([{"role": "user", "content": ""}, {"role": "assistant", "content": "@@@@@@"}], tokenize=False)
     tokenizer.assistant_ending = msg.split("@@@@@@")[-1]
+  if not messages: return ""
   return tokenizer.apply_chat_template(messages, tokenize=False)[:-len(tokenizer.assistant_ending)]
 
 def tokenize_with_user_continuation(tokenizer, messages):
   if not hasattr(tokenizer, "user_ending"):
     msg = tokenizer.apply_chat_template([{"role": "user", "content": "@@@@@@"}], tokenize=False)
     tokenizer.user_ending = msg.split("@@@@@@")[-1]
+  if not messages: return ""
   return tokenizer.apply_chat_template(messages, tokenize=False)[:-len(tokenizer.user_ending)]
 
 def strip_left_stopwords(e_text):

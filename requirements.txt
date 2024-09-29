@@ -19,6 +19,8 @@ pyspellchecker==0.8.1
 bitsandbytes==0.43.3
 einops==0.8.0
 diffusers==0.30.1
+protobuf==5.28.0
+spacy==3.7.6
 spacy
 opencv-python
 autocorrect

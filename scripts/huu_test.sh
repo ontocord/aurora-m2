@@ -22,43 +22,45 @@ purpleteam_model_path="teknium/OpenHermes-2.5-Mistral-7B"
 target_model_path="teknium/OpenHermes-2.5-Mistral-7B"
 cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache"
 
-directory="data/autoredteam"
+directory="data/autoredteam-2"
 mkdir -p $directory
 
 output_file="$directory/purpleteam-${purpleteam_model_path//\//-}-${target_model_path//\//-}.jsonl"
 
 echo 'running autoredteam'
 srun python -m src.purpleteam.autoredteam \
-  --llamaguard_path llamas-community/LlamaGuard-7b \
-  --purpleteam_model_path $purpleteam_model_path \
-  --target_model_path $target_model_path \
-  --output_path $output_file \
-  --cache_dir $cache_dir \
+   --llamaguard_path llamas-community/LlamaGuard-7b \
+   --purpleteam_model_path $purpleteam_model_path \
+   --target_model_path $target_model_path \
+   --output_path $output_file \
+   --cache_dir $cache_dir \
+   --verb_types_to_include EU_Act_and_transparency_violations_against_people
 
-echo 'running create_caption_from_instr'
-srun python -m src.purpleteam.create_caption_from_instr \
-    --cache_dir $cache_dir \
-    --input_path $output_file \
-    --output_path $directory/step-1.jsonl
-
-echo 'running create_img_and_caption'
-srun python -m src.purpleteam.create_img_and_caption \
-    --cache_dir $cache_dir \
-    --score_cutoff 0.14 \
-    --input_path $directory/step-1.jsonl \
-    --output_path $directory/step-2.jsonl
-
-echo 'running create_revised_instr_response'
-srun python -m src.purpleteam.create_revised_instr_response \
-    --cache_dir $cache_dir \
-    --input_path $directory/step-2.jsonl \
-    --output_path $directory/step-3.jsonl
-
-# echo 'running create_multiturn_conv'
-# srun python -m src.purpleteam.create_multiturn_conv \
+# echo 'running create_caption_from_instr'
+# srun python -m src.purpleteam.create_caption_from_instr \
 #     --cache_dir $cache_dir \
-#     --input_path $directory/step-3.jsonl \
-#     --output_path $directory/processed.jsonl
+#     --input_path $output_file \
+#     --output_path $directory/step-1.jsonl
+
+
+# echo 'running create_img_and_caption'
+# srun python -m src.purpleteam.create_img_and_caption \
+#     --cache_dir $cache_dir \
+#     --score_cutoff 0.14 \
+#     --input_path $directory/step-1.jsonl \
+#     --output_path $directory/step-2.jsonl
+
+# echo 'running create_revised_instr_response'
+# srun python -m src.purpleteam.create_revised_instr_response \
+#     --cache_dir $cache_dir \
+#     --input_path $directory/step-2.jsonl \
+#     --output_path $directory/step-3.jsonl
+
+#echo 'running create_multiturn_conv'
+#srun python -m src.purpleteam.create_multiturn_conv \
+#    --cache_dir $cache_dir \
+#    --input_path $directory/step-3.jsonl \
+#    --output_path $directory/processed.jsonl
 
 
 

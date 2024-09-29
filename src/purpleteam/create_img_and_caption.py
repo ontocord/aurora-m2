@@ -199,7 +199,7 @@ def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
     parser.add_argument("--input_path", type=str, help="Path to the input file.")
     parser.add_argument("--batch_size", type=int, default=4, help="Batch size")
-    parser.add_argument("--score_cutoff", type=float, default=0.2, help="score cutoff")
+    parser.add_argument("--score_cutoff", type=float, default=0.14, help="score cutoff")
     parser.add_argument("--cache_dir", type=str, default="", help="Path to cache directory.")
     parser.add_argument("--purpleteam_generative_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
     parser.add_argument("--cos_score_model_path", type=str, default="openai/clip-vit-base-patch32", help="Model used to get the image-text cosine similarity.")

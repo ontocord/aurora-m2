@@ -1,0 +1,31 @@
+running autoredteam
+Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+Traceback (most recent call last):
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/frcnn/utils.py", line 418, in get_config_dict
+    config_file = Config.load_yaml(resolved_config_file)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/frcnn/utils.py", line 363, in load_yaml
+    with open(config) as stream:
+         ^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/leonardo_scratch/fast/EUHPC_E03_068/.cache/546e32cd48ad9baaa3ed33ee0efd9b3b051a426d902bc59d26b252b8c87bf74f.d47ab04b306a84b0c3e3a6bb34a73220bb6ce044af9e17f5f2af03ceac284280'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/autoredteam.py", line 11, in <module>
+    from src.purpleteam.utils import chatml_format_instructions, generate_with_batching, tokenize_with_assistant_continuation
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/utils.py", line 33, in <module>
+    box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned",frcnn_config,  cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").half().cuda()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/frcnn/modeling_frcnn.py", line 1685, in from_pretrained
+    config = Config.from_pretrained(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/frcnn/utils.py", line 385, in from_pretrained
+    config_dict, kwargs = cls.get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/leonardo_work/EUHPC_E03_068/safellm/src/frcnn/utils.py", line 422, in get_config_dict
+    raise EnvironmentError(msg)
+OSError: Can't load config for
+srun: error: lrdn3386: task 0: Exited with exit code 1

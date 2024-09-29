@@ -104,12 +104,10 @@ def create_multiturn(captions, instructions, responses, revised_instructions, re
                         
     # clean the conversation 
     for conv in conversation:
-        conv[0]['content'] = next(
-            (conv[0]['content'].split(question_prefix, 1)[-1] 
-             for question_prefix in question_prefixes 
-             if question_prefix in conv[0]['content']),
-            conv[0]['content']
-        )
+        for question_prefix in question_prefixes:
+            if question_prefix in conv[0]['content']:
+                conv[0]['content'] = conv[0]['content'].split(question_prefix, 1)[-1]
+                break
         for cc in conv: cc["content"] = cc["content"].replace("Assistant:", "").replace("User:", "").strip()
     return conversation
 
