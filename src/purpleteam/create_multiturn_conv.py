@@ -265,6 +265,7 @@ def main():
 
     with open(args.input_path, "r") as infile: 
         with open(args.output_path, "w") as outfile:
+            rng = 0
             while True:
                 # Read a batch of lines from the input file
                 lines = list(itertools.islice(infile, args.batch_size))
@@ -273,27 +274,28 @@ def main():
 
                 # Apply the algo over the batched data
                 all_data = [json.loads(l) for l in lines]
-                text_array = [remove_quotes(data['caption']) for data in all_data]
-                instr_array = [data['instruction'] for data in all_data]
-                response_array = [data['chosen_response'] for data in all_data]
-                revised_instr_array = [data['revised_instruction'] for data in all_data]
-                revised_response_array = [data['revised_response'] for data in all_data]
+                captions = [remove_quotes(data['caption']) for data in all_data]
+                instructions = [data['instruction'] for data in all_data]
+                responses = [data['chosen_response'] for data in all_data]
+                revised_instructions = [data['revised_instruction'] for data in all_data]
+                revised_responses = [data['revised_response'] for data in all_data]
 
-                conversations = []
-                for rng in range(0, len(text_array), args.batch_size):
-                    captions = text_array[rng:min(len(text_array), rng+args.batch_size)]
-                    instructions = instr_array[rng:min(len(instr_array), rng+args.batch_size)]
-                    responses = response_array[rng:min(len(response_array), rng+args.batch_size)]
-                    revised_instructions = revised_instr_array[rng:min(len(revised_instr_array), rng+args.batch_size)]
-                    revised_responses = revised_response_array[rng:min(len(revised_response_array), rng+args.batch_size)]
+                # conversations = []
+                # for rng in range(0, len(text_array), args.batch_size):
+                    # captions = text_array[rng:min(len(text_array), rng+args.batch_size)]
+                    # instructions = instr_array[rng:min(len(instr_array), rng+args.batch_size)]
+                    # responses = response_array[rng:min(len(response_array), rng+args.batch_size)]
+                    # revised_instructions = revised_instr_array[rng:min(len(revised_instr_array), rng+args.batch_size)]
+                    # revised_responses = revised_response_array[rng:min(len(revised_response_array), rng+args.batch_size)]
 
-                    conversations += create_multiturn(captions, instructions, responses, revised_instructions, revised_responses, 
-                                                      purpleteam_generative_model, purpleteam_generative_tokenizer, num_turns=num_turns)
+                conversations = create_multiturn(captions, instructions, responses, revised_instructions, revised_responses, 
+                                                purpleteam_generative_model, purpleteam_generative_tokenizer, num_turns=num_turns)
 
                 for i, conversation in enumerate(conversations):
                     all_data[i]['conversation'] = conversation
                     all_data[i]["metadata"]["step4_params"] = json.dumps(vars(args))
                     outfile.write(json.dumps(all_data[i])+"\n")
+                rng += args.batch_size
 
 
 if __name__ == "__main__":

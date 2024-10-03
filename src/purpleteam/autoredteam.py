@@ -28,7 +28,7 @@ torch.cuda.empty_cache()
 #instructions are of the form: [a person] verb obj conditional_clause. the instruction is then permuted and revised by a model.
 #based on domain rules, create  obj, verb, instruction, conditional_clause, revision type
 #based on example instructions: create domain specific obj, verb, instruction, conditional_clause, revision type and rules
-def auto_redteam(target_model, target_tokenizer, 
+def auto_redteam(args, target_model, target_tokenizer, 
                  purpleteam_generative_model, purpleteam_generative_tokenizer, 
                  blueteam_llamaguard_model, blueteam_llamaguard_tokenizer,
                  instruct_formatter=chatml_format_instructions, 
@@ -585,7 +585,7 @@ You don't mention the above strategies in the revised questions/instructions. Do
 {instr}"""},
 {"role": "assistant", "content": "Below is the revised question:"""}]) for instr, revision in zip(instrs3, added_revisions)]
       output = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, diverse_instr_templates, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=batch_size)
-      instrs3 = [o.split("Below is the revised question:",1)[-1] for o in instrs3]
+      instrs3 = [o.split("Below is the revised question:",1)[-1] for o in output]
       # instrs3 = [o.split(begin_answer_split[0], 1)[-1].split(begin_answer_split[1], 1)[-1].split(end_answer_split, 1)[0].split("</s>")[0].split("2.")[0].replace("1.","").strip().replace("Revised Response:", "").replace("Revised response:", "").split(":",1)[-1].strip('"\'\n ') for o in output]
       # instrs3 = [o.split("assistant\n",1)[-1]  if o.startswith("assistant\n") else o for o in instrs3]
       instrs4 = [instr2 if len(instr3) < len(instr2) else instr3 for instr2, instr3 in zip(instrs2, instrs3)]
@@ -628,6 +628,20 @@ You don't mention the above strategies in the revised questions/instructions. Do
       #find an answer that is safer based on the safety prompt and auto-redteam the "safer" answer
       for instr_aHash, answer, safety_tag in zip(instr2record_items, answers, safety_tags):
           instr, aHash = instr_aHash
+          answer = answer.split("### Response:", 1)[-1]
+          if "Instruction:" in answer:
+            print ('REJECTED BECAUSE THE OUTPUT IN WRONG FORMAT', aHash)
+            del instr2record[instr]
+            continue
+          if "Response:" in answer[:20]:
+            answer = answer.split("Response:", 1)[-1].strip() 
+          if "Answer:" in answer[:20]:
+            answer = answer.split("Answer:", 1)[-1].strip() 
+          if "AI:" in answer[:20]:
+            answer = answer.split("AI:", 1)[-1].strip() 
+          if "Assistant:" in answer[:20]:
+            answer = answer.split("Assistant:", 1)[-1].strip() 
+
           aHash['text'] = f"### Instruction:\n{instr}\n### Response:\n{answer}"
           aHash['metadata']['safety_tag_text1'] = safety_tag[0].strip().lower()
           aHash['metadata']['safety_category_text1'] = safety_tag[1].strip(" .").lower()
@@ -660,6 +674,20 @@ If you refuse to answer, please explain why, and propose an alternate safer inst
       # save away the safety answer as text2 and if llama guard found no safe answers, reject this example (it is too hard)
       for instr_aHash, answer, safety_tag in zip(instr2record_items, answers, safety_tags):
         instr, aHash = instr_aHash
+        answer = answer.split("### Response:", 1)[-1]
+        if "Instruction:" in answer:
+          print ('REJECTED BECAUSE THE OUTPUT IN WRONG FORMAT', aHash)
+          del instr2record[instr]
+          continue
+        if "Response:" in answer[:20]:
+          answer = answer.split("Response:", 1)[-1].strip() 
+        if "Answer:" in answer[:20]:
+          answer = answer.split("Answer:", 1)[-1].strip() 
+        if "AI:" in answer[:20]:
+          answer = answer.split("AI:", 1)[-1].strip() 
+        if "Assistant:" in answer[:20]:
+          answer = answer.split("Assistant:", 1)[-1].strip() 
+
         aHash['text2'] =  f"### Instruction:\n{instr}\n### Response:\n{answer}"
         aHash['metadata']['safety_tag_text2'] = safety_tag[0].strip().lower()
         aHash['metadata']['safety_category_text2'] = safety_tag[1].strip(" .").lower()
@@ -786,6 +814,20 @@ Given the following instruction and response, revise the response so that it is 
       # otherwise, we can do the redteam comparison method below.
       for instr_aHash, answer in zip(instr2record_items, answers):
           instr, aHash = instr_aHash
+          answer = answer.split("### Response:", 1)[-1]
+          if "Instruction:" in answer:
+            print ('REJECTED BECAUSE THE OUTPUT IN WRONG FORMAT', aHash)
+            del instr2record[instr]
+            continue
+          if "Response:" in answer[:20]:
+            answer = answer.split("Response:", 1)[-1].strip() 
+          if "Answer:" in answer[:20]:
+            answer = answer.split("Answer:", 1)[-1].strip() 
+          if "AI:" in answer[:20]:
+            answer = answer.split("AI:", 1)[-1].strip() 
+          if "Assistant:" in answer[:20]:
+            answer = answer.split("Assistant:", 1)[-1].strip() 
+            
           instr2record[instr]['text2'] =  f"### Instruction:\n{instr}\n### Response:\n{answer}"
           instr2record[instr]['metadata']['safety_tag_text2'] = "unsafe"
           instr2record[instr]['metadata']['safety_category_text2'] = "Generated Less Safe"
@@ -902,9 +944,10 @@ Answer yes or no, whether the response is overall a good answer. Then explain wh
       #TODO - expand the 'text' answer into a long answer
       for instr, aHash in list(instr2record.items()):
         #print (aHash)
+        aHash['metadata']['autoredteam-params'] = json.dumps(vars(args))
         outf.write(json.dumps(aHash)+"\n")
   outf.close()
-
+  
 
 def setup_models(args):
     # bnb_config = BitsAndBytesConfig(
@@ -950,7 +993,7 @@ def main():
     args.obj_types_to_include = set(args.obj_types_to_include.split(',')) if args.obj_types_to_include.strip() else {}
 
     blueteam_llamaguard_model, blueteam_llamaguard_tokenizer, purpleteam_generative_model, purpleteam_generative_tokenizer, target_model, target_tokenizer = setup_models(args)
-    auto_redteam(target_model, target_tokenizer, 
+    auto_redteam(args, target_model, target_tokenizer, 
                  purpleteam_generative_model, purpleteam_generative_tokenizer, 
                  blueteam_llamaguard_model, blueteam_llamaguard_tokenizer, 
                  output_file=args.output_path, verb_types_to_include=args.verb_types_to_include,

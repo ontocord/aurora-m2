@@ -48,8 +48,7 @@ def setup(args):
   flux_pipe = FluxPipeline.from_pretrained(args.image_generator_model_path, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir)
   flux_pipe.enable_model_cpu_offload()
 
-  lguard_pipe = pipeline("text-generation", model=args.llamaguard_path, device_map="auto", max_new_tokens=256)
-  return clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe, lguard_pipe
+  return clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe
 
 
 def cosim_eval(images, texts):
@@ -122,7 +121,8 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
     elements1 = []
     elements1_1 = []
     for prompt1, image in zip(working_prompt1, images):
-      aHash, rel_sents = get_element_to_img(prompt1, image, score_cutoff=score_cutoff)
+      aHash, rel_sents = get_element_to_img(prompt1, image, box_segmentation_model,\
+                                            image_preprocessor, clip_processor, clip_model, score_cutoff=score_cutoff)
       for element, val in list(aHash.items()):
           # if we don't detect an actual image but clip thinks there is the element SOMEWHERE in the picture, then we want a higher cutoff
           if element not in prompt1 or ((val[1] and val[0] < score_cutoff) or (not val[1] and val[0] < score_cutoff + 0.05)):
@@ -164,15 +164,16 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
       
     # upsample the caption and correct the count of elements
     up_prompt = []
+    prefix = random.choice(["an image of", "a photo of", "a photograph of", "a picture of", "a screenshot of", "a screen shot of"])
     for prompt1, prompt2, e1, e2 , image_idx in zip(working_prompt1_1, working_prompt2_2, elements1, elements1_1, range(len(images))):
       e1 = e1.strip().replace("  ", " ")
       e2 = e2.strip().replace("  ", " ")
       up_prompt.append(tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e1}"},
-                                                                                              {"role": "assistant", "content": "Modified Caption:"}]))
+                                                                                              {"role": "assistant", "content": f"Modified Caption: {prefix}"}]))
       images_idxs.append(image_idx)
       if e1 != e2:
         up_prompt.append(tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e2}"}, 
-                                                                                                {"role": "assistant", "content": "Modified Caption:"}]))
+                                                                                                {"role": "assistant", "content": f"Modified Caption: {prefix}"}]))
         images_idxs.append(image_idx)
     outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=1)
     outputs = [o.split("Modified Caption:",1)[-1] for o in outputs]
@@ -207,16 +208,19 @@ def main():
     parser.add_argument("--image_generator_model_path", type=str, default="black-forest-labs/FLUX.1-schnell")
     parser.add_argument("--llamaguard_path", type=str, default="meta-llama/Llama-Guard-3-8B")
     parser.add_argument("--output_path", type=str, help="Path to save output for this step.")
+    parser.add_argument("--output_dir", type=str, help="Dir to save images.")
 
     args = parser.parse_args()
     global clip_processor, clip_model, fluo_model, fluo_processor
     global purpleteam_generative_tokenizer, purpleteam_generative_model
-    global flux_pipe, lguard_pipe
-    clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe, lguard_pipe = setup(args)
-    
+    global flux_pipe
+    clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe = setup(args)
+
+    base_path = args.output_path.split("/")[-1].split(".jsonl")[0]
     # TODO: load jsonl till batch_size
     with open(args.output_path, "w") as outfile: 
       with open(args.input_path, "r") as infile:
+        rng = 0
         while True:
           # Read a batch of lines from the input file
           lines = list(itertools.islice(infile, args.batch_size))
@@ -225,29 +229,23 @@ def main():
 
           # Apply the algo over the batched data
           all_data = [json.loads(l) for l in lines]
-          text_array = [data['caption'] for data in all_data]
-          image_text_score_related = []
-          for rng in range(0, len(text_array), args.batch_size):
-            d = text_array[rng:min(len(text_array), rng+args.batch_size)]
-            tmp = generate_image_and_outputs(d, score_cutoff=args.score_cutoff)
-            # add batch_id to idx
-            for idx, tmpp in enumerate(tmp):
-              tmp[idx] = (rng + tmpp[0],) + tmpp[1:]
-            image_text_score_related += tmp
-          for (idx, image, text, score, related) in image_text_score_related:
+          captions = [data['caption'] for data in all_data]
+          idx_image_text_score_related = generate_image_and_outputs(captions, score_cutoff=args.score_cutoff)
+
+          # save
+          for (idx, image, text, score, related) in idx_image_text_score_related:
             data = all_data[idx]
             if "metadata" not in data:
               data["metadata"] = {}
-            data["metadata"]["cos_score"] = score
+            data["metadata"]["caption_media_score"] = score
             data["metadata"]["related"] = related
-            # img_idx = str(assign_uuid(text))
-            image.save(f"data/test-samples/{args.score_cutoff}-{idx}.png")
+            image.save(f"{args.output_dir}/{base_path}-{rng+idx}.png")
             data["caption"] = text
-            data["image"] = [f"data/test-samples/{args.score_cutoff}-{idx}.png"]
-            # print("data['image']:", data['image'])
-            data["metadata"]["step2_params"] = json.dumps(vars(args))
+            data["images"] = [f"{args.output_dir}/{base_path}-{rng+idx}.png"]
+            data["metadata"]["source"] = args.output_dir
+            data["metadata"]["create_img_and_caption-params"] = json.dumps(vars(args))
             outfile.write(json.dumps(data)+"\n")
-                
+          rng += args.batch_size
 
 
 if __name__ == "__main__":

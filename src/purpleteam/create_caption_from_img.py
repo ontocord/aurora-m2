@@ -103,7 +103,8 @@ def generate_captions(images, suffix: str = "", score_cutoff: int = 0.2):
     elements_ = []
     for prompt, image in zip(_working_prompt, images):
       # for working_prompt
-      aHash, rel_sents = get_element_to_img(prompt, image, score_cutoff=score_cutoff)
+      aHash, rel_sents = get_element_to_img(prompt, image, box_segmentation_model,\
+                                            image_preprocessor, clip_processor, clip_model, score_cutoff=score_cutoff)
       for element, val in list(aHash.items()):
           # if we don't detect an actual image but clip thinks there is the element SOMEWHERE in the picture, then we want a higher cutoff
           if element not in prompt or ((val[1] and val[0] < score_cutoff) or (not val[1] and val[0] < score_cutoff + 0.05)):
@@ -124,15 +125,16 @@ def generate_captions(images, suffix: str = "", score_cutoff: int = 0.2):
 
     # upsample the caption and correct the count of elements
     up_prompt = []
+    prefix = random.choice(["an image of", "a photo of", "a photograph of", "a picture of", "a screenshot of", "a screen shot of"])
     for prompt, e1, e2 , image_idx in zip(working_prompt, elements, elements_, range(len(images))):
       e1 = e1.strip().replace("  ", " ")
       e2 = e2.strip().replace("  ", " ")
       up_prompt.append(tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt}.\n\n=====\n\nRemember to include these elements:\n{e1}"},
-                                                                                              {"role": "assistant", "content": "Modified Caption:"}]))
+                                                                                              {"role": "assistant", "content": f"Modified Caption: {prefix}"}]))
       images_idxs.append(image_idx)
       if e1 != e2:
         up_prompt.append(tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt}.\n\n=====\n\nRemember to include these elements:\n{e2}"}, 
-                                                                                                {"role": "assistant", "content": "Modified Caption:"}]))
+                                                                                                {"role": "assistant", "content": f"Modified Caption: {prefix}"}]))
         images_idxs.append(image_idx)
     outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=1)
     outputs = [o.split("Modified Caption:",1)[-1] for o in outputs]
@@ -159,6 +161,7 @@ def main():
     parser = argparse.ArgumentParser(description="Set up models with quantization and specific configurations.")
     parser.add_argument("--input_dir", type=str, default="", help="Path to the input file.")
     parser.add_argument("--batch_size", type=int, default=4, help="Batch size")
+    parser.add_argument("--score_cutoff", type=float, default=0.14, help="score cutoff")
     parser.add_argument("--cache_dir", type=str, default="", help="Path to cache directory.")
     parser.add_argument("--purpleteam_generative_model_path", type=str, default="teknium/OpenHermes-2.5-Mistral-7B", help="Purpleteam generative model hf path.")
     parser.add_argument("--cos_score_model_path", type=str, default="openai/clip-vit-base-patch32", help="Model used to get the image-text cosine similarity.")
@@ -168,7 +171,7 @@ def main():
     args = parser.parse_args()
     global clip_processor, clip_model, fluo_model, fluo_processor
     global purpleteam_generative_tokenizer, purpleteam_generative_model
-    global flux_pipe, lguard_pipe
+    global flux_pipe
     clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model = setup(args)
     
     # TODO: load jsonl till batch_size
@@ -180,8 +183,7 @@ def main():
         for image, caption, blip_text, title, usertags, url in zip(df['jpg'], df['caption'], df['blip2_caption'], df['title'], df['usertags'], df['downloadurl']):
           all_data.append({'image': image, 'orig_caption': caption.as_py(), 'blip2_text': blip_text.as_py(), 'title': title.as_py(), 'usertags': usertags.as_py(), 'url': url.as_py(), 'source': file})
         image_array = [Image.open(BytesIO(data['image'].as_py())) for data in all_data]
-        # image_text_score_related = []
-        image_array[0].save("data/multimodal/commoncatalog-test.jpeg")
+
         for rng in range(0, len(image_array), args.batch_size):
           images = image_array[rng:min(len(image_array), rng+args.batch_size)]
           try:
@@ -192,18 +194,20 @@ def main():
           # add batch_id to idx
           for idx, tmpp in enumerate(tmp):
             tmp[idx] = (rng + tmpp[0],) + tmpp[1:]
-          image_text_score_related = tmp
-          for (idx, text, score, related) in image_text_score_related:
+          idx_text_score_related = tmp
+          for (idx, text, score, related) in idx_text_score_related:
             metadata = all_data[idx]
             data = {'caption': text, 'metadata': metadata}
-            data["metadata"]["cos_score"] = score
+            data["metadata"]["caption_media_score"] = score
             data["metadata"]["related"] = related
-            data["metadata"]["image"] = []
-            data["metadata"]["recaption_params"] = json.dumps(vars(args))
+            if "image" in data["metadata"]:
+              del data["metadata"]["image"]
+            else:
+              print("'image' key not in data['metadata']")
+            data["metadata"]["create_caption_from_img-params"] = json.dumps(vars(args))
             
             outfile.write(json.dumps(data)+"\n")
-            outfile.flush()
-                
+          # if rng >= 3*args.batch_size: break
 
 
 if __name__ == "__main__":

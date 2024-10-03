@@ -27,14 +27,14 @@ from src.frcnn.utils import decode_image
 stopwords_set = en_stopwords = {'haven', 'are', 'why', 'most', "won't", 'against', 'with', 'needn', 'couldn', 'now', 'mustn', 'who', 'under', 'doing', 'am', 'aren', 'they', "didn't", 'd', 'doesn', 'if', 'he', 'her', "haven't", 'isn', 'own', 'does', 'such', 'until', 'into', 'had', 'again', 'over', "hadn't", "you'll", 't', 'by', 'be', "wasn't", 'so', 'yours', 'both', 'any', 'did', "you've", 'these', 'myself', 'o', 'hasn', "isn't", 'you', 'other', 'shan', 'being', 'yourselves', 'was', 'no', 'm', 'those', 'will', 'its', 'itself', 'have', 'down', 'weren', 'having', 'wouldn', 'herself', "mustn't", 'very', 'do', "should've", 'him', "you'd", 'below', 'just', 'that', 'for', 'which', 'but', 'nor', 'all', 'then', 'i', 'whom', 'it', 'once', 'here', 've', "you're", 'ours', "that'll", 'a', 'won', 'himself', 'where', 'this', 'your', "hasn't", 'same', 'when', 'ourselves', 'because', "needn't", 'theirs', 'from', 'mightn', 'my', 'while', 'yourself', "she's", 'each', "doesn't", 'only', 'at', 's', 'their', "wouldn't", 'shouldn', 'and', 'themselves', 'hers', 'has', 'up', 'ma', 'in', 'll', 'we', 're', 'y', 'of', 'after', 'our', "shan't", 'before', 'wasn', 'can', 'should', 'been', 'through', 'as', 'further', 'during', 'between', 'there', 'me', 'on', 'don', "shouldn't", 'more', 'out', "don't", 'the', "weren't", "aren't", "it's", 'what', 'or', "couldn't", 'hadn', "mightn't", 'his', 'above', 'to', 'how', 'few', 'off', 'them', 'didn', 'ain', 'not', 'she', 'an', 'than', 'too', 'is', 'some', 'were', 'about'}
 max_detections = 36
 spacy_nlp = spacy.load('en_core_web_sm')
-frcnn_config = json.load(open("src/frcnn/config.jsonl"))
-frcnn_config = Config(frcnn_config)
-image_preprocessor= Preprocess(frcnn_config).half().cuda()
-box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned",frcnn_config,  cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").half().cuda()
+# frcnn_config = json.load(open("src/frcnn/config.jsonl"))
+# frcnn_config = Config(frcnn_config)
+# image_preprocessor= Preprocess(frcnn_config).half().cuda()
+# box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned",frcnn_config,  cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").half().cuda()
 
-clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache", device_map="auto")
-clip_model = accelerator.prepare(clip_model)
-clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
+# clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache", device_map="auto")
+# clip_model = accelerator.prepare(clip_model)
+# clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
 
 def remove_quotes(text):
   text = text.replace("'s ", " @s@ ").replace("'ve ", " @ve@ ").replace("'m ", " @m@ ").replace("'t ", " @t@ ")
@@ -300,8 +300,11 @@ def clip_image_to_multitext_score(clip_model, clip_processor, image, text_array,
 #given a sentence, break the sentence up into elements (ner, verbs, etc.) and match against the img, in the aggregate as well as against boxes
 #return a dict of element -> (score, PIL Image or None)
 # TODO: count the items. e.g., two apples
-def get_element_to_img(matched_sentence, img, ignore_from_box=[], other_element_arr=[], get_box_images=True, num_boxes=5, box_add_factor=0.65, box_detect_verbs=True, use_longest_subsuming_text=True, score_cutoff=0.2):
-  global spacy_nlp, clip_model, clip_processor,  device, box_segmentation_model, image_preprocessor
+def get_element_to_img(matched_sentence, img, box_segmentation_model,\
+  image_preprocessor, clip_processor, clip_model, ignore_from_box=[], other_element_arr=[],\
+  get_box_images=True, num_boxes=5, box_add_factor=0.65, box_detect_verbs=True, use_longest_subsuming_text=True,\
+  score_cutoff=0.2):
+  global spacy_nlp
   doc = spacy_nlp(matched_sentence)
   noun_chunks = [strip_left_stopwords(e.text) for e in doc.noun_chunks if len(e.text) > 4 and e.text.lower() not in stopwords_set]
   verbs = [strip_left_stopwords(e.text) for e in doc if len(e.text) > 4 and e.tag_.startswith('VB') and e.text.lower() not in stopwords_set] + \

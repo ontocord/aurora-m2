@@ -46,6 +46,7 @@ def main():
 
     with open(args.input_path, "r") as infile: 
         with open(args.output_path, "w") as outfile:
+            rng = 0
             while True:
                 # Read a batch of lines from the input file
                 lines = list(itertools.islice(infile, args.batch_size))
@@ -54,36 +55,44 @@ def main():
 
                 # Apply the algo over the batched data
                 all_data = [json.loads(l) for l in lines]
-                text_array = [remove_quotes(data['caption']) for data in all_data]
-                instr_array = [data['instruction'] for data in all_data]
-                response_array = [data['chosen_response'] for data in all_data]
+                captions = [remove_quotes(data['caption']) for data in all_data]
+                instructions = [data['instruction'] for data in all_data]
+                responses = [data['chosen_response'] for data in all_data]
 
-                revised_instructions, revised_responses = [], []
-                for rng in range(0, len(text_array), args.batch_size):
-                    captions = text_array[rng:min(len(text_array), rng+args.batch_size)]
-                    instructions = instr_array[rng:min(len(instr_array), rng+args.batch_size)]
-                    responses = response_array[rng:min(len(response_array), rng+args.batch_size)]
+                revised_instructions = generate_image_aware_instruction(captions, instructions, purpleteam_generative_model, purpleteam_generative_tokenizer)
 
-                    revised_instruction_batch = generate_image_aware_instruction(captions, instructions, purpleteam_generative_model, purpleteam_generative_tokenizer)
-                    revised_instructions += revised_instruction_batch
-
-                    if random.randint(0,1):
-                        prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Given the below image:\n{caption}\n===\n{revised_instruction} If the question cannot be answered by the image state so politely and state why."}], tokenize=False)
-                                    for caption, revised_instruction in zip(captions, revised_instruction_batch)]
-                        revised_responses += generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
-                    else:
-                        prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": instruction}, {"role": "assistant", "content": response},
-                                                                  {"role": "user", "content": f"Given the below image:\n{caption}\n===\n{revised_instruction}\nIf instruction cannot be answered based on the image alone, refer to the prior conversation, and explain why. Do not refer to any context document in your answer."}], tokenize=False)
-                                    for caption, instruction, revised_instruction, response in zip(captions, instructions, revised_instruction_batch, responses)]
-                        revised_responses += generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
-
+                # if random.randint(0,1):
+                #     prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": f"Given the below image:\n{caption}\n===\n{revised_instruction} If the question cannot be answered by the image state so politely and state why."}], tokenize=False)
+                #                 for caption, revised_instruction in zip(captions, revised_instructions)]
+                #     revised_responses = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
+                # else:
+                prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": instruction}, {"role": "assistant", "content": response},
+                                                            {"role": "user", "content": f"Given the below image:\n{caption}\n===\n{revised_instruction}\nIf instruction cannot be answered based on the image alone, refer to the prior conversation, and explain why. Do not refer to any context document in your answer. If the question cannot be answered by the image state so politely and state why."}], tokenize=False)
+                            for caption, instruction, revised_instruction, response in zip(captions, instructions, revised_instructions, responses)]
+                revised_responses = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
                 revised_responses = [revised_response[0].replace("\n\n", "\n").strip() for revised_response in revised_responses]
 
-                for i, (revised_instruction, revised_response) in enumerate(zip(revised_instructions, revised_responses)):
-                    all_data[i]['revised_instruction'] = revised_instruction
-                    all_data[i]['revised_response'] = revised_response
-                    all_data[i]["metadata"]["step3_params"] = json.dumps(vars(args))
-                    outfile.write(json.dumps(all_data[i])+"\n")
+                for idx, (instruction, response, revised_instruction, revised_response) in enumerate(zip(instructions, responses, revised_instructions, revised_responses)):
+                    all_data[idx]["metadata"]['revised_instruction'] = revised_instruction
+                    all_data[idx]["metadata"]['revised_response'] = revised_response
+                    all_data[idx]["metadata"]['instruction'] = instruction
+                    all_data[idx]["metadata"]['response'] = response
+                    all_data[idx]["metadata"]["create_revised_instr_response-params"] = json.dumps(vars(args))
+                    prompt = f"User: {all_data[idx]['revised_instruction']}\nAssistant: {all_data[idx]['chosen_response']}"
+                    outfile.write(json.dumps({'prompt': prompt,
+                                                'is_pairwise': True,
+                                                'captions': [all_data[idx]['caption']], 
+                                                'chosen_response': all_data[idx]['chosen_response'], 
+                                                'rejected_responses': all_data[idx]['rejected_responses'],
+                                                'caption_media_scores': [all_data[idx]["metadata"]["caption_media_score"]], 
+                                                'medias': all_data[idx]['images'], 
+                                                'media_coordinates': [[0, 0, 0, 0]], # dummy
+                                                'media_types': ["image"],
+                                                'metadata': {'source': all_data[idx]['metadata']["source"], 
+                                                            'params': json.dumps(all_data[idx]['metadata'])}})+"\n")
+
+                    # outfile.write(json.dumps(all_data[i])+"\n")
+                rng += args.batch_size
 
 
 if __name__ == "__main__":

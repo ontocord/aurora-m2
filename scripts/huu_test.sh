@@ -15,7 +15,7 @@ export HF_HUB_DISABLE_TELEMETRY=1
 export DO_NOT_TRACK=1
 export HF_DATASETS_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
-
+export HF_HUB_OFFLINE=1
 source ~/miniconda3/bin/activate
 
 purpleteam_model_path="teknium/OpenHermes-2.5-Mistral-7B"
@@ -27,14 +27,14 @@ mkdir -p $directory
 
 output_file="$directory/purpleteam-${purpleteam_model_path//\//-}-${target_model_path//\//-}.jsonl"
 
-echo 'running autoredteam'
-srun python -m src.purpleteam.autoredteam \
-   --llamaguard_path llamas-community/LlamaGuard-7b \
-   --purpleteam_model_path $purpleteam_model_path \
-   --target_model_path $target_model_path \
-   --output_path $output_file \
-   --cache_dir $cache_dir \
-   --verb_types_to_include EU_Act_and_transparency_violations_against_people
+#echo 'running autoredteam'
+#srun python -m src.purpleteam.autoredteam \
+#   --llamaguard_path llamas-community/LlamaGuard-7b \
+#   --purpleteam_model_path $purpleteam_model_path \
+#   --target_model_path $target_model_path \
+#   --output_path $output_file \
+#    --cache_dir $cache_dir \
+#   --verb_types_to_include EU_Act_and_transparency_violations_against_people
 
 # echo 'running create_caption_from_instr'
 # srun python -m src.purpleteam.create_caption_from_instr \
@@ -64,15 +64,22 @@ srun python -m src.purpleteam.autoredteam \
 
 
 
-# directory="data/commoncatalog"
-# mkdir -p $directory
+directory="data/commoncatalog-2"
+mkdir -p $directory
 
 # echo 'running create_caption_from_img'
 # srun python -m src.purpleteam.create_caption_from_img \
 #     --cache_dir $cache_dir \
-#     --score_cutoff 0.14 \
 #     --input_dir data/test-commoncatalog-cc-by \
-#     --output_path $directory/commoncatalog_recaption.jsonl \
+#     --output_path $directory/commoncatalog_recaption.jsonl 
+
+echo 'running create_img_and_caption'
+srun python -m src.purpleteam.create_img_and_caption \
+     --cache_dir $cache_dir \
+     --score_cutoff 0.14 \
+     --input_path  $directory/commoncatalog_recaption.jsonl \
+     --output_dir $directory \
+     --output_path $directory/commoncatalog_image_and_recaption.jsonl
 
 # echo 'running create_revised_instr_response'
 # srun python -m src.purpleteam.create_revised_instr_response \
