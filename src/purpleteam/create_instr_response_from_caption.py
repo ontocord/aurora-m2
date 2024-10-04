@@ -70,7 +70,7 @@ def main():
                     rejected_responses = [""]
                     all_data[idx]["metadata"]["create_instr_from_caption-params"] = json.dumps(vars(args))
                     outfile.write(json.dumps({'prompt': prompt,
-                                                'is_pairwise': True,
+                                                'is_pairwise': False,
                                                 'captions': [all_data[idx]['caption']], 
                                                 'chosen_response': chosen_response, 
                                                 'rejected_responses': rejected_responses,

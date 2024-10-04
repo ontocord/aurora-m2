@@ -1,0 +1,227 @@
+running create_caption_from_img
+Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:11<00:11, 11.53s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  7.95s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  8.49s/it]
+/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/functional.py:512: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3587.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+loading configuration file cache
+loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
+All model checkpoint weights were used when initializing GeneralizedRCNN.
+
+All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
+If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: mean must have 1 elements if it is an iterable, got 3
+Skipping the corrupted image batch!! Error: Unsupported number of image dimensions: 2
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: Unsupported number of image dimensions: 2
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: mean must have 1 elements if it is an iterable, got 3
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: Unsupported number of image dimensions: 2
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: cannot access local variable 'max_boxes' where it is not associated with a value
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: Unsupported number of image dimensions: 2
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: mean must have 1 elements if it is an iterable, got 3
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: Unsupported number of image dimensions: 2
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: mean must have 1 elements if it is an iterable, got 3
+Skipping the corrupted image batch!! Error: mean must have 1 elements if it is an iterable, got 3
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+Skipping the corrupted image batch!! Error: name 'random' is not defined
+srun: Job step aborted: Waiting up to 92 seconds for job step to finish.
+slurmstepd: error: *** JOB 8005100 ON lrdn0515 CANCELLED AT 2024-10-04T06:40:29 ***

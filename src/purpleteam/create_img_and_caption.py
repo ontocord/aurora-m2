@@ -2,6 +2,7 @@ import json
 import argparse
 import spacy
 import itertools
+import random
 import numpy as np
 from src.purpleteam.utils import get_element_to_img, pil_image_to_base64
 
@@ -48,7 +49,12 @@ def setup(args):
   flux_pipe = FluxPipeline.from_pretrained(args.image_generator_model_path, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir)
   flux_pipe.enable_model_cpu_offload()
 
-  return clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe
+  frcnn_config = json.load(open("src/frcnn/config.jsonl"))
+  frcnn_config = Config(frcnn_config)
+  image_preprocessor= Preprocess(frcnn_config).half().cuda()
+  box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned",frcnn_config,  cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").half().cuda()
+
+  return image_preprocessor, box_segmentation_model, clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe
 
 
 def cosim_eval(images, texts):
@@ -145,7 +151,8 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
     working_prompt2_2 = []
     for prompt2, image in zip(working_prompt2, images):
       # for working_prompt2
-      aHash, rel_sents = get_element_to_img(prompt2, image, score_cutoff=score_cutoff)
+      aHash, rel_sents = get_element_to_img(prompt2, image, box_segmentation_model,\
+                                            image_preprocessor, clip_processor, clip_model, score_cutoff=score_cutoff)
       for element, val in list(aHash.items()):
           # if we don't detect an actual image but clip thinks there is the element SOMEWHERE in the picture, then we want a higher cutoff
           if element not in prompt2 or ((val[1] and val[0] < score_cutoff) or (not val[1] and val[0] < score_cutoff + 0.05)):
@@ -213,8 +220,8 @@ def main():
     args = parser.parse_args()
     global clip_processor, clip_model, fluo_model, fluo_processor
     global purpleteam_generative_tokenizer, purpleteam_generative_model
-    global flux_pipe
-    clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe = setup(args)
+    global flux_pipe, image_preprocessor, box_segmentation_model
+    image_preprocessor, box_segmentation_model, clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe = setup(args)
 
     base_path = args.output_path.split("/")[-1].split(".jsonl")[0]
     # TODO: load jsonl till batch_size

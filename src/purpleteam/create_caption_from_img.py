@@ -3,6 +3,7 @@ import argparse
 import spacy
 import glob
 import itertools
+import random
 import numpy as np
 from src.purpleteam.utils import get_element_to_img, pil_image_to_base64
 
@@ -50,8 +51,12 @@ def setup(args):
   purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
   purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
 
+  frcnn_config = json.load(open("src/frcnn/config.jsonl"))
+  frcnn_config = Config(frcnn_config)
+  image_preprocessor= Preprocess(frcnn_config).half().cuda()
+  box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned",frcnn_config,  cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").half().cuda()
 
-  return clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model
+  return image_preprocessor, box_segmentation_model, clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model
 
 
 def cosim_eval(images, texts):
@@ -171,8 +176,8 @@ def main():
     args = parser.parse_args()
     global clip_processor, clip_model, fluo_model, fluo_processor
     global purpleteam_generative_tokenizer, purpleteam_generative_model
-    global flux_pipe
-    clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model = setup(args)
+    global flux_pipe, image_preprocessor, box_segmentation_model
+    image_preprocessor, box_segmentation_model, clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model = setup(args)
     
     # TODO: load jsonl till batch_size
     with open(args.output_path, "w") as outfile: 
@@ -207,7 +212,7 @@ def main():
             data["metadata"]["create_caption_from_img-params"] = json.dumps(vars(args))
             
             outfile.write(json.dumps(data)+"\n")
-          # if rng >= 3*args.batch_size: break
+          if rng >= 3*args.batch_size: break
 
 
 if __name__ == "__main__":
