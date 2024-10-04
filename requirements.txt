@@ -31,3 +31,5 @@ json_repair
 wn
 scispacy
 protobuf
+timm
+matplotlib
