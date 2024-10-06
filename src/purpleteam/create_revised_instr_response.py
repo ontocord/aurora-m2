@@ -26,7 +26,7 @@ def setup(args):
 
     # Setup for PurpleTeam generative model
     purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained("teknium/OpenHermes-2.5-Mistral-7B", cache_dir=args.cache_dir)
-    purpleteam_generative_model = AutoModelForCausalLM.from_pretrained("teknium/OpenHermes-2.5-Mistral-7B", low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval() # quantization_config=bnb_config
+    purpleteam_generative_model = AutoModelForCausalLM.from_pretrained("teknium/OpenHermes-2.5-Mistral-7B", low_cpu_mem_usage=True, torch_dtype=torch.bfloat16, device_map="auto", cache_dir=args.cache_dir).eval() # quantization_config=bnb_config
     purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
     purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
 
@@ -69,8 +69,8 @@ def main():
                 prompts = [purpleteam_generative_tokenizer.apply_chat_template([{"role": "user", "content": instruction}, {"role": "assistant", "content": response},
                                                             {"role": "user", "content": f"Given the below image:\n{caption}\n===\n{revised_instruction}\nIf instruction cannot be answered based on the image alone, refer to the prior conversation, and explain why. Do not refer to any context document in your answer. If the question cannot be answered by the image state so politely and state why."}], tokenize=False)
                             for caption, instruction, revised_instruction, response in zip(captions, instructions, revised_instructions, responses)]
-                revised_responses = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
-                revised_responses = [revised_response[0].replace("\n\n", "\n").strip() for revised_response in revised_responses]
+                revised_responses = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device, batch_size=args.batch_size)
+                revised_responses = [revised_response.replace("\n\n", "\n").strip() for revised_response in revised_responses]
 
                 for idx, (instruction, response, revised_instruction, revised_response) in enumerate(zip(instructions, responses, revised_instructions, revised_responses)):
                     all_data[idx]["metadata"]['revised_instruction'] = revised_instruction
@@ -78,7 +78,7 @@ def main():
                     all_data[idx]["metadata"]['instruction'] = instruction
                     all_data[idx]["metadata"]['response'] = response
                     all_data[idx]["metadata"]["create_revised_instr_response-params"] = json.dumps(vars(args))
-                    prompt = f"User: {all_data[idx]['revised_instruction']}\nAssistant: {all_data[idx]['chosen_response']}"
+                    prompt = f"User: {revised_instruction}\nAssistant: {all_data[idx]['chosen_response']}"
                     outfile.write(json.dumps({'prompt': prompt,
                                                 'is_pairwise': True,
                                                 'captions': [all_data[idx]['caption']], 

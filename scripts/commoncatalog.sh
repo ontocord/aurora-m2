@@ -45,16 +45,16 @@ srun python -m src.purpleteam.create_caption_from_img \
 if [ $? -eq 0 ]; then
     end_time=$(date +%s)
     elapsed=$(( end_time - start_time ))
-    echo "`create_caption_from_img` completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
+    echo "'create_caption_from_img' completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
 else
-    echo "`create_caption_from_img` failed at $(date)" >> $log_file
+    echo "'create_caption_from_img' failed at $(date)" >> $log_file
     exit 1
 fi
 
 ## step 2
 echo 'running create_img_and_caption'
 start_time=$(date +%s)
-srun python -m src.purpleteam.create_img_and_caption \
+srun python -m src.purpleteam.create_img_and_caption-2 \
      --cache_dir $cache_dir \
      --score_cutoff 0.14 \
      --input_path  $directory/commoncatalog_recaption.jsonl \
@@ -65,9 +65,9 @@ srun python -m src.purpleteam.create_img_and_caption \
 if [ $? -eq 0 ]; then
     end_time=$(date +%s)
     elapsed=$(( end_time - start_time ))
-    echo "`create_img_and_caption` completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
+    echo "'create_img_and_caption' completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
 else
-    echo "`create_img_and_caption` failed at $(date)" >> $log_file
+    echo "'create_img_and_caption' failed at $(date)" >> $log_file
     exit 1
 fi
 
@@ -83,7 +83,7 @@ srun python -m src.purpleteam.create_instr_response_from_caption \
 if [ $? -eq 0 ]; then
     end_time=$(date +%s)
     elapsed=$(( end_time - start_time ))
-    echo "`create_instr_response_from_caption` completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
+    echo "'create_instr_response_from_caption' completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
     
     # Count number of lines in processed.jsonl
     jsonl_length=$(wc -l < "$directory/processed.jsonl")
@@ -92,6 +92,6 @@ if [ $? -eq 0 ]; then
     # Mark process as completed
     echo "completed" >> $log_file
 else
-    echo "`create_instr_response_from_caption` failed at $(date)" >> $log_file
+    echo "'create_instr_response_from_caption' failed at $(date)" >> $log_file
     exit 1
 fi

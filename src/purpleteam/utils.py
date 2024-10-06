@@ -23,6 +23,26 @@ from src.frcnn.modeling_frcnn import GeneralizedRCNN
 from src.frcnn.utils import Config
 from src.frcnn.utils import decode_image
 
+import cv2
+import numpy as np
+from matplotlib import colors
+from collections import OrderedDict
+
+
+hsv_color_ranges = {
+    "red": [(0, 100, 100), (10, 255, 255)],  # Red spans two ranges
+    "orange": [(10, 100, 100), (25, 255, 255)],
+    "yellow": [(25, 100, 100), (35, 255, 255)],
+    "green": [(35, 100, 100), (85, 255, 255)],
+    "cyan": [(85, 100, 100), (100, 255, 255)],
+    "blue": [(100, 100, 100), (130, 255, 255)],
+    "purple": [(130, 100, 100), (160, 255, 255)],
+    "pink": [(140, 50, 50), (180, 255, 255)],
+    "brown": [(10, 100, 20), (20, 255, 200)],
+    "black": [(0, 0, 0), (180, 255, 50)],
+    "white": [(0, 0, 200), (180, 30, 255)],
+    "gray": [(0, 0, 50), (180, 20, 200)]
+}
 
 stopwords_set = en_stopwords = {'haven', 'are', 'why', 'most', "won't", 'against', 'with', 'needn', 'couldn', 'now', 'mustn', 'who', 'under', 'doing', 'am', 'aren', 'they', "didn't", 'd', 'doesn', 'if', 'he', 'her', "haven't", 'isn', 'own', 'does', 'such', 'until', 'into', 'had', 'again', 'over', "hadn't", "you'll", 't', 'by', 'be', "wasn't", 'so', 'yours', 'both', 'any', 'did', "you've", 'these', 'myself', 'o', 'hasn', "isn't", 'you', 'other', 'shan', 'being', 'yourselves', 'was', 'no', 'm', 'those', 'will', 'its', 'itself', 'have', 'down', 'weren', 'having', 'wouldn', 'herself', "mustn't", 'very', 'do', "should've", 'him', "you'd", 'below', 'just', 'that', 'for', 'which', 'but', 'nor', 'all', 'then', 'i', 'whom', 'it', 'once', 'here', 've', "you're", 'ours', "that'll", 'a', 'won', 'himself', 'where', 'this', 'your', "hasn't", 'same', 'when', 'ourselves', 'because', "needn't", 'theirs', 'from', 'mightn', 'my', 'while', 'yourself', "she's", 'each', "doesn't", 'only', 'at', 's', 'their', "wouldn't", 'shouldn', 'and', 'themselves', 'hers', 'has', 'up', 'ma', 'in', 'll', 'we', 're', 'y', 'of', 'after', 'our', "shan't", 'before', 'wasn', 'can', 'should', 'been', 'through', 'as', 'further', 'during', 'between', 'there', 'me', 'on', 'don', "shouldn't", 'more', 'out', "don't", 'the', "weren't", "aren't", "it's", 'what', 'or', "couldn't", 'hadn', "mightn't", 'his', 'above', 'to', 'how', 'few', 'off', 'them', 'didn', 'ain', 'not', 'she', 'an', 'than', 'too', 'is', 'some', 'were', 'about'}
 max_detections = 36
@@ -109,16 +129,18 @@ def generate_image_aware_instruction(captions, instructions, model, tokenizer):
   if random.randint(0, 1):
     instr_revision_prompts = [tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"You are given the below image:\n{caption}\n===\nRevise the below instruction such that events, physical conditions, attributes, color, actions, feelings, objects, people or other information from the image are removed from the instruction, and the instruction refers to those things in the image instead. Do not refer to proper names in the instruction if those names are already in the image. Do not refer to any context document. Do not refer to the 'description' of the image. Retain the theme of the instruction. Do not repeat this instruction or the information from the image in your revised instruction. The instruction is:\n{instruction}"}, 
                                                                               {"role": "assistant", "content": "Revised Instruction:"}]) for caption, instruction in zip(captions, instructions)]
-    revised_instructions = generate_with_batching(model, tokenizer, instr_revision_prompts, accelerator.device)
+    revised_instructions = generate_with_batching(model, tokenizer, instr_revision_prompts, accelerator.device, batch_size=len(instr_revision_prompts))
     revised_instructions = [
-        revised_instruction.split("instruction:", 1)[-1]
+        revised_instruction.split("Answer:", 1)[0]
+        .split("answer:", 1)[0]
+        .split("instruction:", 1)[-1]
         .split("Instruction:", 1)[-1]
         .split("Revised Instruction:", 1)[-1]
         .split("Revised instruction:", 1)[-1]
+        .split("Assistant\n", 1)[-1]
         .split("assistant\n", 1)[-1]
         .replace("caption", "image").strip()
         for revised_instruction in revised_instructions
-        if "answer:" not in revised_instruction.lower()
     ]
   else:
     captions_concepts_list = [set([a.strip(",.\'\"?").lower() for a in caption.split() if (a.endswith("ly") or a.endswith("ion") or a.endswith("ing") or a.endswith("ity")) and len(a) > 5]) for caption in captions]
@@ -138,7 +160,7 @@ def generate_image_aware_instruction(captions, instructions, model, tokenizer):
       prompts = [tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"You are given the below image:\n{caption}\n===\nRevise the below instruction such that events, physical conditions, attributes, color, actions, feelings, objects, people or other concepts from the image are removed from the instruction, and the instruction refers to those things in the image instead. DO NOT re-use words from the image description into the revised instruction. Do not refer to any context document. Do not refer to the 'description' of the image. Retain the theme of the instruction.\nDo not simply repeat or paraphrase the instruction or the information from the image in your revised instruction.\nThe instruction is:\n{instruction}\n===\nWhen referring the image, use phrases like 'the <genric term like boy, girl, man, woman ... > in the image'."},
                                                                 {"role": "assistant", "content": "Revised instruction: Referring to this image"}]) for caption, instruction in zip(captions, instructions)]
       
-    revised_instructions = generate_with_batching(model, tokenizer, prompts, accelerator.device)
+    revised_instructions = generate_with_batching(model, tokenizer, prompts, accelerator.device, batch_size=len(prompts))
     revised_instructions = [revised_instruction.split("Revised instruction:",1)[-1].strip() for revised_instruction in revised_instructions]
 
   if random.randint(0, 1):
@@ -461,7 +483,7 @@ def chatml_format_instructions(tokenizer, system, instruction, response=""):
 # {response}"""
 
 # generate output from a batch of inputs
-def generate_with_batching(model, tokenizer, data, device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200, batch_size=2, **args):
+def generate_with_batching(model, tokenizer, data, device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=400, batch_size=2, **args):
   torch.cuda.empty_cache()
   output = []
   for rng in range(0, len(data), batch_size):
@@ -473,3 +495,353 @@ def generate_with_batching(model, tokenizer, data, device,  use_cache=True, repe
                         use_cache=use_cache, repetition_penalty=repetition_penalty, no_repeat_ngram_size=no_repeat_ngram_size, max_new_tokens=max_new_tokens, **args)[:, prompt_len:], skip_special_tokens=True))
   torch.cuda.empty_cache()
   return output
+
+
+def find_quotes(text):
+  accum = []
+  text = text.replace("'s ", " @s@ ").replace("'ve ", " @ve@ ").replace("'m ", " @m@ ").replace("'t ", " @t@ ")
+  for idx, segment in enumerate(text.split("'")):
+    if idx % 2 != 0:
+      accum.append(segment)
+  accum = [a.replace(" @s@ ", "'s ").replace(" @ve@ ", "'ve ").replace( " @m@ ", "'m ").replace(" @t@ ", "'t ").replace("  ", " ").replace("  ", " ").strip() for a in accum]
+  accum.sort(key=lambda a: len(a), reverse=True)
+  return accum
+
+def augment_for_quotes(prompt_array, color="pink", side="bottom"):
+    # Modify the original prompt by appending adversarial suffix
+    prompt_array2 = []
+    found = False
+        
+    prompt_array = [text.replace("\"", "'") for text in prompt_array]
+    for prompt in prompt_array:
+      for _ in range(5):
+        color = random.choice(["pink", "green", "orange", "blue", "white", "gray", "purple", "cyan"])
+        if color in prompt:
+          continue
+      ret = []
+      accum = find_quotes(prompt)
+      accum2 = []
+      prompt2 = []
+      for sentence in prompt.split(". "):
+        add = False
+        for s in accum:
+          if s not in sentence: continue
+          add = True
+          if len(s) > 20:
+            found = True
+            sentence = sentence.replace(s, '')
+            sentence = sentence.replace("the words ''", f"a large {color} solid rectangle")
+            sentence = sentence.replace("title ''",  f"a large {color} solid rectangle at the top")
+            sentence = sentence.replace("named ''",  f"a large {color} solid rectangle at the bttom")
+            sentence = sentence.replace("states ''",  f"a large {color} solid rectangle")
+            sentence = sentence.replace("reads ''",  f"a large {color} solid rectangle")
+            sentence = sentence.replace("  ", " ")
+            sentence = sentence.replace("which translates to ''", "")
+            sentence = sentence.replace("written", " ").replace("text", "")
+            sentence = sentence.replace("title", "")
+            sentence = sentence.replace("font", " ")
+            found_side = False
+            if 'solid rectangle' in sentence:
+              for side2 in ["top", "bottom", "lower left", "upper left", "lower right", "upper right", "left", "right", "center", ]:
+                if side2 in sentence:
+                  ret.append((side2, s))
+                  found_side=True
+                  break
+              if not found_side:
+                ret.append((side, s))
+            else:
+              accum2.append(s)
+          break
+        if add:
+          prompt2.append(sentence)
+          continue
+        if any(b for b in ["translate", "mention", "explain", "describe", "says", "mention", "information"] if b in sentence):
+          continue
+        sentence = sentence.replace("written", " ").replace("text", "")
+        sentence = sentence.replace("title", "")
+        sentence = sentence.replace("font", " ")
+        prompt2.append(sentence)
+      prompt2 = ". ".join(prompt2)
+      if "''" in prompt2:
+        found = True
+        prompt2 = prompt2.replace("''", " ")
+      prompt2 = prompt2.strip(".")+"."  
+      prompt2 = ".".join(s for s in prompt2.split(".") if s.count("rectangle") + s.count("solid")  < 4)
+      prompt2 = prompt2.replace("  ", " ").replace("  ", " ")
+      if found and 'solid rectangle' not in prompt2 and accum2:
+        if side in prompt2:
+          side = "bottom"
+          if side in prompt2:
+            side = "top"
+            if side in prompt2:
+              for _ in range(5):
+                side = random.choice(["left", "right", "center", "lower left", "upper left", "lower right", "upper right"])
+                if side not in prompt2: 
+                  found = False
+      if found:
+        prompt2 = random.choice([f"There is a large {color} solid rectangle at the {side}.", f"There is a large empty {color} rectangle to the {side}.", f"The image is mostly on one side, and there is empty {color} rectangle on the {side}.",f"On the {side} side, there is a rectangle of {color}.",]) + " " + prompt2
+        ret.append((side, "\n".join(accum2)))
+      prompt2 = " "+prompt2+" "
+      prompt2 = prompt2.replace("The a ", "A ").replace(" the a ", " a ").replace("The of ", "The ").replace(" the of ", " the ").replace(" the , ", ", ").replace(" a , ", ",").replace(" .", ".")
+      prompt2 = prompt2.strip()
+      prompt_array2.append ((color, prompt2, ret))
+    return prompt_array2
+
+
+# Function to convert a color name to an HSV tuple directly for color detection
+def get_hsv_from_name(color_name):
+    upper, lower =  hsv_color_ranges.get(color_name)
+    return [int(upper[0]+lower[0]/2), int(upper[1]+lower[1]/2), int(upper[2]+lower[2]/2) ]
+
+# Function to map rectangles to relative positions
+def get_position(x, y, w, h, img_width, img_height):
+    cx, cy = x + w // 2, y + h // 2  # Center of the rectangle
+
+    # Determine if the rectangle is primarily aligned on the left, right, top, or bottom
+    if cx < img_width // 3:
+        if cy < img_height // 3:
+            return 'upper left'
+        elif cy > 2 * img_height // 3:
+            return 'lower left'
+        else:
+            return 'left'
+    elif cx > 2 * img_width // 3:
+        if cy < img_height // 3:
+            return 'upper right'
+        elif cy > 2 * img_height // 3:
+            return 'lower right'
+        else:
+            return 'right'
+    elif cy < img_height // 3:
+        return 'top'
+    elif cy > 2 * img_height // 3:
+        return 'bottom'
+    else:
+        return "center"
+
+def create_default_rectangles(img_width, img_height):
+    # Create the OrderedDict with the specified order of rectangles
+    default_rectangles = OrderedDict([
+        ("top", (int(0.01 * img_width), int(0.01 * img_height), int(0.98 * img_width), int(0.2 * img_height))),
+        ("bottom", (int(0.01 * img_width), int(0.75 * img_height), int(0.98 * img_width), int(0.2 * img_height))),
+        ("left", (int(0.01 * img_width), int(0.01 * img_height), int(0.48 * img_width), int(0.98 * img_height))),
+        ("right", (int(0.51 * img_width), int(0.01 * img_height), int(0.48 * img_width), int(0.98 * img_height))),
+        ("upper left", (int(0.01 * img_width), int(0.01 * img_height), int(0.48 * img_width), int(0.2 * img_height))),
+        ("upper right", (int(0.51 * img_width), int(0.01 * img_height), int(0.48 * img_width), int(0.2 * img_height))),
+        ("lower left", (int(0.01 * img_width), int(0.75 * img_height), int(0.48 * img_width), int(0.2 * img_height))),
+        ("lower right", (int(0.51 * img_width), int(0.75 * img_height), int(0.48 * img_width), int(0.2 * img_height))),
+        ("center", (int(0.25 * img_width), int(0.25 * img_height), int(0.5 * img_width), int(0.5 * img_height))),
+
+    ])
+    return default_rectangles
+
+# Main function to detect rectangles and assign text
+def replace_color_rectangles_with_text(image, text_list, detection_color="pink", clear_background=True):
+    # Convert to PIL to cv2
+    image = np.array(image)[:, :, ::-1].copy()
+    
+    # Get the HSV range for the specified detection color
+    lower_bound, upper_bound = hsv_color_ranges.get(detection_color, [(0, 0, 200), (180, 30, 255)])
+    # Convert to HSV color space
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    h_mean = np.mean(hsv[:, :, 0])  # Average Hue
+    s_mean = np.mean(hsv[:, :, 1])  # Average Saturation
+    v_mean = np.mean(hsv[:, :, 2])  # Average Value (Brightness)
+    
+    # Return the average HSV value
+    replace_color =  (h_mean, s_mean, v_mean)
+
+    # Threshold the image to get only colors in the range
+    mask = cv2.inRange(hsv, lower_bound, upper_bound)
+
+    # Find contours in the mask
+    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Assign text to positions
+    position_map = OrderedDict()  # Maps positions like 'upper right' to contours
+    remaining_text = []  # Stores text that doesn't have a specific position
+
+    img_height, img_width, _ = image.shape
+    
+    # Iterate through contours and check for rectangles
+    for contour in contours:
+        # Approximate the contour to a polygon
+        epsilon = 0.05 * cv2.arcLength(contour, True)
+        approx = cv2.approxPolyDP(contour, epsilon, True)
+
+        # Check if the contour has 4 points (suggests a rectangle) and is convex
+        if len(approx) == 4 and cv2.isContourConvex(approx):
+            # Check if the approximated polygon is close to a rectangle
+            rect = cv2.boundingRect(approx)
+            x, y, w, h = rect
+            if w > img_width - 10 and h > img_height - 10:
+              continue
+            # Filter out very small rectangles
+            if w > 150 and h > 60:
+                
+                position = get_position(x, y, w, h, img_width, img_height)
+                if not position: continue
+                position_map[position] = rect  # Store the bounding box for this position
+    if not position_map:
+      clear_background = False
+      position_map = create_default_rectangles(img_height, img_width)
+    default_position = create_default_rectangles(img_height, img_width)
+    # Process the text list
+    for item in text_list:
+        if isinstance(item, tuple):  # Tuple containing (position, text)
+            position, text = item
+            if position in position_map:
+                rect = position_map.pop(position)
+                del default_position[position]
+                x, y, w, h = rect
+                replace_color = image[max(0,x-10), max(0,y-10)].tolist()
+                draw_text_in_rectangle(image, rect, text, replace_color, clear_background=clear_background)
+            else:
+                remaining_text.append(item)
+        else:
+            remaining_text.append(item)
+
+    for item in remaining_text:
+        if isinstance(item, tuple):  # Tuple containing (position, text)
+            position, text = item
+            remaining_text.pop(0)
+            if position in default_position:
+                rect = default_position.pop(position)
+                x, y, w, h = rect
+                replace_color = image[max(0,x-10), max(0,y-10)].tolist()
+                draw_text_in_rectangle(image, rect, text, replace_color, clear_background=False)
+                
+    for position in list(position_map.keys()):
+        rect = position_map[position]
+        if remaining_text: 
+            item = remaining_text.pop(0)
+            if isinstance(item, tuple):  # Tuple containing (position, text)  
+              position, text = item
+            else:
+              text = item
+            del default_position[position]
+            x, y, w, h = rect
+            replace_color = image[max(0,x-10), max(0,y-10)].tolist()    
+            draw_text_in_rectangle(image, rect, text, replace_color, clear_background=clear_background)
+        else:
+          break
+
+    for position in list(default_position.keys()):
+        rect = default_position[position]
+        if remaining_text:
+            item = remaining_text.pop(0)
+            if isinstance(item, tuple):  # Tuple containing (position, text)  
+              position, text = item
+            else:
+              text = item
+            del default_position[position]
+            x, y, w, h = rect
+            replace_color = image[max(0,x-10), max(0,y-10)].tolist()    
+            draw_text_in_rectangle(image, rect, text, replace_color, clear_background=False)
+        else:
+          break
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    return Image.fromarray(image)
+
+# Function to draw text inside a rectangle, using random fonts, random justification, random line types, and larger text size
+def draw_text_in_rectangle(image, rect, text, replace_color, clear_background=True):
+    x, y, w, h = rect
+
+    # Function to determine if the background color is dark
+    def is_color_dark(r, g, b):
+        luminance = (0.299 * r + 0.587 * g + 0.114 * b)
+        return luminance < 128
+
+    # Light font colors for dark backgrounds
+    light_colors = [
+        [255, 255, 255],  # White
+        [255, 200, 200],  # Light Pink
+        [255, 255, 0],    # Yellow
+        [173, 216, 230],  # Light Blue
+        [240, 230, 140],  # Khaki
+        [144, 238, 144],  # Light Green
+        [255, 182, 193],  # Light Coral
+    ]
+
+    # Dark font colors for light backgrounds
+    dark_colors = [
+        [0, 0, 0],        # Black
+        [105, 105, 105],  # Dim Gray
+        [47, 79, 79],     # Dark Slate Gray
+        [0, 0, 139],      # Dark Blue
+        [139, 0, 0],      # Dark Red
+        [0, 100, 0],      # Dark Green
+        [85, 107, 47],    # Dark Olive Green
+    ]
+
+    # Choose the font color based on the brightness of the replace_color
+    if is_color_dark(replace_color[0], replace_color[1], replace_color[2]):
+        font_color = random.choice(light_colors)  # Use a light color for dark backgrounds
+    else:
+        font_color = random.choice(dark_colors)  # Use a dark color for light backgrounds
+
+    # Draw the background rectangle
+    if clear_background:
+        cv2.rectangle(image, (x, y), (x + w, y + h), replace_color, -1)
+
+    # Split the text into lines based on newline characters
+    lines = text.split("\n")
+
+    # Randomly select a font from OpenCV fonts (adding more options)
+    fonts = [
+        cv2.FONT_HERSHEY_SIMPLEX, cv2.FONT_HERSHEY_COMPLEX, cv2.FONT_HERSHEY_DUPLEX,
+        cv2.FONT_HERSHEY_TRIPLEX, cv2.FONT_HERSHEY_COMPLEX_SMALL, cv2.FONT_HERSHEY_SCRIPT_SIMPLEX,
+        cv2.FONT_HERSHEY_SCRIPT_COMPLEX, cv2.FONT_HERSHEY_PLAIN, cv2.FONT_ITALIC
+    ]
+    font = random.choice(fonts)
+
+    # Start with a larger font scale
+    font_scale = (random.random() + 1)*1.5
+    font_thickness = max(2, int(font_scale * 2))  # Use a larger font thickness
+
+    # Randomly select a line type
+    line_types = [cv2.LINE_AA, cv2.LINE_8, cv2.LINE_4]
+    line_type = random.choice(line_types)
+
+    # Find the longest line to fit within the width of the rectangle
+    longest_line = max(lines, key=len)
+    text_size = cv2.getTextSize(longest_line, font, font_scale, font_thickness)[0]
+
+    # Adjust font_scale to fit the longest line within the rectangle's width
+    max_text_width = w * 0.9  # Allow text to take up 90% of the rectangle's width
+    max_text_height = h * 0.9  # Allow text to take up 90% of the rectangle's height
+    step_size = int(text_size[1] + font_thickness * 1.2)  # Step size for each line
+
+    while text_size[0] > max_text_width and font_scale > 0.5:
+        font_scale -= 0.1
+        font_thickness = max(1, int(font_scale * 2))
+        text_size = cv2.getTextSize(longest_line, font, font_scale, font_thickness)[0]
+
+    step_size = int(text_size[1] + font_thickness * 1.2)  # Step size for each line
+
+    # Calculate total text height to ensure it fits within the rectangle's height
+    total_text_height = len(lines) * step_size  # Height for all lines
+
+    # Now that the font scale fits, draw each line of text
+    y_offset = y + (h - total_text_height) // 2  # Center the text vertically
+
+    # Randomly choose the text alignment (left, center, right)
+    justifications = ["left", "center", "right"]
+    justification = random.choice(justifications)
+
+    for i, line in enumerate(lines):
+        line_size = cv2.getTextSize(line, font, font_scale, font_thickness)[0]
+
+        # Determine the x-coordinate based on the justification
+        if justification == "left":
+            text_x = x + int(0.05 * w)  # Left-aligned (5% padding)
+        elif justification == "right":
+            text_x = x + w - line_size[0] - int(0.05 * w)  # Right-aligned (5% padding)
+        else:
+            text_x = x + (w - line_size[0]) // 2  # Center-aligned
+
+        text_y = y_offset + step_size  # Move down for each line
+        y_offset = text_y + (line_size[1] + font_thickness)
+
+        # Put each line of text on the image with random line type
+        cv2.putText(image, line, (text_x, text_y), font, font_scale, font_color, font_thickness, line_type)

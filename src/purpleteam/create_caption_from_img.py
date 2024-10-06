@@ -71,7 +71,7 @@ def cosim_eval(images, texts):
 
     return cos_scores
 
-def generate_captions(images, suffix: str = "", score_cutoff: int = 0.2):
+def generate_captions(images, suffix: str = "", batch_size: int = 4, score_cutoff: int = 0.2):
 
     # Process the image with fluorence and generate caption
     fluo_prompt = '<MORE_DETAILED_CAPTION>'
@@ -141,7 +141,7 @@ def generate_captions(images, suffix: str = "", score_cutoff: int = 0.2):
         up_prompt.append(tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt}.\n\n=====\n\nRemember to include these elements:\n{e2}"}, 
                                                                                                 {"role": "assistant", "content": f"Modified Caption: {prefix}"}]))
         images_idxs.append(image_idx)
-    outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=1)
+    outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=400 ,batch_size=batch_size)
     outputs = [o.split("Modified Caption:",1)[-1] for o in outputs]
     outputs = [o.replace("Caption:", "").replace("caption:", "").replace("Modified Caption:", "").replace("Modified caption:", "").replace("modified caption:", "").strip() for o in outputs]
     return_text.extend(outputs)
@@ -192,7 +192,7 @@ def main():
         for rng in range(0, len(image_array), args.batch_size):
           images = image_array[rng:min(len(image_array), rng+args.batch_size)]
           try:
-            tmp = generate_captions(images)
+            tmp = generate_captions(images, batch_size=args.batch_size)
           except Exception as e:
             print(f"Skipping the corrupted image batch!! Error: {e}")
             continue
@@ -212,7 +212,7 @@ def main():
             data["metadata"]["create_caption_from_img-params"] = json.dumps(vars(args))
             
             outfile.write(json.dumps(data)+"\n")
-          if rng >= 3*args.batch_size: break
+          if rng >= 20*args.batch_size: break
 
 
 if __name__ == "__main__":

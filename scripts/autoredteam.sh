@@ -40,7 +40,8 @@ srun python -m src.purpleteam.autoredteam \
   --purpleteam_model_path $purpleteam_model_path \
   --target_model_path $target_model_path \
   --output_path $directory/autoredteam.jsonl \
-  --cache_dir $cache_dir
+  --cache_dir $cache_dir \
+  --batch_size 128
 
 # Check if the command was successful
 if [ $? -eq 0 ]; then
@@ -58,49 +59,54 @@ start_time=$(date +%s)
 srun python -m src.purpleteam.create_caption_from_instr \
      --cache_dir $cache_dir \
      --input_path $directory/autoredteam.jsonl \
-     --output_path $directory/autoredteam_caption.jsonl
+     --output_path $directory/autoredteam_caption.jsonl \
+     --batch_size 32
 
 # Check if the command was successful
 if [ $? -eq 0 ]; then
     end_time=$(date +%s)
     elapsed=$(( end_time - start_time ))
-    echo "`create_caption_from_instr` completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
+    echo "'create_caption_from_instr' completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
 else
-    echo "`create_caption_from_instr` failed at $(date)" >> $log_file
+    echo "'create_caption_from_instr' failed at $(date)" >> $log_file
     exit 1
 fi
 
+# step 3
 echo 'running create_img_and_caption'
 start_time=$(date +%s)
-srun python -m src.purpleteam.create_img_and_caption \
+srun python -m src.purpleteam.create_img_and_caption-2 \
      --cache_dir $cache_dir \
      --score_cutoff 0.14 \
      --input_path $directory/autoredteam_caption.jsonl \
      --output_path $directory/autoredteam_img_and_recaption.jsonl \
-     --output_dir $directory
+     --output_dir $directory \
+     --batch_size 8
 
 # Check if the command was successful
 if [ $? -eq 0 ]; then
     end_time=$(date +%s)
     elapsed=$(( end_time - start_time ))
-    echo "`create_img_and_caption` completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
+    echo "'create_img_and_caption' completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
 else
-    echo "`create_img_and_caption` failed at $(date)" >> $log_file
+    echo "'create_img_and_caption' failed at $(date)" >> $log_file
     exit 1
 fi
 
+# step 4
 echo 'running create_revised_instr_response'
 start_time=$(date +%s)
 srun python -m src.purpleteam.create_revised_instr_response \
      --cache_dir $cache_dir \
      --input_path $directory/autoredteam_img_and_recaption.jsonl \
-     --output_path $directory/processed.jsonl
+     --output_path $directory/processed.jsonl \
+     --batch_size 32 
 
 # Check if the command was successful
 if [ $? -eq 0 ]; then
     end_time=$(date +%s)
     elapsed=$(( end_time - start_time ))
-    echo "`create_revised_instr_response` completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
+    echo "'create_revised_instr_response' completed successfully at $(date) - Duration: ${elapsed}s" >> $log_file
     
     # Count number of lines in processed.jsonl
     jsonl_length=$(wc -l < "$directory/processed.jsonl")
@@ -109,7 +115,7 @@ if [ $? -eq 0 ]; then
     # Mark process as completed
     echo "completed" >> $log_file
 else
-    echo "`create_revised_instr_response` failed at $(date)" >> $log_file
+    echo "'create_revised_instr_response' failed at $(date)" >> $log_file
     exit 1
 fi
 

@@ -1,104 +1,0 @@
-running create_caption_from_img
-Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
-  warnings.warn(
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:11<00:11, 11.41s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  7.89s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  8.42s/it]
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/functional.py:512: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3587.)
-  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
-Asking to truncate to max_length but no maximum length is provided and the model has no predefined maximum length. Default to no truncation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-loading configuration file cache
-loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
-All model checkpoint weights were used when initializing GeneralizedRCNN.
-
-All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-Completed!!
-/var/spool/slurmd/job8005118/slurm_script: line 48: create_caption_from_img: command not found
-running create_img_and_caption
-Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
-  warnings.warn(
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:10<00:10, 10.83s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:15<00:00,  7.50s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:15<00:00,  8.00s/it]
-Couldn't connect to the Hub: Cannot reach https://huggingface.co/api/models/black-forest-labs/FLUX.1-schnell: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable..
-Will try to load from local cache.
-Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
-Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  5.36it/s][A
-Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.40it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.39it/s]
-Loading pipeline components...:  14%|█▍        | 1/7 [00:00<00:02,  2.39it/s]Loading pipeline components...:  43%|████▎     | 3/7 [00:00<00:00,  4.71it/s]Loading pipeline components...:  71%|███████▏  | 5/7 [00:01<00:00,  2.91it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
-Loading pipeline components...: 100%|██████████| 7/7 [00:01<00:00,  4.07it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:01<00:00,  3.76it/s]
-Token indices sequence length is longer than the specified maximum sequence length for this model (215 > 77). Running this sequence through the model will result in indexing errors
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['words " funeral direct " written in white text. the bottom left tile shows a close - up of a tree trunk with a white flower on top. the background is a mix of green and brown tones, with a blue sky and white clouds. in the center of the collage, there is a large green leaf in the shape of a heart. the leaf is surrounded by a blue and white striped pattern. on the right side of the image, there are several smaller images of trees, buildings, and a bridge over a body of water. in the bottom right corner, there appears to be a photo of two people sitting on a bench with a view of the city skyline in the background.', 'in the lower left corner, a close - up shot of a leaf is framed by branches, and in the bottom right, a picture of a cat lounges on a windowsill against a backdrop of trees. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', 'with trees and shrubs, and there is a person walking in the distance. the sky is overcast, and the overall mood of the image is peaceful and serene. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-loading configuration file cache
-loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
-All model checkpoint weights were used when initializing GeneralizedRCNN.
-
-All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:18<00:55, 18.35s/it] 50%|█████     | 2/4 [00:19<00:16,  8.11s/it] 75%|███████▌  | 3/4 [00:20<00:05,  5.13s/it]100%|██████████| 4/4 [00:22<00:00,  3.73s/it]100%|██████████| 4/4 [00:22<00:00,  5.62s/it]
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/functional.py:512: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3587.)
-  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/create_img_and_caption.py", line 258, in <module>
-    main()
-  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/create_img_and_caption.py", line 239, in main
-    idx_image_text_score_related = generate_image_and_outputs(captions, score_cutoff=args.score_cutoff)
-                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/leonardo_work/EUHPC_E03_068/safellm/src/purpleteam/create_img_and_caption.py", line 154, in generate_image_and_outputs
-    aHash, rel_sents = get_element_to_img(prompt2, image, score_cutoff=score_cutoff)
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TypeError: get_element_to_img() missing 4 required positional arguments: 'box_segmentation_model', 'image_preprocessor', 'clip_processor', and 'clip_model'
-srun: error: lrdn2905: task 0: Exited with exit code 1
-/var/spool/slurmd/job8005118/slurm_script: line 70: create_img_and_caption: command not found

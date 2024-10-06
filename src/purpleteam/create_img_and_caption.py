@@ -33,16 +33,16 @@ spacy_nlp = spacy.load('en_core_web_sm')
 max_detections = 36
 
 def setup(args):
-  clip_model = CLIPModel.from_pretrained(args.cos_score_model_path, cache_dir=args.cache_dir, device_map="auto")
+  clip_model = CLIPModel.from_pretrained(args.cos_score_model_path, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, device_map="auto")
   clip_model = accelerator.prepare(clip_model)
   clip_processor = CLIPProcessor.from_pretrained(args.cos_score_model_path, cache_dir=args.cache_dir)
 
-  fluo_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir=args.cache_dir).to(accelerator.device).eval()
+  fluo_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model_path, torch_dtype=torch.bfloat16, trust_remote_code=True, cache_dir=args.cache_dir).to(accelerator.device).eval()
   fluo_processor = AutoProcessor.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir=args.cache_dir)
   fluo_model = accelerator.prepare(fluo_model)
 
   purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_generative_model_path, cache_dir=args.cache_dir)
-  purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval()
+  purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir, torch_dtype=torch.bfloat16).eval()
   purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
   purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
 
@@ -52,10 +52,9 @@ def setup(args):
   frcnn_config = json.load(open("src/frcnn/config.jsonl"))
   frcnn_config = Config(frcnn_config)
   image_preprocessor= Preprocess(frcnn_config).half().cuda()
-  box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned",frcnn_config,  cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").half().cuda()
+  box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned",frcnn_config,  torch_dtype=torch.bfloat16, cache_dir=args.cache_dir).half().cuda()
 
   return image_preprocessor, box_segmentation_model, clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe
-
 
 def cosim_eval(images, texts):
     # evaluate the generated text by comparing its similarity with flux generated image 
@@ -69,7 +68,7 @@ def cosim_eval(images, texts):
 
     return cos_scores
 
-def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutoff: int = 0.2):
+def generate_image_and_outputs(prompt_array: list, suffix: str = "", batch_size: int = 4, score_cutoff: int = 0.2):
     # Modify the original prompt by appending adversarial suffix
     prompt_array = [f"{prompt} {suffix}".strip() for prompt in prompt_array]
     # TODO: prompt not to give text in the img
@@ -182,7 +181,7 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", score_cutof
         up_prompt.append(tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {prompt1}. In more detail; {prompt2}.\n\n=====\n\nRemember to include these elements:\n{e2}"}, 
                                                                                                 {"role": "assistant", "content": f"Modified Caption: {prefix}"}]))
         images_idxs.append(image_idx)
-    outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200 ,batch_size=1)
+    outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, up_prompt, accelerator.device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=400 ,batch_size=batch_size)
     outputs = [o.split("Modified Caption:",1)[-1] for o in outputs]
     outputs = [o.replace("Caption:", "").replace("caption:", "").replace("Modified Caption:", "").replace("Modified caption:", "").replace("modified caption:", "").strip() for o in outputs]
     return_text.extend(outputs)
@@ -237,7 +236,7 @@ def main():
           # Apply the algo over the batched data
           all_data = [json.loads(l) for l in lines]
           captions = [data['caption'] for data in all_data]
-          idx_image_text_score_related = generate_image_and_outputs(captions, score_cutoff=args.score_cutoff)
+          idx_image_text_score_related = generate_image_and_outputs(captions, batch_size=args.batch_size, score_cutoff=args.score_cutoff)
 
           # save
           for (idx, image, text, score, related) in idx_image_text_score_related:

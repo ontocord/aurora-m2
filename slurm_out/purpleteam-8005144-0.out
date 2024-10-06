@@ -1,277 +1,0 @@
-running create_caption_from_img
-Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
-  warnings.warn(
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:11<00:11, 11.38s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  7.88s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  8.40s/it]
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/functional.py:512: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3587.)
-  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
-Asking to truncate to max_length but no maximum length is provided and the model has no predefined maximum length. Default to no truncation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-loading configuration file cache
-loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
-All model checkpoint weights were used when initializing GeneralizedRCNN.
-
-All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-'image' key not in data['metadata']
-Completed!!
-/var/spool/slurmd/job8005144/slurm_script: line 48: create_caption_from_img: command not found
-running create_img_and_caption
-Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
-  warnings.warn(
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:10<00:10, 10.81s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:15<00:00,  7.48s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:15<00:00,  7.98s/it]
-Couldn't connect to the Hub: Cannot reach https://huggingface.co/api/models/black-forest-labs/FLUX.1-schnell: offline mode is enabled. To disable it, please unset the `HF_HUB_OFFLINE` environment variable..
-Will try to load from local cache.
-Loading pipeline components...:   0%|          | 0/7 [00:00<?, ?it/s]Loading pipeline components...:  14%|█▍        | 1/7 [00:00<00:01,  4.70it/s]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
-Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  5.35it/s][A
-Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.37it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.36it/s]
-Loading pipeline components...:  43%|████▎     | 3/7 [00:00<00:00,  4.29it/s]Loading pipeline components...:  71%|███████▏  | 5/7 [00:01<00:00,  2.74it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
-Loading pipeline components...: 100%|██████████| 7/7 [00:01<00:00,  4.05it/s]Loading pipeline components...: 100%|██████████| 7/7 [00:01<00:00,  3.79it/s]
-Token indices sequence length is longer than the specified maximum sequence length for this model (215 > 77). Running this sequence through the model will result in indexing errors
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['words " funeral direct " written in white text. the bottom left tile shows a close - up of a tree trunk with a white flower on top. the background is a mix of green and brown tones, with a blue sky and white clouds. in the center of the collage, there is a large green leaf in the shape of a heart. the leaf is surrounded by a blue and white striped pattern. on the right side of the image, there are several smaller images of trees, buildings, and a bridge over a body of water. in the bottom right corner, there appears to be a photo of two people sitting on a bench with a view of the city skyline in the background.', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', 'with trees and shrubs, and there is a person walking in the distance. the sky is overcast, and the overall mood of the image is peaceful and serene. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-loading configuration file cache
-loading weights file https://cdn.huggingface.co/unc-nlp/frcnn-vg-finetuned/pytorch_model.bin from cache at /leonardo_scratch/fast/EUHPC_E03_068/.cache/57f6df6abe353be2773f2700159c65615babf39ab5b48114d2b49267672ae10f.77b59256a4cf8343ae0f923246a81489fc8d82f98d082edc2d2037c977c0d9d0
-All model checkpoint weights were used when initializing GeneralizedRCNN.
-
-All the weights of GeneralizedRCNN were initialized from the model checkpoint at unc-nlp/frcnn-vg-finetuned.
-If your task is similar to the task the model of the checkpoint was trained on, you can already use GeneralizedRCNN for predictions without further training.
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:18<00:55, 18.35s/it] 50%|█████     | 2/4 [00:19<00:16,  8.11s/it] 75%|███████▌  | 3/4 [00:20<00:05,  5.13s/it]100%|██████████| 4/4 [00:22<00:00,  3.73s/it]100%|██████████| 4/4 [00:22<00:00,  5.62s/it]
-/leonardo/home/userexternal/hraj0000/miniconda3/lib/python3.12/site-packages/torch/functional.py:512: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at ../aten/src/ATen/native/TensorShape.cpp:3587.)
-  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
-Asking to truncate to max_length but no maximum length is provided and the model has no predefined maximum length. Default to no truncation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['also a car driving by in the distance, adding movement to the otherwise static scene. overall, the atmosphere is calm and tranquil.', 'background is dark, making the man the focal point of the image. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:25,  8.61s/it] 50%|█████     | 2/4 [00:09<00:08,  4.10s/it] 75%|███████▌  | 3/4 [00:11<00:02,  2.95s/it]100%|██████████| 4/4 [00:12<00:00,  2.41s/it]100%|██████████| 4/4 [00:12<00:00,  3.18s/it]
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['a sports event or training session. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', 'and the woman in the middle is wearing an older woman with white hair and a blue floral dress. the baby is sitting in the stroller and is looking up at the camera. in the background, there are other people and tents, suggesting that the event is taking place outdoors.', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:25,  8.61s/it] 50%|█████     | 2/4 [00:09<00:08,  4.10s/it] 75%|███████▌  | 3/4 [00:11<00:02,  2.95s/it]100%|██████████| 4/4 [00:12<00:00,  2.41s/it]100%|██████████| 4/4 [00:12<00:00,  3.18s/it]
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', 'her hand on her chin, looking at the other woman with a thoughtful expression. she appears to be deep in thought. the background shows other tables and chairs in the restaurant and a chandelier hanging from the ceiling.', '. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', 'the leaves are also intricately detailed, with curved lines and curves. the overall effect is a beautiful and ornate piece of art. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:25,  8.61s/it] 50%|█████     | 2/4 [00:09<00:08,  4.10s/it] 75%|███████▌  | 3/4 [00:11<00:02,  2.95s/it]100%|██████████| 4/4 [00:12<00:00,  2.41s/it]100%|██████████| 4/4 [00:12<00:00,  3.18s/it]
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', 'a window and a curtain. on the left side of the image, there is a text that reads " i\'m in love and always will be " and on the right side, there are lines that appear to be arrows pointing towards the man. the overall mood of the illustration is somber and contemplative.', 'is melancholic and pensive. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:25,  8.61s/it] 50%|█████     | 2/4 [00:09<00:08,  4.10s/it] 75%|███████▌  | 3/4 [00:11<00:02,  2.95s/it]100%|██████████| 4/4 [00:12<00:00,  2.41s/it]100%|██████████| 4/4 [00:12<00:00,  3.18s/it]
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['to the side with a serious expression on his face. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', 'hands clearly visible. there is also a small white drop - shaped logo on the top left corner of the case. the overall design is modern and minimalistic.', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:25,  8.62s/it] 50%|█████     | 2/4 [00:09<00:08,  4.10s/it] 75%|███████▌  | 3/4 [00:11<00:02,  2.95s/it]100%|██████████| 4/4 [00:12<00:00,  2.41s/it]100%|██████████| 4/4 [00:12<00:00,  3.18s/it]
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ["are clear and easy to read. at the very top left hand side of the casing there appears to be an additional feature but its purpose isn 't evident from the photo. overall, the design of the watch seems contemporary and simple.", 'it a sense of depth and dimension. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:25,  8.61s/it] 50%|█████     | 2/4 [00:09<00:08,  4.10s/it] 75%|███████▌  | 3/4 [00:11<00:02,  2.95s/it]100%|██████████| 4/4 [00:12<00:00,  2.41s/it]100%|██████████| 4/4 [00:12<00:00,  3.18s/it]
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['lighter shades of white scattered throughout. the edges of the image are slightly blurred, giving it a dreamy, ethereal quality. the overall effect is one of beauty and serenity.', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', 'with trees and grass. the sky is blue and the weather seems to be sunny. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:25,  8.62s/it] 50%|█████     | 2/4 [00:09<00:08,  4.10s/it] 75%|███████▌  | 3/4 [00:11<00:02,  2.95s/it]100%|██████████| 4/4 [00:12<00:00,  2.41s/it]100%|██████████| 4/4 [00:12<00:00,  3.18s/it]
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', 'color. the illustration is in a simple, cartoon - like style and is slightly tilted to the left.', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:25,  8.61s/it] 50%|█████     | 2/4 [00:09<00:08,  4.10s/it] 75%|███████▌  | 3/4 [00:11<00:02,  2.95s/it]100%|██████████| 4/4 [00:12<00:00,  2.41s/it]100%|██████████| 4/4 [00:12<00:00,  3.18s/it]
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['is text that reads " includes new multiplayer adventure four swords " in white letters. the nintendo logo is in the bottom right corner. the background of the cover is a light brown color. <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>', '- like structure with multiple branches and leaves. the branches are intertwined and intertwining with each other, creating an abstract and dynamic composition. the leaves are of different sizes and shapes, with some being larger and more prominent than others. the overall effect is one of depth and dimensionality, with the colors blending together to create a mesmerizing and dynamic effect.', '<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>']
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:08<00:25,  8.61s/it] 50%|█████     | 2/4 [00:09<00:08,  4.10s/it] 75%|███████▌  | 3/4 [00:11<00:02,  2.95s/it]100%|██████████| 4/4 [00:12<00:00,  2.41s/it]100%|██████████| 4/4 [00:12<00:00,  3.18s/it]
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-The following part of your input was truncated because CLIP can only handle sequences up to 77 tokens: ['and more dominant while others blend seamlessly into their surroundings. this work of art showcases a unique balance between simplicity and complexity, resulting in a visually stimulating and captivating experience for viewers.']
-  0%|          | 0/4 [00:00<?, ?it/s] 25%|██▌       | 1/4 [00:07<00:22,  7.47s/it] 50%|█████     | 2/4 [00:07<00:06,  3.23s/it] 75%|███████▌  | 3/4 [00:08<00:01,  1.95s/it]100%|██████████| 4/4 [00:08<00:00,  1.35s/it]100%|██████████| 4/4 [00:08<00:00,  2.15s/it]
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Completed!!
-/var/spool/slurmd/job8005144/slurm_script: line 68: create_img_and_caption: command not found
-running create_instr_response_from_caption
-Detected kernel version 4.18.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:10<00:10, 10.63s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:15<00:00,  7.32s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:15<00:00,  7.82s/it]
-Asking to truncate to max_length but no maximum length is provided and the model has no predefined maximum length. Default to no truncation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Setting `pad_token_id` to `eos_token_id`:32000 for open-end generation.
-Completed!!
-/var/spool/slurmd/job8005144/slurm_script: line 86: create_instr_response_from_caption: command not found

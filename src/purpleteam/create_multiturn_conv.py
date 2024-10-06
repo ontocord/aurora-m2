@@ -187,7 +187,7 @@ def create_multiturn2(captions, instructions, responses, revised_instructions, r
             ]
 
             # Generate outputs
-            outputs = generate_with_batching(model, tokenizer, prompts, accelerator.device)
+            outputs = generate_with_batching(model, tokenizer, prompts, accelerator.device, batch_size=len(prompts))
 
             # Process outputs
             outputs = [oo.split("Question:", 1)[-1] for oo in outputs]
@@ -219,7 +219,7 @@ def create_multiturn2(captions, instructions, responses, revised_instructions, r
             ]
 
             # Generate assistant outputs
-            outputs = generate_with_batching(model, tokenizer, prompts, accelerator.device)
+            outputs = generate_with_batching(model, tokenizer, prompts, accelerator.device, batch_size=len(prompts))
 
             # Process outputs
             outputs = [oo.split("Answer:", 1)[-1] for oo in outputs]

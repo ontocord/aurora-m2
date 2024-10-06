@@ -17,30 +17,13 @@ torch.cuda.empty_cache()
 
 
 def setup(args):
-    # bnb_config = BitsAndBytesConfig(
-    #     load_in_4bit=True,
-    #     bnb_4bit_use_double_quant=False,
-    #     bnb_4bit_quant_type="nf4",
-    #     bnb_4bit_compute_dtype=torch.float16
-    # )
-
-    # # Setup for LlamaGuard model
-    # llamaguard_tokenizer = AutoTokenizer.from_pretrained(args.llamaguard_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
-    # llamaguard_model = AutoModelForCausalLM.from_pretrained(args.llamaguard_path, low_cpu_mem_usage=True, device_map="auto", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").eval() # quantization_config=bnb_config
-    # llamaguard_tokenizer.pad_token = llamaguard_tokenizer.eos_token
-    # llamaguard_model = accelerator.prepare(llamaguard_model)
 
     # Setup for PurpleTeam generative model
     purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_generative_model_path, cache_dir=args.cache_dir)
-    purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval() # quantization_config=bnb_config
+    purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", torch_dtype=torch.bfloat16, cache_dir=args.cache_dir).eval() # quantization_config=bnb_config
     purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
     purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
 
-    # # Setup for target model
-    # target_tokenizer = AutoTokenizer.from_pretrained(args.target_model_path, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache")
-    # target_model = AutoModelForCausalLM.from_pretrained(args.target_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").eval() # quantization_config=bnb_config
-    # target_tokenizer.pad_token = target_tokenizer.eos_token
-    # target_model = accelerator.prepare(target_model)
 
     return purpleteam_generative_model, purpleteam_generative_tokenizer
 
@@ -76,7 +59,7 @@ def main():
                 prefix = random.choice(["an image of", "a photo of", "a photograph of", "a picture of", "a screenshot of", "a screen shot of"])
                 prompts = [tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary.\n\n{instruction}"},
                                                                 {"role": "assistant", "content": f"Caption: {prefix}"}]) for instruction in instructions]
-                outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device)
+                outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device, max_new_tokens=400, batch_size=args.batch_size)
                 for i, output in enumerate(outputs):
                     caption = output.replace("Caption:", "").replace("caption:", "").replace("caption", "").replace("Caption", "").strip()
                     caption = caption.replace("1.","").replace("2.","").replace("3.","").replace("1)","").replace("2)","").replace("3)","").strip('-\' "').strip()
