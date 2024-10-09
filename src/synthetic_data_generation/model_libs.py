@@ -1077,7 +1077,7 @@ def batch_create_synthetic_data_from_llm_output(params_list):
           code_idx = doc.indexof("```")
           doc, code_portion = doc[:code_idx], doc[code_idx:]
       lang = langid.classify(doc)
-
+      #TODO: if not english, we should do a basic kenlm score for multilingual
       edu_pred = edu_model.predict(doc.lower().replace("\n", " ")[:min(1000, len(doc))].replace(" she ", " he ").replace(" her ", " his"))
       oh_eli5_pred = oh_eli5.predict(doc.lower().replace("\n", " ")[:min(1000, len(doc))].replace(" she ", " he ").replace(" her ", " his"))
       ##((pred[0][0] == '__label__Mid' and pred[1] > 0.60 ) and (oh_eli5_pred[0][0] == '__label__hq' and  oh_eli5_pred[1] > 0.40)) or \
