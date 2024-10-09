@@ -1,4 +1,4 @@
-# safellm
+# aurora-m2 aka safellm
 
 ## Synthetic Data Generation Papers
 - Evol-Instruct - [Automatic Instruction Evolving for Large Language Models](https://arxiv.org/pdf/2406.00770)
