@@ -24,6 +24,7 @@ def get_ngram_score(text, lang="en", window_size=3, ):
     aHash[key] = aHash[key]/text_len
   if not aHash: return 0.0
   return aHash.most_common(1)[0][1]
+  
 def process_1():
   with open("/content/drive/Shareddrives/ontocord_llc/continued_pretraining_synthetic_and_permissive_part3.jsonl", "w") as outf:
     if False:
@@ -435,5 +436,120 @@ def process_2():
         source = dat['seed_data']
         if "ultra" not in source and story not in seen_story:
           outf.write(json.dumps({'text': story, 'instruct': '', 'metadata': {'source': "HuggingFaceTB/cosmopedia/stories/openhermes"}})+"\n")
+def process_3():
+  import json, random, math
+  try:
+    from datasets import load_dataset
+  except:
+    !pip install -q datasets
+  from datasets import load_dataset
   
-    
+  with open("/content/drive/Shareddrives/ontocord_llc/TIGER-Lab-WebInstructSub.jsonl", "w") as outf:
+  
+    dataset = load_dataset("TIGER-Lab/WebInstructSub")
+    q = 0
+    f = 0
+    few_shot = 0
+    for idx, dat in enumerate(dataset['train']):
+      question, answer = dat['question'], dat['answer']
+      question = question.strip()
+      answer = answer.strip()
+      text = f"Q: {question} A: {answer}"
+      if few_shot == 1:
+        if random.randint(0,1):
+          instruction = instruction +f"""Q: {question}\n<|endoftext|>\n<|assistant|>A: {answer}<|endoftext|>"""
+        else:
+          if random.randint(0,1):
+            instruction = instruction +f"""Q: {question}\nA:<|endoftext|>\n<|assistant|>{answer}<|endoftext|>"""
+          else:
+            instruction = instruction +f"""Q: {question}\n<|endoftext|>\n<|assistant|>A: {answer}<|endoftext|>"""
+  
+        few_shot -= 1
+        outf.write(json.dumps({'instruct': instruction, 'text': text,  'metadata':{'source': "TIGER-Lab/WebInstructSub/"+dat['source']+"/"+str(idx)}})+"\n")
+        instruction = ""
+        continue
+      elif few_shot > 1:
+        instruction= instruction + f"""Q: {question}\nA: {answer}\n\n"""
+        few_shot -= 1
+        continue
+      elif random.randint(0,1) > 0 and len(answer) > 100 and not ('this' in answer[:40] or answer.startswith("Yes") or answer.startswith("No")):
+        q +=1
+        if random.randint(0,1):
+          instruction= f"""<|user|>{answer}\n\nGive me a potential question that a user of a discussion forum might ask for the above text.<|endoftext|>\n<|assistant|>{question}<|endoftext|>"""
+        else:
+          instruction= f"""<|user|>Give me a potential question that a user of a discussion forum might ask for the below text.\n\n{answer}<|endoftext|>\n<|assistant|>{question}<|endoftext|>"""
+        if random.randint(0,1) and "socratic" not in dat['source']:
+          instruction = instruction.replace("a discussion forum", dat['source'])
+        elif random.randint(0,1) and " I " not in question and " sorry " not in question and " someone " not in question and " you " not in question:
+          instruction = instruction.replace("that a user of a discussion forum might ask ", "")
+        if random.randint(0,1):
+          instruction = instruction.replace("potential", "possible")
+        if random.randint(0,1):
+          instruction = instruction.replace("question", "query")
+        if random.randint(0,1):
+          instruction = instruction.replace("question", "instruction")
+        if random.randint(0,1):
+          instruction = instruction.replace(" text.", random.choice([" segment.", " answer.", " explanation."]))
+        if random.randint(0,1):
+          instruction = instruction.replace("above text", "above")
+        if random.randint(0,1):
+          instruction = instruction.replace("below text", "below")
+        if random.randint(0,1):
+          instruction = instruction.replace("Give me", random.choice(["Give", "Find", "Write", "Draft", "Come up with"]))
+      elif few_shot <= 0 and random.randint(0,4) == 0:
+        f+=1
+        few_shot = random.randint(2,5)
+        instruction= f"""<|user|>Q: {question}\nA: {answer}\n\n"""
+        continue
+      else:
+        instruction= f"""<|user|>{question}<|endoftext|>\n<|assistant|>{answer}<|endoftext|>"""
+      outf.write(json.dumps({'instruct': instruction, 'text': text,  'metadata':{'source': "TIGER-Lab/WebInstructSub/"+dat['source']}})+"\n")
+  
+  with open("/content/drive/Shareddrives/ontocord_llc/lmsys-arena-human-preference-55k.jsonl", "w") as outf:
+  
+   #!rm -rf ~/.cache/hugging*/datasets
+    dataset = load_dataset("lmsys/lmsys-arena-human-preference-55k")
+    for idx, a in enumerate(dataset['train']):
+      if len(a['prompt']) < 50: continue
+      prompt_arr = json.loads(a['prompt'])
+      model_a_arr = json.loads(a['response_a'])
+      model_b_arr = json.loads(a['response_b'])
+      instruction = ""
+      for prompt, model_a, model_b in zip(prompt_arr, model_a_arr, model_b_arr):
+        instruct = ""
+        if not model_a or not model_b: continue
+        if a['winner_model_a']:
+          if random.randint(0,4) == 0:
+            instruct = "<|user|>"+prompt+"<|endoftext|>\n<|assistant|>"+model_a+"<|endoftext|>\n"
+          elif abs(len(model_a) - len(model_b)) > 100 and len(model_a) > len(model_b):
+            instruct = "<|user|>"+prompt+"<|endoftext|>\n<|assistant|>"+model_b+"<|endoftext|>\n<|user|>This doesn't sound right. Can you improve this answer and make it more detailed?<|endoftext|>\n<|assistant|>\n"+model_a+"<|endoftext|>\n"
+          elif abs(len(model_a) - len(model_b)) > 100 and len(model_a) < len(model_b):
+            instruct = "<|user|>"+prompt+"<|endoftext|>\n<|assistant|>"+model_b+"<|endoftext|>\n<|user|>This doesn't sound right. Can you improve this answer and make it more concise?<|endoftext|>\n<|assistant|>\n"+model_a+"<|endoftext|>\n"
+        elif a['winner_model_b']:
+          if random.randint(0,4) == 0:
+            instruct = "<|user|>"+prompt+"<|endoftext|>\n<|assistant|>"+model_b+"<|endoftext|>\n"
+          elif abs(len(model_a) - len(model_b)) > 100 and len(model_a) < len(model_b):
+            instruct = "<|user|>"+prompt+"<|endoftext|>\n<|assistant|>"+model_a+"<|endoftext|>\n<|user|>This doesn't sound right. Can you improve this answer and make it more detailed?<|endoftext|>\n<|assistant|>\n"+model_b+"<|endoftext|>\n"
+          elif abs(len(model_a) - len(model_b)) > 100 and len(model_a) > len(model_b):
+            instruct = "<|user|>"+prompt+"<|endoftext|>\n<|assistant|>"+model_a+"<|endoftext|>\n<|user|>This doesn't sound right. Can you improve this answer and make it more concise?<|endoftext|>\n<|assistant|>\n"+model_b+"<|endoftext|>\n"
+        else:
+          instruct = "<|user|>"+prompt+"<|endoftext|>\n<|assistant|>"+model_a+"<|endoftext|>\n"
+        if random.randint(0,1):
+          instruct = instruct.replace("This doesn't sound right.", "Don't like this answer.")
+        if random.randint(0,1):
+          instruct = instruct.replace("This doesn't sound right.", "")
+        if random.randint(0,1):
+          instruct = instruct.replace("sound right.", "seem good.")
+        if random.randint(0,1):
+          instruct = instruct.replace("Can you improve", "Please work on this and update")
+        if random.randint(0,1):
+          instruct = instruct.replace("Can you improve", "Improve")
+        if random.randint(0,1):
+          instruct = instruct.replace("this answer and make it more", "your reply; please ")
+        if random.randint(0,1):
+          instruct = instruct.replace("make it more", "give me an answer that is more")
+        if random.randint(0,1):
+          instruct = instruct.replace("this answer", "your answer")
+        instruction = instruction+instruct
+      outf.write(json.dumps({'text': ("Q: "+a['prompt']+"\nA: "+ a['response_a']) if len( a['response_a']) < 100 else  a['response_a'], 'instruct': instruction, 'metadata': {'source': "lmsys/lmsys-arena-human-preference-55k/"+str(idx)}})+"\n")
+  
