@@ -19,3 +19,4 @@ Benchmark Report of Different LLM Inference Backends [link](https://www.bentoml.
 - python -m wn download oewn:2023
 - python -m spacy download en_core_web_sm
 - pip install -q https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.4/en_ner_bc5cdr_md-0.5.4.tar.gz
+- NOTE: scispacy is not working on Leonardo for some reason bc of nmslib not installing. TODO to fix. 
