@@ -1,3 +1,4 @@
+# THIS IS AN OLD TUTORIAL. NEEDS UPDATE
 # How to use Context-aware Automated Purple Teaming
 
 #### 1. Input construction - Constructing Context via Rule Templates 
