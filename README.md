@@ -15,7 +15,7 @@ Benchmark Report of Different LLM Inference Backends [link](https://www.bentoml.
 
 
 ## Installation
-- On leonardo, you will need to do this: `module load flash-attn`
+- On leonardo, you will need to do this: `module load cuda`
 - In addition to pip install -r requirements.txt also do this:
 - python -m wn download oewn:2023
 - python -m spacy download en_core_web_sm
