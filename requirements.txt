@@ -32,3 +32,4 @@ scispacy
 protobuf
 timm
 matplotlib
+flash-attn
