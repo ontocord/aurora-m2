@@ -31,7 +31,7 @@ echo 'generating autoredteam data'
 #srun --mpi=list
 
 srun python -m src.create_multimodal_data \
-      --batch_size 40 \
+      --batch_size 20 \
       --task generate_autoredteam \
       --LLM_small_model artificialguybr/Qwen2.5-0.5B-OpenHermes2.5 \
       --use_LLM_size medium \
