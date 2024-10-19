@@ -1,0 +1,65 @@
+#!/bin/bash
+#SBATCH --account EUHPC_E03_068
+#SBATCH -p boost_usr_prod
+#SBATCH --time 16:00:00     # format: HH:MM:SS
+#SBATCH -N 1                # 1 node
+#SBATCH --cpus-per-task=10
+#SBATCH --ntasks-per-node=1 # 4 tasks out of 32
+#SBATCH --gpus-per-node=4
+#SBATCH --gres=gpu:4          # 4 gpus per node out of 4
+#SBATCH --mem=123000          # memory per node out of 494000MB (481GB)
+#SBATCH --job-name=create_multimodal_data
+#SBATCH --output=/leonardo_work/EUHPC_E03_068/slurm_out/huu-%j-%t.out
+
+
+export HF_HUB_DISABLE_TELEMETRY=1
+export DO_NOT_TRACK=1
+export HF_DATASETS_OFFLINE=1
+export TRANSFORMERS_OFFLINE=1
+export HF_HUB_OFFLINE=1
+source ~/miniconda3/bin/activate
+
+cache_dir="/leonardo_work/EUHPC_E03_068/.cache"
+
+#/leonardo_scratch/fast/EUHPC_E03_068/.cache"
+
+directory="/leonardo_work/EUHPC_E03_068/staging_data/huu-commoncatalog-test"
+mkdir -p $directory
+
+echo 'generating autoredteam data'
+
+#srun --mpi=list
+
+srun python -m src.create_multimodal_data \
+      --batch_size 40 \
+      --task generate_autoredteam \
+      --LLM_small_model artificialguybr/Qwen2.5-0.5B-OpenHermes2.5 \
+      --use_LLM_size medium \
+      --cache_dir $cache_dir \
+      --output_dir $directory \
+      --output_path $directory/autoredteam.jsonl  \
+
+
+#     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-5902856173521346022-881c09c0-8d26-4696-ab27-ae38e76eef3e-4766908-1-c000.parquet \
+#     --image_width -1 \
+#     --image_height -1 \
+
+#echo 'creating captions'
+#and people images from commoncatalog'
+#srun python -m src.create_multimodal_data \
+#     --task generate_captions_then_filter_people_images \
+#     --input_dir /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/ \
+#     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-4706868160279389178-bbe490c0-37b3-4c20-a536-22eb9efb5fea-74701-1-c000.parquet \
+#     --output_dir $directory \
+#     --output_path $directory/commoncatalog_captions.jsonl     
+
+
+
+#echo 'creating images'
+#srun python -m src.create_multimodal_data \
+#     --task generate_images \
+#     --input_dir $directory \
+#     --output_dir $directory \
+#     --input_path $directory/commoncatalog_captions_then_images.jsonl  \
+#     --output_path $directory/commoncatalog_image_with_recaptions.jsonl
+

@@ -1,4 +1,4 @@
-from accelerate import Accelerator
+#from accelerate import Accelerator
 
 # Create an accelerator
-accelerator = Accelerator()
+#accelerator = Accelerator()

@@ -1,5 +1,5 @@
-from src.accelerator import accelerator
-device = accelerator.device
+#from src.accelerator import accelerator
+# device = accelerator.device
 import torch
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
@@ -143,6 +143,7 @@ def blueteam_classify_conversation(blueteam_llamaguard_model, blueteam_llamaguar
                                    chat,  rule="", categories="", role="", 
                                    batch_size=1, return_score=False, ignore_extra_rules=False, 
                                    prompts=None, category2name=None):
+  device = blueteam_llamaguard_model.device
   torch.cuda.empty_cache()
   if prompts is None:
     prompts = llamaguard_classifier_categories
@@ -156,7 +157,7 @@ def blueteam_classify_conversation(blueteam_llamaguard_model, blueteam_llamaguar
     input_ids = blueteam_llamaguard_tokenizer(ct, return_tensors="pt", add_special_tokens=False, truncation=True, padding=True).to(device)
     output.extend(blueteam_llamaguard_tokenizer.batch_decode(blueteam_llamaguard_model.generate(**input_ids, max_new_tokens=5, pad_token_id=0), skip_special_tokens=True))
   answers = [(s.split("[/INST]")[1].replace("<s>", "").replace("</s>", "")+" ").split() for s in output]
-  answers = [a+[category2name.get(a[-1], '').strip(" .")] for a in answers]
+  answers = [a if not a else (a+[category2name.get(a[-1], '').strip(" .")]) for a in answers]
   torch.cuda.empty_cache()
 
   if return_score:

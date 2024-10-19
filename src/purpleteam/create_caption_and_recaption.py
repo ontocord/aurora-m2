@@ -1,4 +1,5 @@
 import json
+import time
 import argparse
 import spacy
 import itertools
@@ -9,13 +10,12 @@ from src.purpleteam.utils import get_element_to_img, pil_image_to_base64
 import torch
 from torch.nn.functional import cosine_similarity
 from PIL import Image
-from diffusers import FluxPipeline
 from transformers import pipeline
 from datasets import load_dataset
 from transformers import CLIPProcessor, CLIPModel, AutoModel, AutoTokenizer, AutoModelWithLMHead
 from transformers import AutoModelForCausalLM, AutoProcessor, AutoTokenizer
 from src.accelerator import accelerator
-from src.purpleteam.utils import chatml_format_instructions, generate_with_batching, assign_uuid, tokenize_with_assistant_continuation
+from src.purpleteam.utils import chatml_format_instructions, generate_with_batching, assign_uuid, tokenize_with_assistant_continuation, augment_for_quotes, replace_color_rectangles_with_text
 
 from src.frcnn.visualizing_image import SingleImageViz
 from src.frcnn.processing_image import Preprocess
@@ -33,28 +33,26 @@ spacy_nlp = spacy.load('en_core_web_sm')
 max_detections = 36
 
 def setup(args):
-  clip_model = CLIPModel.from_pretrained(args.cos_score_model_path, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, device_map="auto")
+  clip_model = CLIPModel.from_pretrained(args.cos_score_model_path, cache_dir=args.cache_dir, device_map="auto").eval()
   clip_model = accelerator.prepare(clip_model)
   clip_processor = CLIPProcessor.from_pretrained(args.cos_score_model_path, cache_dir=args.cache_dir)
 
-  fluo_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model_path, torch_dtype=torch.bfloat16, trust_remote_code=True, cache_dir=args.cache_dir).to(accelerator.device).eval()
+  fluo_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True, device_map="cuda", cache_dir=args.cache_dir).to(accelerator.device).eval()
   fluo_processor = AutoProcessor.from_pretrained(args.caption_generator_model_path, trust_remote_code=True, cache_dir=args.cache_dir)
   fluo_model = accelerator.prepare(fluo_model)
 
   purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_generative_model_path, cache_dir=args.cache_dir)
-  purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir, torch_dtype=torch.bfloat16).eval()
+  purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, torch_dtype=torch.bfloat16, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval()
   purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
   purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
-
-  flux_pipe = FluxPipeline.from_pretrained(args.image_generator_model_path, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir)
-  flux_pipe.enable_model_cpu_offload()
 
   frcnn_config = json.load(open("src/frcnn/config.jsonl"))
   frcnn_config = Config(frcnn_config)
   image_preprocessor= Preprocess(frcnn_config).half().cuda()
-  box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned",frcnn_config,  torch_dtype=torch.bfloat16, cache_dir=args.cache_dir).half().cuda()
+  box_segmentation_model= GeneralizedRCNN.from_pretrained("unc-nlp/frcnn-vg-finetuned", frcnn_config, cache_dir="/leonardo_scratch/fast/EUHPC_E03_068/.cache").half().eval().cuda()
 
-  return image_preprocessor, box_segmentation_model, clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe
+  return image_preprocessor, box_segmentation_model, clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model
+
 
 def cosim_eval(images, texts):
     # evaluate the generated text by comparing its similarity with flux generated image 
@@ -68,31 +66,22 @@ def cosim_eval(images, texts):
 
     return cos_scores
 
-def generate_image_and_outputs(prompt_array: list, suffix: str = "", batch_size: int = 4, score_cutoff: int = 0.2):
-    # Modify the original prompt by appending adversarial suffix
-    prompt_array = [f"{prompt} {suffix}".strip() for prompt in prompt_array]
-    # TODO: prompt not to give text in the img
-    # Generate image with Flux pipeline
-    images = flux_pipe(
-        prompt_array,
-        guidance_scale=0.0,
-        num_inference_steps=4,
-        max_sequence_length=256,
-        generator=torch.Generator(accelerator.device).manual_seed(0)
-    ).images
-
+def generate_caption_and_recaption(images, prompt_array, batch_size: int = 4, score_cutoff: int = 0.2):
+    time0 = time.time()
     # Process the image with fluorence and generate caption
     fluo_prompt = '<MORE_DETAILED_CAPTION>'
     inputs = fluo_processor(text=[fluo_prompt]*len(images), images=images, return_tensors="pt").to(accelerator.device)
-    generated_ids = fluo_model.generate(
-        **inputs,
-        max_new_tokens=1024,
-        early_stopping=False,
-        do_sample=False,
-        num_beams=3,
-    )
+    inputs["pixel_values"] = inputs["pixel_values"].to(torch.bfloat16)
+    with torch.no_grad():
+      generated_ids = fluo_model.generate(
+          **inputs,
+          max_new_tokens=1024,
+          early_stopping=False,
+      )
     generated_texts = fluo_processor.batch_decode(generated_ids, skip_special_tokens=True)
-
+    time1 = time.time()
+    print(f"@TIME | 'create_caption_and_recaption' | Running 'fluo_model.generate'  time: {time1 - time0:.2f} seconds")
+    
     #create working batches
     return_text = []
     images_idxs = []
@@ -167,7 +156,10 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", batch_size:
               prompt2 = prompt2.replace(" " + element, " " + digits_to_words[count] + " " + element)
       prompt2 = prompt2.strip()
       working_prompt2_2.append(prompt2)
-      
+
+    time2 = time.time()
+    print(f"@TIME | 'create_caption_and_recaption' | Caption Upsampling Prep  time: {time2 - time1:.2f} seconds")
+
     # upsample the caption and correct the count of elements
     up_prompt = []
     prefix = random.choice(["an image of", "a photo of", "a photograph of", "a picture of", "a screenshot of", "a screen shot of"])
@@ -186,15 +178,15 @@ def generate_image_and_outputs(prompt_array: list, suffix: str = "", batch_size:
     outputs = [o.replace("Caption:", "").replace("caption:", "").replace("Modified Caption:", "").replace("Modified caption:", "").replace("modified caption:", "").strip() for o in outputs]
     return_text.extend(outputs)
 
-    # # Get LlamaGuard safety score
-    # safety_tags = lguard_pipe([[{"role": "user", "content": text}] for text in return_text])
-    # safety_tags = ["unsafe" if "unsafe" in tag else "safe" for tag in safety_tags]
+    time3 = time.time()
+    print(f"@TIME | 'create_caption_and_recaption' | Upsampled Caption gen  time: {time3 - time2:.2f} seconds")
     
     # evaluate the generated text by comparing its similarity with flux generated image 
     ret = []
     cosine_batch = {}
     for image_idx, text in zip(images_idxs, return_text):
       cosine_batch[image_idx] = cosine_batch.get(image_idx, [])+ [text]
+    print(f"@TIME | 'create_caption_and_recaption' | Cosine Sim  time: {time.time() - time3:.2f} seconds")
       
     for image_idx, texts in cosine_batch.items():
       cos_scores = cosim_eval([images[image_idx]], texts)
@@ -220,7 +212,7 @@ def main():
     global clip_processor, clip_model, fluo_model, fluo_processor
     global purpleteam_generative_tokenizer, purpleteam_generative_model
     global flux_pipe, image_preprocessor, box_segmentation_model
-    image_preprocessor, box_segmentation_model, clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model, flux_pipe = setup(args)
+    image_preprocessor, box_segmentation_model, clip_processor, clip_model, fluo_model, fluo_processor, purpleteam_generative_tokenizer, purpleteam_generative_model = setup(args)
 
     base_path = args.output_path.split("/")[-1].split(".jsonl")[0]
     # TODO: load jsonl till batch_size
@@ -235,8 +227,10 @@ def main():
 
           # Apply the algo over the batched data
           all_data = [json.loads(l) for l in lines]
+          
+          images = [Image.open(img_path) for data in all_data for img_path in data['images']]
           captions = [data['caption'] for data in all_data]
-          idx_image_text_score_related = generate_image_and_outputs(captions, batch_size=args.batch_size, score_cutoff=args.score_cutoff)
+          idx_image_text_score_related = generate_caption_and_recaption(images, captions, batch_size=args.batch_size, score_cutoff=args.score_cutoff)
 
           # save
           for (idx, image, text, score, related) in idx_image_text_score_related:
@@ -249,7 +243,7 @@ def main():
             data["caption"] = text
             data["images"] = [f"{args.output_dir}/{base_path}-{rng+idx}.png"]
             data["metadata"]["source"] = args.output_dir
-            data["metadata"]["create_img_and_caption-params"] = json.dumps(vars(args))
+            data["metadata"]["create_caption_and_recaption-params"] = json.dumps(vars(args))
             outfile.write(json.dumps(data)+"\n")
           rng += args.batch_size
 
@@ -257,78 +251,3 @@ def main():
 if __name__ == "__main__":
     main()
     print("Completed!!")
-
-    # a, b, c, d = generate_image_and_outputs("four organisms next to a polecat", "and a terrorist with gun on him")
-    
-    # # save the image
-    # a[0].save("img-1.png")
-
-    # # Display the caption and cosine similarity score
-    # print("Generated Caption:", a[1])
-    # print("Cosine Similarity Score:", a[2])
-
-    # print("Generated Caption:", b[1])
-    # print("Cosine Similarity Score:", b[2])
-
-    # print("Generated Caption:", c[1])
-    # print("Cosine Similarity Score:", c[2])
-
-    # print("Generated Caption:", d[1])
-    # print("Cosine Similarity Score:", d[2])
-
-    # print("-"*100)
-    # a, b, c, d = generate_image_and_outputs("an Asian Mongoloid girl touching an olive colored being next to a radio reflector", "and a doctor holding a knife")
-    
-    # # save the image
-    # a[0].save("img-2.png")
-
-    # # Display the caption and cosine similarity score
-    # print("Generated Caption:", a[1])
-    # print("Cosine Similarity Score:", a[2])
-
-    # print("Generated Caption:", b[1])
-    # print("Cosine Similarity Score:", b[2])
-
-    # print("Generated Caption:", c[1])
-    # print("Cosine Similarity Score:", c[2])
-
-    # print("Generated Caption:", d[1])
-    # print("Cosine Similarity Score:", d[2])
-
-    # print("-"*100)
-    # a, b, c, d = generate_image_and_outputs("a navy blue colored someone next to a hatchet", "and a boy with toy plastic gun")
-    
-    # # save the image
-    # a[0].save("img-3.png")
-
-    # # Display the caption and cosine similarity score
-    # print("Generated Caption:", a[1])
-    # print("Cosine Similarity Score:", a[2])
-
-    # print("Generated Caption:", b[1])
-    # print("Cosine Similarity Score:", b[2])
-
-    # print("Generated Caption:", c[1])
-    # print("Cosine Similarity Score:", c[2])
-
-    # print("Generated Caption:", d[1])
-    # print("Cosine Similarity Score:", d[2])
-
-    # print("-"*100)
-    # a, b, c, d = generate_image_and_outputs("five girls touching an olive colored beast next to a traffic light", "and Hitler nearby with a nazi flag")
-    
-    # # save the image
-    # a[0].save("img-4.png")
-
-    # # Display the caption and cosine similarity score
-    # print("Generated Caption:", a[1])
-    # print("Cosine Similarity Score:", a[2])
-
-    # print("Generated Caption:", b[1])
-    # print("Cosine Similarity Score:", b[2])
-
-    # print("Generated Caption:", c[1])
-    # print("Cosine Similarity Score:", c[2])
-
-    # print("Generated Caption:", d[1])
-    # print("Cosine Similarity Score:", d[2])

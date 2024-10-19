@@ -7,6 +7,7 @@ import random
 from io import BytesIO
 import numpy as np
 from numpy import asarray
+from collections import deque
 
 import torch
 import PIL
@@ -174,6 +175,7 @@ def tokenize_with_assistant_continuation(tokenizer, messages):
     msg = tokenizer.apply_chat_template([{"role": "user", "content": ""}, {"role": "assistant", "content": "@@@@@@"}], tokenize=False)
     tokenizer.assistant_ending = msg.split("@@@@@@")[-1]
   if not messages: return ""
+  print("messages:", messages)
   return tokenizer.apply_chat_template(messages, tokenize=False)[:-len(tokenizer.assistant_ending)]
 
 def tokenize_with_user_continuation(tokenizer, messages):
@@ -483,18 +485,35 @@ def chatml_format_instructions(tokenizer, system, instruction, response=""):
 # {response}"""
 
 # generate output from a batch of inputs
-def generate_with_batching(model, tokenizer, data, device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=400, batch_size=2, **args):
+def generate_with_batching(model, tokenizer, data, device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, temperature=0.85, max_new_tokens=400, batch_size=2, **args):
   torch.cuda.empty_cache()
   output = []
   for rng in range(0, len(data), batch_size):
     d = data[rng:min(len(data), rng+batch_size)]
     if d:
-      input_ids = tokenizer(d, truncation=True, padding=True, return_tensors="pt", add_special_tokens=False, ).to(device)
-      prompt_len = input_ids["input_ids"].shape[-1]
-      output.extend(tokenizer.batch_decode(model.generate(**input_ids,
-                        use_cache=use_cache, repetition_penalty=repetition_penalty, no_repeat_ngram_size=no_repeat_ngram_size, max_new_tokens=max_new_tokens, **args)[:, prompt_len:], skip_special_tokens=True))
+      with torch.no_grad():
+        input_ids = tokenizer(d, truncation=True, padding=True, return_tensors="pt", add_special_tokens=False, ).to(device)
+        prompt_len = input_ids["input_ids"].shape[-1]
+        output.extend(tokenizer.batch_decode(model.generate(**input_ids,
+                          use_cache=use_cache, repetition_penalty=repetition_penalty, no_repeat_ngram_size=no_repeat_ngram_size, max_new_tokens=max_new_tokens, temperature=temperature, **args)[:, prompt_len:], skip_special_tokens=True))
   torch.cuda.empty_cache()
   return output
+
+
+def chunkify(sequence, n):
+    """Splits a sequence into N roughly equal-sized chunks."""
+
+    deque_sequence = deque(sequence)
+    result = []
+    chunk_size = (len(sequence) + n - 1) // n  # Ceiling division
+
+    while deque_sequence:
+        chunk = []
+        for _ in range(min(chunk_size, len(deque_sequence))):
+            chunk.append(deque_sequence.popleft())
+        result.append(chunk)
+
+    return result
 
 
 def find_quotes(text):

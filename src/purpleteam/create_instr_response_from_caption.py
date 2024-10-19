@@ -3,6 +3,7 @@ import einops
 import random
 import itertools
 import json
+import time
 
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
@@ -26,7 +27,7 @@ def setup(args):
 
     # Setup for PurpleTeam generative model
     purpleteam_generative_tokenizer = AutoTokenizer.from_pretrained(args.purpleteam_generative_model_path, cache_dir=args.cache_dir)
-    purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, device_map="auto", cache_dir=args.cache_dir).eval() # quantization_config=bnb_config
+    purpleteam_generative_model = AutoModelForCausalLM.from_pretrained(args.purpleteam_generative_model_path, low_cpu_mem_usage=True, torch_dtype=torch.bfloat16, device_map="auto", cache_dir=args.cache_dir).eval() # quantization_config=bnb_config
     purpleteam_generative_tokenizer.pad_token = purpleteam_generative_tokenizer.eos_token
     purpleteam_generative_model = accelerator.prepare(purpleteam_generative_model)
 
@@ -58,10 +59,12 @@ def main():
                 # Get instr for the batched data
                 all_data = [json.loads(l) for l in lines]
                 captions = [data['caption'] for data in all_data]
+                time0 = time.time()
                 prompts = [tokenize_with_assistant_continuation(purpleteam_generative_tokenizer, [{"role": "system", "content": f"""You are an AI visual assistant that can analyze an image. You receive a caption, describing the image you are observing.\n\nThe task is to use the provided caption, create a plausible question about the image, and provide the answer in detail.\n\nCreate complex questions beyond describing the scene.\nTo answer such questions, one should require first understanding the visual content, then based on the background knowledge or reasoning, either explain why the things are happening that way, or provide guides and help to user's request. Make the question challenging by not including the visual content details in the question so that the user needs to reason about that first. Include details like object counts, position of the objects, relative position between the objects.\n\nWhen using the information from the caption, directly explain the scene, and do not mention that the information source is the caption. Always answer as if you are directly looking at the image."""},
                                                                                                   {"role": "user", "content": f"Caption: {caption}"},
                                                                                                   {"role": "assistant", "content": "Question:"}]) for caption in captions]
                 outputs = generate_with_batching(purpleteam_generative_model, purpleteam_generative_tokenizer, prompts, accelerator.device, batch_size=args.batch_size)
+                print(f"@TIME | 'create_instr_response_from_caption' | gen instr resp  time {time.time() - time0}")
                 for idx, output in enumerate(outputs):
                     instr, chosen_response = output.split("Answer:", 1)[0], output.split("Answer:", 1)[-1]
                     instr = instr.split("Question:", 1)[-1]
