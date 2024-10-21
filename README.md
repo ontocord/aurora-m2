@@ -1,6 +1,7 @@
 # aurora-m2 aka safellm
 
 ## Synthetic Data Generation Papers
+- Creating more data from smaller models is more efficient - [Smaller, Weaker, Yet Better: Training LLM Reasoners via Compute-Optimal Sampling](https://arxiv.org/pdf/2408.16737).
 - Evol-Instruct - [Automatic Instruction Evolving for Large Language Models](https://arxiv.org/pdf/2406.00770)
 - Orca-3 - [AgentInstruct: Toward Generative Teaching with Agentic Flows](https://arxiv.org/pdf/2407.03502)
 - 1 Billion Personas - [Scaling Synthetic Data Creation with 1,000,000,000 Personas](https://arxiv.org/pdf/2406.20094v1) [Code](https://github.com/tencent-ailab/persona-hub)
