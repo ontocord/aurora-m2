@@ -17,20 +17,19 @@ from diffusers import FluxPipeline
 from transformers import pipeline
 from datasets import load_dataset
 from transformers import CLIPProcessor, CLIPModel, AutoModel, AutoTokenizer, AutoModelWithLMHead
-from transformers import AutoModelForCausalLM, AutoProcessor, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoProcessor, AutoTokenizer, LlavaForConditionalGeneration
 from torch import multiprocessing
 from torch import threading
+#import multiprocessing, threading
 from transformers.utils import logging as transformers_logging
-from src.utils import chunkify, chatml_format_instructions, generate_with_batching, assign_uuid, tokenize_with_assistant_continuation, cleanup_data_batch, standardize_data_fields, cleanup_and_serialize_params, augment_for_quotes, \
-                      STORY_PROMPTS, generate_image_aware_instruction
-
+from src.utils import *
+from src.purpleteam.autoredteam import auto_redteam
+from src.purpleteam.templates.seed import verb_templates, obj_templates
 from src.frcnn.visualizing_image import SingleImageViz
 from src.frcnn.processing_image import Preprocess as FRCNNPreprocess
 from src.frcnn.modeling_frcnn import GeneralizedRCNN
 from src.frcnn.utils import Config as FRCNNConfig
 from src.frcnn.utils import decode_image as frcnn_decode_image
-from src.purpleteam.autoredteam import auto_redteam
-from src.purpleteam.templates.seed import verb_templates, obj_templates
 from urllib.parse import unquote
 
 
@@ -45,15 +44,11 @@ from matplotlib import colors
 import random
 from collections import OrderedDict
 
-
 import logging
+
 logger = logging.getLogger(__name__)  
 
-logging.basicConfig(
-    format='%(asctime)s : %(processName)s : %(threadName)s : %(levelname)s : %(message)s',
-    level=logging.WARNING)
-
-transformers_logging.set_verbosity(transformers.logging.ERROR)
+#transformers_logging.set_verbosity(transformers.logging.ERROR)
 
 spacy_nlp = None
 max_detections = 5
@@ -71,17 +66,33 @@ LLM_medium_model = None
 LLM_medium_tokenizer = None
 LLM_large_model = None
 LLM_large_tokenizer = None
-image_text_score_model = None
+LLM_model = None
+LLM_tokenizer = None
+LLM_redteam_target_model = None
+LLM_redteam_target_tokenizer = None
+LLM_math_model = None
+LLM_math_tokenizer = None
+LLM_code_model = None
+LLM_code_tokenizer = None
+image_text_model = None
 image_text_processor = None
 device  = None
 box_detect_image_preprocessor = None
 box_segmentation_model = None
 evaluator_model = None
 evaluator_tokenizer = None
+small_evaluator_model = None
+small_evaluator_tokenizer = None
+vlm_evaluator_model = None
+vlm_evaluator_processor = None
 
+model_registry = {}
+tokenizer_registry = {}
 
 def initialize(args_new):
   global spacy_nlp, \
+      model_registry, \
+      tokenizer_registry, \
       max_detections, \
       num_devices, \
       args, \
@@ -96,14 +107,27 @@ def initialize(args_new):
       LLM_medium_tokenizer, \
       LLM_large_model, \
       LLM_large_tokenizer, \
+      LLM_model, \
+      LLM_tokenizer, \
+      LLM_redteam_target_model, \
+      LLM_redteam_target_tokenizer, \
+      LLM_math_model, \
+      LLM_math_tokenizer, \
+      LLM_code_model, \
+      LLM_code_tokenizer, \
+      image_text_model, \
       image_text_processor, \
       device, \
-      image_text_score_model, \
       box_detect_image_preprocessor, \
       box_segmentation_model, \
       evaluator_model, \
       evaluator_tokenizer, \
+      vlm_evaluator_model, \
+      vlm_evaluator_processor, \
+      small_evaluator_model, \
+      small_evaluator_tokenizer, \
       tasks_configs
+
   
   args = args_new
   device_number = args.device_number
@@ -122,63 +146,153 @@ def initialize(args_new):
     # is there a way to pass params to the initializer??
     logger.warning (f'CREATING {args.image_generator_model} MODEL '+ device)
     if 'black-forest-labs/FLUX.1-schnell' in args.image_generator_model:
-      image_generator = FluxPipeline.from_pretrained(args.image_generator_model, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir).to(device, attn_implementation="flash_attention_2") # , 
+      if model_registry.get(args.image_generator_model) is None:
+        model_registry[args.image_generator_model] = image_generator = FluxPipeline.from_pretrained(args.image_generator_model, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir).to(device, attn_implementation="flash_attention_2") # ,
+      image_generator = model_registry[args.image_generator_model] 
     else:
       assert False, f"{args.image_generator_model} not yet supported"
 
   if 'caption_generator' in config['models_needed'] and caption_generator_processor is None:
-    logger.warning(f'CREATING {args.caption_generator_model} MODEL')    
-    caption_generator_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
-    caption_generator_processor = AutoProcessor.from_pretrained(args.caption_generator_model, trust_remote_code=True, cache_dir=args.cache_dir)
+    if  model_registry.get(args.caption_generator_model) is None:
+      logger.warning(f'CREATING {args.caption_generator_model} MODEL')    
+      model_registry[args.caption_generator_model] = caption_generator_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
+      tokenizer_registry[args.caption_generator_model] = caption_generator_processor = AutoProcessor.from_pretrained(args.caption_generator_model, trust_remote_code=True, cache_dir=args.cache_dir)
+    caption_generator_model  = model_registry[args.caption_generator_model] = caption_generator_model
+    caption_generator_processor = tokenizer_registry[args.caption_generator_model]
 
   if (("LLM_model" in config['models_needed']) or 'LLM_small' in config['models_needed']) and 'small' in args.use_LLM_size  and LLM_small_tokenizer is None:
-    logger.warning(f'CREATING {args.LLM_small_model} MODEL')    
-    LLM_small_model = AutoModelForCausalLM.from_pretrained(args.LLM_small_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
-    LLM_small_tokenizer = AutoTokenizer.from_pretrained(args.LLM_small_model, trust_remote_code=True, cache_dir=args.cache_dir)
+    if model_registry.get(args.LLM_small_model) is None:        
+      logger.warning(f'CREATING {args.LLM_small_model} MODEL')    
+      model_registry[args.LLM_small_model] = LLM_small_model = AutoModelForCausalLM.from_pretrained(args.LLM_small_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
+      tokenizer_registry[args.LLM_small_model] = LLM_small_tokenizer = AutoTokenizer.from_pretrained(args.LLM_small_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
     if not LLM_small_tokenizer.pad_token:
       LLM_small_tokenizer.pad_token = LLM_small_tokenizer.eos_token
-
+    LLM_small_model = model_registry[args.LLM_small_model]
+    LLM_small_tokenizer = tokenizer_registry[args.LLM_small_model] 
+    
   if (("LLM_model" in config['models_needed']) or 'LLM_medium' in config['models_needed']) and 'medium' in args.use_LLM_size  and LLM_medium_tokenizer is None:
-    logger.warning(f'CREATING {args.LLM_medium_model} MODEL')    
-    LLM_medium_model = AutoModelForCausalLM.from_pretrained(args.LLM_medium_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
-    LLM_medium_tokenizer = AutoTokenizer.from_pretrained(args.LLM_medium_model, trust_remote_code=True, cache_dir=args.cache_dir)
+    if model_registry.get(args.LLM_medium_model) is None:    
+      logger.warning(f'CREATING {args.LLM_medium_model} MODEL')    
+      model_registry[args.LLM_medium_model] = LLM_medium_model = AutoModelForCausalLM.from_pretrained(args.LLM_medium_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
+      tokenizer_registry[args.LLM_medium_model] = LLM_medium_tokenizer = AutoTokenizer.from_pretrained(args.LLM_medium_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
     if not LLM_medium_tokenizer.pad_token:
       LLM_medium_tokenizer.pad_token = LLM_medium_tokenizer.eos_token
+    LLM_medium_model = model_registry[args.LLM_medium_model]
+    LLM_medium_tokenizer = tokenizer_registry[args.LLM_medium_model] 
 
-  if (("LLM_model" in config['models_needed']) or 'LLM_large' in config['models_needed']) and 'large' in args.use_LLM_size and LLM_large_tokenizer is None:
-    logger.warning(f'CREATING {args.LLM_large_model} MODEL')    
-    LLM_large_model = AutoModelForCausalLM.from_pretrained(args.LLM_large_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
-    LLM_large_tokenizer = AutoTokenizer.from_pretrained(args.LLM_large_model, trust_remote_code=True, cache_dir=args.cache_dir)
+  if (("LLM_model" in config['models_needed']) or 'LLM_large' in config['models_needed']) and 'large' in args.use_LLM_size  and LLM_large_tokenizer is None:
+    if model_registry.get(args.LLM_large_model) is None:
+      logger.warning(f'CREATING {args.LLM_large_model} MODEL')    
+      model_registry[args.LLM_large_model] = LLM_large_model = AutoModelForCausalLM.from_pretrained(args.LLM_large_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
+      tokenizer_registry[args.LLM_large_model] = LLM_large_tokenizer = AutoTokenizer.from_pretrained(args.LLM_large_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
     if not LLM_large_tokenizer.pad_token:
       LLM_large_tokenizer.pad_token = LLM_large_tokenizer.eos_token
+    LLM_large_model = model_registry[args.LLM_large_model]
+    LLM_large_tokenizer = tokenizer_registry[args.LLM_large_model] 
+    
+  if args.use_LLM_size == 'small':
+    LLM_model = LLM_small_model
+    LLM_tokenizer = LLM_small_tokenizer
+  elif args.use_LLM_size == 'large':
+    LLM_model = LLM_large_model
+    LLM_tokenizer = LLM_large_tokenizer
+  else:
+    LLM_model = LLM_medium_model
+    LLM_tokenizer = LLM_medium_tokenizer
 
+  if (("LLM_redteam_target" in config['models_needed'])) and LLM_redteam_target_model is None:
+    if model_registry.get(args.LLM_redteam_target_model) is None:    
+      logger.warning(f'CREATING {args.LLM_redteam_target_model} MODEL')
+      model_registry[args.LLM_redteam_target_model] = LLM_redteam_target_model = AutoModelForCausalLM.from_pretrained(args.LLM_redteam_target_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
+      tokenizer_registry[args.LLM_redteam_target_model] = LLM_redteam_target_tokenizer = AutoTokenizer.from_pretrained(args.LLM_redteam_target_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
+    if not LLM_redteam_target_model:
+      LLM_redteam_target_model, LLM_redteam_target_tokenizer = model_registry[args.LLM_redteam_target_model], tokenizer_registry[args.LLM_redteam_target_model]
+    if not LLM_redteam_target_tokenizer.pad_token:
+        LLM_redteam_target_tokenizer.pad_token = LLM_redteam_target_tokenizer.eos_token
+    LLM_redteam_target_model = model_registry[args.LLM_redteam_target_model]
+    LLM_redteam_target_tokenizer = tokenizer_registry[args.LLM_redteam_target_model]
+
+  if (("LLM_code" in config['models_needed'])) and LLM_code_model is None:
+    if model_registry.get(args.LLM_code_model) is None:    
+      logger.warning(f'CREATING {args.LLM_code_model} MODEL')
+      model_registry[args.LLM_code_model] = LLM_code_model = AutoModelForCausalLM.from_pretrained(args.LLM_code_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
+      tokenizer_registry[args.LLM_code_model] = LLM_code_tokenizer = AutoTokenizer.from_pretrained(args.LLM_code_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
+    if not LLM_code_tokenizer.pad_token:
+        LLM_code_tokenizer.pad_token = LLM_code_tokenizer.eos_token
+    LLM_code_model = model_registry[args.LLM_code_model]
+    LLM_code_tokenizer = tokenizer_registry[args.LLM_code_model]
+   
+  if (("LLM_math" in config['models_needed'])) and LLM_math_model is None:
+    if model_registry.get(args.LLM_math_model) is None:    
+      logger.warning(f'CREATING {args.LLM_math_model} MODEL')
+      model_registry[args.LLM_math_model] = LLM_math_model = AutoModelForCausalLM.from_pretrained(args.LLM_math_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
+      tokenizer_registry[args.LLM_math_model] = LLM_math_tokenizer = AutoTokenizer.from_pretrained(args.LLM_math_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
+    if not LLM_math_tokenizer.pad_token:
+        LLM_math_tokenizer.pad_token = LLM_math_tokenizer.eos_token
+    LLM_math_model = model_registry[args.LLM_math_model]
+    LLM_math_tokenizer = tokenizer_registry[args.LLM_math_model]
+   
   if 'image_text_scorer' in config['models_needed'] and image_text_processor is None:
-    logger.warning(f'CREATING {args.image_text_score_model} MODEL')
-    if 'openai/clip' in args.image_text_score_model:
-      image_text_score_model = CLIPModel.from_pretrained(args.image_text_score_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir).eval().to(device)
-      image_text_processor = CLIPProcessor.from_pretrained(args.image_text_score_model, cache_dir=args.cache_dir)
-    else:
-      assert False, f"{args.image_text_score_model} not yet supported"
+    if model_registry.get(args.image_text_score_model) is None:        
+      logger.warning(f'CREATING {args.image_text_score_model} MODEL')
+      if 'openai/clip' in args.image_text_model:
+        model_registry[args.image_text_score_model] = image_text_model = CLIPModel.from_pretrained(args.image_text_score_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir).eval().to(device)
+        tokenizer_registry[args.image_text_score_model] = image_text_processor = CLIPProcessor.from_pretrained(args.image_text_score_model, cache_dir=args.cache_dir)
+      else:
+        assert False, f"{args.image_text_score_model} not yet supported"
+    image_text_model = model_registry[args.image_text_score_model]
+    image_text_processor = tokenizer_registry[args.image_text_score_model]
 
   if 'box_segementer' in config['models_needed'] and box_segmentation_model is None:
-    if "unc-nlp/frcnn-vg-finetuned" in args.box_segmenter_model:
-      frcnn_config = json.load(open(args.box_segmenter_config_path)) # "src/frcnn/config.jsonl"
-      frcnn_config = FRCNNConfig(frcnn_config)
-      box_detect_image_preprocessor= FRCNNPreprocess(frcnn_config).half().cuda()
-      box_segmentation_model= GeneralizedRCNN.from_pretrained(args.box_segementer_model, frcnn_config, trust_remote_code=True, cache_dir=args.cache_dir).half().eval().to(device)
-    else:
-      assert False, f"{args.box_segmenter_model} not yet supported"
-  
-  if 'evaluator' in config['models_needed'] and evaluator_model is None:
-    if "llamas-community/LlamaGuard-7b" in args.evaluator_model:
-      evaluator_model = AutoModelForCausalLM.from_pretrained(args.evaluator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
-      evaluator_tokenizer = AutoTokenizer.from_pretrained(args.evaluator_model, trust_remote_code=True, cache_dir=args.cache_dir)
-      if not evaluator_tokenizer.pad_token:
-        evaluator_tokenizer.pad_token = evaluator_tokenizer.eos_token
-    else:
-      assert False, f"{args.evaluator_model} not yet supported"
-
+    if model_registry.get(args.box_segementer_model) is None:
+      logger.warning(f'CREATING {args.box_segementer_model} MODEL')    
+      if "unc-nlp/frcnn-vg-finetuned" in args.box_segmenter_model:
+        frcnn_config = json.load(open(args.box_segmenter_config_path)) 
+        frcnn_config = FRCNNConfig(frcnn_config)
+        model_registry[args.box_segementer_model] = box_segmentation_model= GeneralizedRCNN.from_pretrained(args.box_segementer_model, frcnn_config, trust_remote_code=True, cache_dir=args.cache_dir).half().eval().to(device)
+        tokenizer_registry[args.box_segementer_model] = box_detect_image_preprocessor= FRCNNPreprocess(frcnn_config).half().cuda()
+      else:
+        assert False, f"{args.box_segmenter_model} not yet supported"
+    box_segmentation_model = model_registry[args.box_segementer_model]
+    box_detect_image_preprocessor = tokenizer_registry[args.box_segementer_model]
       
+  if 'evaluator' in config['models_needed'] and evaluator_model is None:
+    if model_registry.get(args.evaluator_model) is None:
+      logger.warning(f'CREATING {args.evaluator_model} MODEL')    
+      if "LlamaGuard-7b" in args.evaluator_model:
+        model_registry[args.evaluator_model] = evaluator_model = AutoModelForCausalLM.from_pretrained(args.evaluator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
+        tokenizer_registry[args.evaluator_model] = evaluator_tokenizer = AutoTokenizer.from_pretrained(args.evaluator_model, trust_remote_code=True, cache_dir=args.cache_dir)
+        if not evaluator_tokenizer.pad_token:
+          evaluator_tokenizer.pad_token = evaluator_tokenizer.eos_token
+      else:
+        assert False, f"{args.evaluator_model} not yet supported"
+    evaluator_model = model_registry[args.evaluator_model]
+    evaluator_tokenizer = tokenizer_registry[args.evaluator_model]
+      
+  if 'small_evaluator' in config['models_needed'] and small_evaluator_model is None:
+    if model_registry.get(args.small_evaluator_model) is None:
+      logger.warning(f'CREATING {args.small_evaluator_model} MODEL')    
+      if "Llama-Guard-3-1B" in args.small_evaluator_model:
+        model_registry[args.small_evaluator_model] =small_evaluator_model = AutoModelForCausalLM.from_pretrained(args.small_evaluator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
+        tokenizer_registry[args.small_evaluator_model] =small_evaluator_tokenizer = AutoTokenizer.from_pretrained(args.small_evaluator_model, trust_remote_code=True, cache_dir=args.cache_dir)
+        if not small_evaluator_tokenizer.pad_token:
+          small_evaluator_tokenizer.pad_token = small_evaluator_tokenizer.eos_token
+      else:
+        assert False, f"{args.small_evaluator_model} not yet supported"
+    small_evaluator_model = model_registry[args.small_evaluator_model]
+    small_evaluator_tokenizer = tokenizer_registry[args.small_evaluator_model]
+      
+  if 'llavaguard' in config['models_needed'] and vlm_evalurator_model is None:
+    if model_registry.get(args.vlm_evaluator_model) is None:
+      logger.warning(f'CREATING {args.vlm_evalurator_model} MODEL')    
+      if "AIML-TUDA/LlavaGuard-v1.1-7B-hf" in args.vlm_evalurator_model:
+        model_registry[args.vlm_evaluator_model] = vlm_evaluator_model = LlavaForConditionalGeneration.from_pretrained(args.vlm_evalurator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
+        tokenizer_registry[args.vlm_evaluator_model] = vlm_evaluator_processor = AutoProcessor.from_pretrained(args.vlm_evalurator_model, trust_remote_code=True, cache_dir=args.cache_dir)
+      else:
+        assert False, f"{args.vlm_evaluator_model} not yet supported"
+    vlm_evaluator_model = model_registry[args.vlm_evaluator_model]
+    vlm_evaluator_tokenizer = tokenizer_registry[args.vlm_evaluator_model]
+
   return device
 
 
@@ -197,31 +311,75 @@ def initialize_gpus_and_models(pool, args):
 
 ### TASK SPECIFIC FUNCTIONS
 
-# Create a template so we can use python's format functionality to
-# fill in captions in the 'text' field.
+# Create a template so we can use python's format functionality to fill
+# in captions in the 'text' field. Cleanup the text field to add
+# caption tags if none are there.
 def create_caption_template_hash(data_list):
   caption_template_hash = {}
+  params_template_hash = {}
   for data in data_list:
+    if "<image>" in data['text'] and '<caption>' not in data['text']:
+     data['text'] = data['text'].replace('<image>', '<caption><image></caption>')
+    text_lower = data['text'].lower()
     if "<caption>" not in data['text']:
-      caption_list0 = [data['text']]
-    else:
-      caption_list0 = [t.split("</caption>")[0].strip() for t in data['text'].split("<caption>") if "</caption>" in t]
-    template = data['text']
-    if not template:
-      template = "<caption>{CAPTION_1}<caption>"
-    else:
-      if "<caption>" not in template:
-        template = "<caption>"+template+"</caption>"
-      caption_list0 = list(enumerate(caption_list0))
-      caption_list0.sort(key=lambda a: len(a[1]), reverse=True)
-      # we want to create templates by replacing things that are longest first in case there are overlaps
-      for i, caption in caption_list0:
-        caption = caption.replace("<caption>", "").replace("<image>", "").replace("</caption>", "")
-        template = template.replace(">"+caption+"<", ">{CAPTION_"+str(i)+"}<")
-        if ">{CAPTION_"+str(i)+"}<" not in template:
-          logger.warning("Something went wrong and the caption template could not be created")
-    caption_template_hash[data['idx']] = template
-  return caption_template_hash
+      if ("<table" in text_lower or  "<div>" in text_lower or "<pre>" in text_lower or \
+          "<!" in text_lower or "<a href" in text_lower or "<br>" in text_lower or \
+          "<p>" in text_lower or "<h1" in text_lower or "<h2" in text_lower or "<h3" in text_lower or "<h4" in text_lower or "<h5" in text_lower or "<h6" in text_lower):
+        data['text'] = "<caption></caption>"+data['text']
+      else:
+        data['text'] = "<caption>"+data['text']+"</caption>"
+    caption_count = data['text'].count("<caption>")
+    if data['media_list'] and data['media_list'][0] and len(data['media_list']) > caption_count:
+      data['text'] = data['text']+"".join(["<caption><image></caption>" for _ in range(len(data['media_list']) - caption_count)])
+    #logger.warning("1 "+data['text'])
+    template = ""
+    new_text = ""
+    params_hash = {}
+    for i, t in enumerate(data['text'].split("<caption>")):
+        if (i+1) % 2 == 0:
+          j = i-1 # we start indexing by 0
+          caption =  t.split("</caption>",1)[0]
+          t = "<caption>"+t
+          if "</caption>" not in t:
+            t = t+"</caption>"
+          # manage other tags
+          if caption.startswith("<"):
+            template = template+"<caption><image>{CAPTION_"+str(j)+"}</caption>"+t.split("</caption>",1)[-1]
+            caption = caption.split(">",1)[-1]
+          elif caption.endswith(">"):
+            template = template+"<caption>{CAPTION_"+str(j)+"}<image></caption>"+t.split("</caption>",1)[-1]
+            caption = caption.split("<")
+            caption = "<".join(caption[:-1])
+          elif "<" in caption and ">" in caption: 
+            if " " not in caption.split(">",1)[0].split("<",1)[-1]: # we might have captions that have <> and not tags? probably do a regex or test??
+              assert False, "<image> or other media tags must occur before or after the caption, and not within the caption"
+          else:
+            template = template+"<caption>{CAPTION_"+str(j)+"}</caption>"+t.split("</caption>",1)[-1]            
+          params_hash[f"CAPTION_{j}"] = caption
+          new_text = new_text + t
+        else:
+          template = template + t
+          new_text = new_text + t
+    data['text'] = new_text
+    #logger.warning ("2 "+ data['text'])
+    caption_template_hash[data['_tmp_idx']] = template
+    params_template_hash[data['_tmp_idx']] = params_hash
+    
+  return caption_template_hash, params_template_hash
+def set_caption(params_template, j, text):
+  params_template[f"CAPTION_{j}"] = text
+
+def reset_all_captions(params_template, text_array):
+  for j, text in enumerate(text_array):
+    params_template[f"CAPTION_{j}"] = text
+
+def apply_params_to_caption_text(data_list, caption_template_hash, params_template_hash):
+  for data in data_list:
+    caption_template = caption_template_hash[data['_tmp_idx']]
+    params_template = params_template_hash[data['_tmp_idx']]
+    #logger.warning("applying " + str(params_template))
+    data['text'] = caption_template.format(**params_template)
+    
 
 # use a box-element detection model and a text-image scorer to check
 # if words in caption really do exist to minimize
@@ -260,7 +418,8 @@ def detect_elements_and_remove_missing_elements(caption, image, score_cutoff, \
   working_caption_with_elements_removed.append(caption)
   return aHash
 
-possible_image_dims = ([256]*8) + ([512]*8)+ ([1024]*5) + ([2048]*3) + ([4096]*2)
+# we can make these probabilities parameters
+possible_image_dims = ([256]*20) + ([512]*10)+ ([1024]*5) + ([2048]*3) + ([4096]*2)
 
 # Given a list of data items with a text field with captions inside
 # it, each keyed to an idx, generate list of list of images keyed to
@@ -270,7 +429,7 @@ possible_image_dims = ([256]*8) + ([512]*8)+ ([1024]*5) + ([2048]*3) + ([4096]*2
 def generate_images(data_list):
   global device, image_generator, caption_generator_model, caption_generator_processor, args
   logger.warning(f"Starting Image Generation "+ device + " " + str(image_generator.device))  
-  idx2DataHash = dict([(data['idx'], data) for data in data_list])
+  idx2DataHash = dict([(data['_tmp_idx'], data) for data in data_list])
   problem_idxs = []
   model_time = 0
   items_processed = 0
@@ -278,40 +437,66 @@ def generate_images(data_list):
   width=args.image_width
   height=args.image_height
   if width <= 0:
-    if height > 0 and random.randint(0,1):
+    if height > 0 and random.randint(0,5) == 0: # increase the probability of square ratio
       width = height
     else:
       width = random.choice(possible_image_dims)
     if width == 512:
-      new_batch_size = new_batch_size/2
+      new_batch_size = new_batch_size/1.5
     elif width == 1024:
-      new_batch_size = new_batch_size/3
+      new_batch_size = new_batch_size/2
     elif width == 2048:
-      new_batch_size = new_batch_size/4
+      new_batch_size = new_batch_size/4.3
     elif width == 4096:
-      new_batch_size = new_batch_size/10
+      new_batch_size = new_batch_size/12
 
   if height <= 0:
-    if width > 0 and random.randint(0,1):
+    if width > 0 and random.randint(0,5) == 0:
       height = width
     else:
       height = random.choice(possible_image_dims)
     if height == 512:
-      new_batch_size = new_batch_size/2
+      new_batch_size = new_batch_size/1.5
     elif height == 1024:
-      new_batch_size = new_batch_size/3
+      new_batch_size = new_batch_size/2
     elif height == 2048:
-      new_batch_size = new_batch_size/4
+      new_batch_size = new_batch_size/4.3
     elif height == 4096:
-      new_batch_size = new_batch_size/10
-  new_batch_size = max(1, int(new_batch_size))
+      new_batch_size = new_batch_size/12
 
+  #HACK - On leonardo, we get OOM for 4096x4096
+  if height == 2048 and width == 4096:
+    height = 1024
+    logger.warning("4096x2048 will OOM on Leonardo even at batchsize==1. Resetting to 4096x1024")
+  if height == 4096 and width == 2048:
+    width = 1024
+    logger.warning("2048x4096 will OOM on Leonardo even at batchsize==1. Resetting to 1024x4096")
+  if height == 4096 and width == 4096:
+    height = 1024
+    logger.warning("4096x4096 will OOM on Leonardo even at batchsize==1. Resetting to 4096x1024")
+  new_batch_size = max(1, int(new_batch_size))
+  logger.warning(f"Setting images  in datalist " + str(len(data_list)))
+  caption_template_hash, params_template_hash = create_caption_template_hash(data_list)  
+  for data in data_list:
+    # do some minor cleanup
+    data['text'] = data['text'].split("Title:",1)[-1].strip()
+    caption_template = caption_template_hash[data['_tmp_idx']]
+    params_template = params_template_hash[data['_tmp_idx']]
+    for key, val in list(params_template.items()):
+      if '<image>' not in val:
+        if random.randint(0,1):
+          val = val + "<image>"
+        else:
+          val = "<image>"+val
+        params_template[key] = val
+  apply_params_to_caption_text(data_list, caption_template_hash, params_template_hash)
+  logger.warning ("finished setting image in datalist " + str(len(data_list)))
   #We use idx_pair: (idx, i) where i is the poisition in the media_list
   with torch.no_grad():
     caption_list = []
     idx_pairs = []
     for data in data_list:
-      idx = data['idx']
+      idx = data['_tmp_idx']
       text = data['text']
       if not text:
         problem_idxs.append(idx)
@@ -337,10 +522,12 @@ def generate_images(data_list):
     #draw_caption_list = [a[1] for a in detected_and_cleaned_texts]  
     # Generate image with diffuser pipeline
     images = []
-    logger.warning("drawing at " + str(width) +"x"+str(height))
+    logger.warning("drawing at " + str(width) +"x"+str(height) + " at batch size " + str(new_batch_size))
     for rng in range(0, len(caption_list), new_batch_size):
+      caption_batch = caption_list[rng: min(len(caption_list), rng+new_batch_size)]
+      logger.warning("Doing one batch of captioning " + str(len(caption_batch)))      
       images.extend(image_generator(
-        caption_list[rng: min(len(caption_list), rng+new_batch_size)],
+        caption_batch,
         guidance_scale=0.0,
         num_inference_steps=4,
         max_sequence_length=args.image_gen_caption_max_sequence,
@@ -349,14 +536,16 @@ def generate_images(data_list):
       ).images)
     model_time = time.time() - time0
     items_processed = len(images)
-    logger.warning(f"Image Gen time: {model_time} ")
+    logger.warning(f"Image Gen time: {model_time} "+str(len(data_list)) + " " + str(len(images)))
   #torch.cuda.empty_cache()
   for data  in data_list:
     data['media_list'] = []
     data['media_coordinates_list'] = []
     data['media_caption_scores_list'] = []    
-    data['media_types_list'] = []                            
+    data['media_types_list'] = []
+  logger.warning(f"Cleared images ")    
   for idx_pair, image in zip(idx_pairs, images):
+    #logger.warning("setting " + str(idx_pair))
     idx, i = idx_pair
     data = idx2DataHash[idx]
     if len(data['media_list']) < i+1:
@@ -366,34 +555,12 @@ def generate_images(data_list):
     if len(data['media_types_list']) < i+1:
       data['media_types_list'].extend([None]*(i+1-len(data['media_types_list'])))
     data['media_list'][i] = image
-    data["media_coordinates_list"][i] = [0, 0]+ list(image.size) # we can consider shifting the coordinates over for multiple images. this can be done at run time.
+    data["media_coordinates_list"][i] = [0, 0]+ list(image.size) # is this widthxheight? we can consider shifting the coordinates over for multiple images. this can be done at run time.
     data["media_types_list"][i] = "image"
-
-  for data in data_list:
-    # add the caption tag and the image tag if it's not already there
-    if "<caption>" not in data["text"]:
-      if random.randint(0,1):
-        data["text"] = f"<caption><image>{data['text']}</caption>"
-      else:
-        data["text"] = f"<caption>{data['text']}<image></caption>"
-    else:
-      segments = []
-      for i, t in enumerate(data['text'].split("<caption>")):
-        if (i+1) % 2 == 0:
-          t = "<caption>"+t
-          if "</caption>" not in t:
-            t = t+"</caption>"
-
-          # randomly put the image either at the beginning or end of the caption. e.g., the caption appears above the image or below the image in a web-page.
-          if "<image>" not in t:
-            if random.randint(0,1):
-              t = t.replace("<caption>", "<caption><image>")
-            else:
-              t = t.replace("</caption>", "<image><caption>>")            
-          segments.append(t)
-      data['text'] = " ".join(segments)
-  problem_idxs = set(problem_idxs)    
-  data_list = [data for data in data_list if data['idx'] not in problem_idxs]                      
+  problem_idxs = set(problem_idxs)
+  logger.warning("finished setting")
+  data_list = [data for data in data_list if data['_tmp_idx'] not in problem_idxs]
+  
   return data_list, model_time, items_processed, list(problem_idxs)
 
 # Given a lists of data items, with a 'media_list' field that has
@@ -409,12 +576,15 @@ def generate_captions(data_list, clear_images=False):
   # 256x256. TODO: make the thumbnail dimension a arg.
   global device, image_generator, caption_generator_model, caption_generator_processor, args
   logger.warning(f"Starting Captions Generation "+ device + " " + str(caption_generator_model.device)) 
-  idx2DataHash = dict([(data['idx'], data) for data in data_list]) 
+  idx2DataHash = dict([(data['_tmp_idx'], data) for data in data_list]) 
   time0 = time.time()
   caption_generator_model_prompt = '<MORE_DETAILED_CAPTION>'
   problem_idxs = []
   model_time = 0
   items_processed = 0
+  # we don't know if the data_list was expanded somehow during
+  # processing so that the size > batch_size.
+  new_batch_size = args.batch_size
   with torch.no_grad():
     #optimize this to remove whole records of idx if there is at least
     #one image that is a problem. right now we do captions for all
@@ -423,7 +593,7 @@ def generate_captions(data_list, clear_images=False):
     idx_pairs = [] # in the form of [(idx, i)...]
     #logger.warning ('Checking for corrupted images for batch size: ' +str(len(idx_and_images)))
     for data in data_list:
-      idx = data['idx']
+      idx = data['_tmp_idx']
       image_set = data['media_list']
       if not image_set:
         problem_idxs.append(idx)
@@ -458,16 +628,21 @@ def generate_captions(data_list, clear_images=False):
     if len(images) == 0:
       logger.warning("There were no data item with valid images to caption")
       return [], model_time, items_processed, list(problem_idxs)
-      
-    inputs = caption_generator_processor(text=[caption_generator_model_prompt]*len(images), images=images, return_tensors="pt").to(caption_generator_model.device)
-    inputs["pixel_values"] = inputs["pixel_values"].to(torch.bfloat16)
-    generated_ids = caption_generator_model.generate(
+    recaption_list = []
+    for rng in range(0, len(images), new_batch_size):
+      image_batch = images[rng: min(len(images), rng+new_batch_size)]
+      logger.warning("Doing one batch of captioning " + str(len(image_batch)))
+      inputs = caption_generator_processor(text=[caption_generator_model_prompt]*len(image_batch), images=image_batch, return_tensors="pt").to(caption_generator_model.device)
+      inputs["pixel_values"] = inputs["pixel_values"].to(torch.bfloat16)
+      generated_ids = caption_generator_model.generate(
           **inputs,
           max_new_tokens=args.caption_max_sequence,
           early_stopping=True,
       )
-    recaption_lists = caption_generator_processor.batch_decode(generated_ids, skip_special_tokens=True)
-    items_processed = len(recaption_lists)
+      captions = caption_generator_processor.batch_decode(generated_ids, skip_special_tokens=True)
+      recaption_list.extend(captions)
+      
+    items_processed = len(recaption_list)
     assert items_processed != 0, f"Something went wrong and we have no captions {recaption_list}!"      
     time1 = time.time()
     model_time = time1-time0
@@ -481,26 +656,22 @@ def generate_captions(data_list, clear_images=False):
       data['media_caption_scores_list'] = []          
       data['media_types_list'] = []                            
 
+  #logger.warning("Creating template hash")
   # let's create templates of the original text with potentially
   # interleaved captions to replace with the new captions
-  template_hash = create_caption_template_hash(data_list)
-  # a temporary hash table to hold idx->[caption, caption ...]
-  template_params_hash = {}
-  for idx_pair, text in zip(idx_pairs, recaption_lists):
+  caption_template_hash, params_template_hash = create_caption_template_hash(data_list)
+  for idx_pair, text in zip(idx_pairs, recaption_list):
     idx, i = idx_pair
-    template_params = template_params_hash[idx] = template_params_hash.get(idx, [])
-    if len(template_params) < i+1:
-      template_params.extend(['']*(i+1-len(template_params)))
-    template_params[i] = text
-    
-  for idx, caption_list in template_params_hash.items():
-    data = idx2DataHash[idx]
-    caption_hash = dict([("CAPTION_"+str(i), text) for i, text in enumerate(caption_list)])
-    data['text'] = template_hash[idx].format(**caption_hash)
-
+    params_template = params_template_hash[idx] = params_template_hash.get(idx, [])
+    if len(params_template) < i+1:
+      params_template.extend(['']*(i+1-len(params_template)))
+    set_caption(params_template, i, text)
+  logger.warning("Created params_template " + str(len(params_template_hash)))
+  apply_params_to_caption_text(data_list, caption_template_hash, params_template_hash)
+  logger.warning("Setting the text " + str(len(data_list)))
   #torch.cuda.empty_cache()
   problem_idxs = set(problem_idxs)
-  data_list = [data for data in data_list if data['idx'] not in problem_idxs]
+  data_list = [data for data in data_list if data['_tmp_idx'] not in problem_idxs]
   return data_list, model_time, items_processed, list(problem_idxs)
 
 
@@ -509,6 +680,7 @@ def generate_captions_and_clear_images(data_list):
 
 def generate_captions_and_dont_clear_images(data_list):
   return generate_captions(data_list, clear_images=False)
+
 
 # Given an image and optionally an original caption, we will
 # (re)caption the image.  we will then correct for any hallucinationed
@@ -519,23 +691,13 @@ def generate_captions_and_dont_clear_images(data_list):
 # image_position). Another complexity is the data might be in the form
 # of interleaved captions.  assumes there are images in media_list.
 def fix_and_upsample_caption(data_list, do_recaption=True):
-  idx2DataHash = dict([(data['idx'], data) for data in data_list])
-  model = None
-  tokenizer = None
+  idx2DataHash = dict([(data['_tmp_idx'], data) for data in data_list])
   new_batch_size = args.batch_size
-  if args.use_LLM_size == 'small':
-    model = LLM_small_model
-    tokenizer = LLM_small_tokenizer
-  elif args.use_LLM_size == 'large':
-    model = LLM_large_model
-    tokenizer = LLM_large_tokenizer
+  if args.use_LLM_size == 'large':
     # to account for mismatches between the smaller image geeneration
     # and caption_generator_model models and the large LLMs, create sub_batches to
     # prevent OOM.
     new_batch_size = max(1, int(args.batch_size/2))
-  else:
-    model = LLM_medium_model
-    tokenizer = LLM_medium_tokenizer
   if not data_list[0]['media_list']:
     assert False, "We need images to do (re)captioning"
 
@@ -551,7 +713,7 @@ def fix_and_upsample_caption(data_list, do_recaption=True):
         caption_list0 = [t.split("</caption>")[0].strip() for t in data['text'].split("<caption>") if "</caption>" in t]
       for i, caption in enumerate(caption_list0):
         caption = caption.replace("<caption>", "").replace("<image>", "").replace("</caption>", "").strip()
-        caption_hash[(data['idx'], i)] = caption
+        caption_hash[(data['_tmp_idx'], i)] = caption
 
   if not data_list[0]['text'] or do_recaption:
     # in this case, the user only passed us data items with images but
@@ -572,7 +734,7 @@ def fix_and_upsample_caption(data_list, do_recaption=True):
       recaption_list0 = [t.split("</caption>")[0].strip() for t in data['text'].split("<caption>") if "</caption>" in t]
     for i, recaption in enumerate(recaption_list0):
       recaption = recaption.replace("<caption>", "").replace("<image>", "").replace("</caption>", "").strip()        
-      recaption_hash[(data['idx'], i)] = recaption
+      recaption_hash[(data['_tmp_idx'], i)] = recaption
   
   if not caption_hash or not do_recaption:
     caption_hash = recaption_hash
@@ -678,27 +840,27 @@ def fix_and_upsample_caption(data_list, do_recaption=True):
     existing_element = existing_element.strip().replace("  ", " ")
     existing_element_with_spatial_relationships = existing_element_with_spatial_relationships.strip().replace("  ", " ")
     if recaption:
-      upsampled_caption.append(tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {caption}. In more detail; {recaption}.\n\n=====\n\nRemember to include these elements:\n{existing_element}"},
+      upsampled_caption.append(tokenize_with_assistant_continuation(LLM_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {caption}. In more detail; {recaption}.\n\n=====\n\nRemember to include these elements:\n{existing_element}"},
                                                                                             {"role": "assistant", "content": f"Modified Caption: {prefix}"}]))
     else:
-      upsampled_caption.append(tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {caption}.\n\n=====\n\nRemember to include these elements:\n{existing_element}"},
+      upsampled_caption.append(tokenize_with_assistant_continuation(LLM_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {caption}.\n\n=====\n\nRemember to include these elements:\n{existing_element}"},
                                                                                             {"role": "assistant", "content": f"Modified Caption: {prefix}"}]))
       
     text_sim_check_idx_pairs.append(idx_pair)
     if existing_element != existing_element_with_spatial_relationships:
       if recaption:
-        upsampled_caption.append(tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {caption}. In more detail; {recaption}.\n\n=====\n\nRemember to include these elements:\n{existing_element_with_spatial_relationships}"}, 
+        upsampled_caption.append(tokenize_with_assistant_continuation(LLM_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {caption}. In more detail; {recaption}.\n\n=====\n\nRemember to include these elements:\n{existing_element_with_spatial_relationships}"}, 
                                                                                               {"role": "assistant", "content": f"Modified Caption: {prefix}"}]))
       else:
-        upsampled_caption.append(tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {caption}..\n\n=====\n\nRemember to include these elements:\n{existing_element_with_spatial_relationships}"}, 
+        upsampled_caption.append(tokenize_with_assistant_continuation(LLM_tokenizer, [{"role": "user", "content": f"Modify this image caption to make it grammatical and depicting a matter-of-fact scenary. Do not add new color, objects or people. Do not make up details about the image and stick strictly to the caption given. DO NOT add any comments, just give the modified caption. Caption:\n {caption}..\n\n=====\n\nRemember to include these elements:\n{existing_element_with_spatial_relationships}"}, 
                                                                                               {"role": "assistant", "content": f"Modified Caption: {prefix}"}]))
       all_prefixes.append(prefix)        
       text_sim_check_idx_pairs.append(idx_pair)
 
   with torch.no_grad():
     # we potenially doubled the size of the batch, so do this upsampling with the original batch_size
-    upsampled_caption = generate_with_batching(model, tokenizer, upsampled_caption, batch_size=new_batch_size)
-    upsampled_caption = [prefix+ " " + o.strip() for prefix, o in zip(all_prefixes, upsampled_caption)]
+      upsampled_caption = generateith_batching(model, tokenizer, upsampled_caption, skip_special_tokens=True, batch_size=new_batch_size)
+      upsampled_caption = [prefix+ " " + o.strip() for prefix, o in zip(all_prefixes, upsampled_caption)]
 
   items_processed += len(upsampled_caption)
   model_time += time.time()-time0
@@ -729,22 +891,22 @@ def fix_and_upsample_caption(data_list, do_recaption=True):
     data['metadata']['params']['related_caption_to_media_scores_list'][i] = text_and_scores
 
   # now set the text field as the best matching caption and save away the scores
-  # use the template we created to keep the same interleaved structure if there are any
-  caption_template_hash = create_caption_template_hash(data_list)  
+  # use the template to keep the same interleaved structure if there are any
+  caption_template_hash, params_template_hash = create_caption_template_hash(data_list)  
   for idx, data in idx2DataHash.items():
-    template = caption_template_hash[data['idx']]
-    template_params = dict([('CAPTION_'+str(i), related[0][0]) for i, related in enumerate(data['metadata']['params']['related_caption_to_media_scores_list'])])
-    data['text'] = template.format(**template_params)
+    params_template = params_template_hash[data['_tmp_idx']]
+    reset_all_captions(params_template, [related[0][0] for related in enumerate(data['metadata']['params']['related_caption_to_media_scores_list'])])
     data['media_caption_scores_list'] = [related[0][1] for i, related in enumerate(data['metadata']['params']['related_caption_to_media_scores_list'])]
+  apply_params_to_caption_text(data_list, caption_template_hash, params_template_hash)
+  
   problem_idxs = set(problem_idxs)
-  data_list = [data for data in data_list if data['idx'] not in problem_idxs]
+  data_list = [data for data in data_list if data['_tmp_idx'] not in problem_idxs]
   return data_list, model_time, items_processed, list(problem_idxs)
 
   
-def generate_captions_then_generate_people_images(data_list):
+def generate_captions_then_filter_people_images(data_list):
   data_list, model_time, items_processed, problem_idxs = generate_captions_and_dont_clear_images(data_list)
-  data_list1 = []
-  data_list2 = []
+  people_images = 0
   for data in data_list:
     caption = " "+data['text']+" "
     if 'people' in caption or 'person' in caption or " man" in caption or "woman" in caption or "boy" in caption or "girl" in caption:
@@ -752,33 +914,26 @@ def generate_captions_then_generate_people_images(data_list):
       data['media_coordinates_list'] = []
       data['media_caption_scores_list'] = []          
       data['media_types_list'] = []
-      data_list2.append(data)
-    else:
-      data_list1.append(data)
-  if data_list2:
-    data_list2, new_model_time, new_items_processed, new_problem_idxs = generate_images(data_list2)
-    return data_list1+data_list2, model_time+new_model_time, items_processed+new_items_processed, problem_idxs+new_problem_idxs
-  else:
-    return data_list, model_time, items_processed, problem_idxs
+      people_images += 1
+  logger.warning("Not saving people images " + str(people_images))
+  return data_list, model_time, items_processed, problem_idxs
 
 def generate_captions_then_images(data_list):
   data_list, model_time, items_processed, problem_idxs = generate_captions_and_clear_images(data_list)
   data_list, new_model_time, new_items_processed, new_problem_idxs = generate_images(data_list)
   return data_list, model_time+new_model_time, items_processed+new_items_processed, problem_idxs+new_problem_idxs
 
-def generate_images_then_recaptions(data_list):
+def generate_images_then_captions(data_list):
   data_list, model_time, items_processed, problem_idxs = generate_images(data_list)
   data_list, new_model_time, new_items_processed, new_problem_idxs = generate_captions_and_dont_clear_images(data_list)
   return data_list, model_time+new_model_time, items_processed+new_items_processed, problem_idxs+new_problem_idxs
 
 # split up text into segments and create images and captions
-# interleaved. of the form caption text caption text, etc.
+# interleaved. of the form: ...  caption text caption text ..., etc.
 # upsampling. just use the image generator to generate based on raw
 # text, divided by sentences.  this is fixed size image generation for
-# every 5 sentences. maximum of 3 captions.
-# TODO:
-# - add consistency between captions.
-# - LLM upsample. 
+# every 5 sentences. maximum of 3 captions.  TODO: - add consistency
+# between captions.  - LLM upsample.
 def generate_interleaved_images_and_captions_from_text(data_list, max_captions=1):
   if max_captions > 3:
     logger.warning("Max captions is 3 for now. Setting to 3")
@@ -821,45 +976,42 @@ def generate_interleaved_images_and_captions_from_text(data_list, max_captions=1
   data_list, new_model_time, new_items_processed, new_problem_idxs = generate_captions_and_dont_clear_images(data_list)
   return data_list, model_time+new_model_time, items_processed+new_items_processed, problem_idxs+new_problem_idxs
 
+
+
 def generate_stories(data_list, clear_images=True):
-  idx2DataHash = dict([(data['idx'], data) for data in data_list])  
-  model = None
-  tokenizer = None
-  new_batch_size = args.batch_size
-  if args.use_LLM_size == 'small':
-    model = LLM_small_model
-    tokenizer = LLM_small_tokenizer
-  elif args.use_LLM_size == 'large':
-    model = LLM_large_model
-    tokenizer = LLM_large_tokenizer
+  idx2DataHash = dict([(data['_tmp_idx'], data) for data in data_list])
+  new_batch_size = args.batch_size  
+  if args.use_LLM_size == 'large':
     # to account for mismatches between the smaller image geeneration
     # and caption_generator_model models and the large LLMs, create sub_batches to
     # prevent OOM.
     new_batch_size = max(1, int(args.batch_size/2))
-  else:
-    model = LLM_medium_model
-    tokenizer = LLM_medium_tokenizer
   problem_idxs = []
-  prompts = []
-  prompt = random.choice(STORY_PROMPT)
+  idxs = []
+  templatized_prompts = []
+  prompt = random.choice(STORY_PROMPTS)
   for data in data_list:
     text = data['text']
     if 'assault' in text or 'robbery' in text or 'arson' in text or 'fellatio' in text or 'hand job' in text or 'prostitu' in text or 'handjob' in text or 'fucks' in text or 'blow job' in text or 'blowjob' in text or ' incest' in text or ' porn' in text or ' rape' in text or ' killer' in text or ' murder' in text or ' kidnap' in text or ' abduct' in text or ' sex ' in text  or ' torture' in text or ' kills ' in text:
       warning = "If this story contains themes of sex or violence, give a warning at the beginning of the story with an explanation."
     else:
       warning = ""
-    prompt = prompt %{'warning': warning} + "\n\n" + text
-    prompts.append(tokenie_with_chat_template(tokenizer, prompt))
-    idxs.append(data['idx'])
+    if len(text) > 1500:
+      text = text[:1500] # make this an argument
+    template_prompt = prompt %{'warning': warning} + "\n\n" + text
+    templatized_prompts.append(tokenize_with_chat_template(LLM_tokenizer, [{'role': 'user', 'content': template_prompt}]))
+    #logger.warning(templatized_prompts[-1])
+    idxs.append(data['_tmp_idx'])
   t0 = time.time()  
   with torch.no_grad():
-    stories = generate_with_batching(model, tokenizer, prompts, batch_size=new_batch_size)
+    stories = generate_with_batching(LLM_model, LLM_tokenizer, templatized_prompts, skip_special_tokens=True, batch_size=new_batch_size, max_new_tokens=args.LLM_max_new_tokens, return_continuations_only=True , dont_decode_non_english=True)
   model_time = time.time()-t0
   items_processed = len(stories)
 
-  for idx, story, prompt in zip(idxs, stories, prompts):
+  for idx, story, prompt in zip(idxs, stories, templatized_prompts):
     # do error checks and throw-away stories that are garbage
     data = idx2DataHash[idx]
+    story = story.split("Title:", 1)[-1]
     data['text'] = story
     data['metadata']['params']['story_prompt'] = prompt
   if clear_images:
@@ -869,28 +1021,384 @@ def generate_stories(data_list, clear_images=True):
       data['media_caption_scores_list'] = []          
       data['media_types_list'] = []                            
   problem_idxs = set(problem_idxs)
-  data_list = [data for data in data_list if data['idx'] not in problem_idxs]
+  data_list = [data for data in data_list if data['_tmp_idx'] not in problem_idxs]
   return data_list, model_time, items_processed, list(problem_idxs)
 
-def generate_caption_from_instr(data_list):
-  idx2DataHash = dict([(data['idx'], data) for data in data_list])  
+basic_math_concepts = [
+    "Addition", 
+    "Subtraction", 
+    "Multiplication", 
+    "Division", 
+    "Fractions", 
+    "Decimals", 
+    "Percentages"
+]
 
-  model = None
-  tokenizer = None
+high_school_math_concepts = [
+    "Algebra", 
+    "Geometry", 
+    "Trigonometry", 
+    "Statistics", 
+    "Probability", 
+    "Linear Equations", 
+    "Quadratic Equations", 
+    "Polynomials", 
+    "Sequences and Series", 
+    "Compound Interest", 
+    "Simple Interest", 
+    "Pythagorean Theorem", 
+    "Slope and Equation of a Line", 
+    "Area and Volume Formulas", 
+    "Congruence and Similarity", 
+    "Transformations (Rotation, Reflection, Translation, Dilation)"
+]
+
+complex_math_concepts = [
+    "Exponents", 
+    "Roots", 
+    "Calculus", 
+    "Functions", 
+    "Inequalities", 
+    "Limits", 
+    "Derivatives", 
+    "Integrals", 
+    "Differential Equations", 
+    "Discrete Mathematics", 
+    "Logarithms", 
+    "Matrices", 
+    "Vectors", 
+    "Complex Numbers", 
+    "Set Theory", 
+    "Number Theory", 
+    "Graph Theory", 
+    "Probability Distributions", 
+    "Permutations and Combinations", 
+    "Distance and Midpoint Formulas"
+]
+
+# Calculate repetition counts
+basic_repetition = 5 * len(complex_math_concepts)
+high_school_repetition = 3 * len(complex_math_concepts)
+
+# Create the final list
+math_concepts = basic_math_concepts * basic_repetition + high_school_math_concepts * high_school_repetition + complex_math_concepts
+other_langs = ["javascript", "CUDA", "cpp", "SQL", "torchscript"]
+
+def generate_python_plus(data_list, max_new_tokens=512):
+  idx2DataHash = dict([(data['_tmp_idx'], data) for data in data_list])
   new_batch_size = args.batch_size
-  if args.use_LLM_size == 'small':
-    model = LLM_small_model
-    tokenizer = LLM_small_tokenizer
-  elif args.use_LLM_size == 'large':
-    model = LLM_large_model
-    tokenizer = LLM_large_tokenizer
+  items_processed = 0
+  problem_idxs = []
+  if '3b' not in args.LLM_code_model and '1b' not in args.LLM_code_model:
     # to account for mismatches between the smaller image geeneration
     # and caption_generator_model models and the large LLMs, create sub_batches to
     # prevent OOM.
     new_batch_size = max(1, int(args.batch_size/2))
-  else:
-    model = LLM_medium_model
-    tokenizer = LLM_medium_tokenizer
+  batch = [] 
+  t0 = time.time()
+  for data in data_list:
+    context = data['text']
+    if len(context) > 1500: context = context[:1500]
+    prompt = f"Convert this to perfect Python code with all necessary imports, placeholder classes, functions and documentation:\n{context}\n\n==\n\nIn addition to being inspired by the context, the Python code must be multi-steps, and must include the operations: '"+", ".join(random.sample(["*", "**", "//", "+", "-", "%"], 2))+"' and include the concepts for " + random.choice(math_concepts) + "."
+    if random.randint(0,1):
+      prompt += "\nUse perfect torch script, with `@torch.jit.script`."
+    elif random.randint(0,1):
+      prompt += "\nUse Triton JIT `@triton.jit` and appropriate optimized code for GPU."
+    elif random.randint(0,1):
+      prompt += "\nUse SQLAlchemy."
+    batch.append(tokenize_with_assistant_continuation(LLM_code_tokenizer, [{'role': 'user', 'content': prompt}, {'role': 'assistant', 'content': "```python"}]))
+  with torch.no_grad():
+    # we potenially doubled the size of the batch, so do this upsampling with the original batch_size
+    python_code = generate_with_batching(LLM_code_model, LLM_code_tokenizer, batch, skip_special_tokens=True, batch_size=new_batch_size, max_new_tokens=min(args.LLM_max_new_tokens, max_new_tokens), return_continuations_only=True , dont_decode_non_english=True)
+  items_processed += len(python_code)
+  other_lang_batch_labels = []
+  other_lang_batch = []
+  other_lang_batch_idxs = []  
+  new_data_list = []
+  redo_batch = []
+  redo_batch_idxs = []
+  for data, python in zip(data_list, python_code):
+    python = "```python"+python
+    code = python.strip("\n `")
+    is_error, err_str = check_python_syntax(code)
+    if not is_error:
+      data['text'] = data['text']+"<|endoftext|>"+python
+      other_lang = random.choice(other_langs)
+      other_lang_batch_labels.append(other_lang)
+      prompt2 = f"Convert this Python code to perfect {other_lang} with documentation. Do not mention Python in your code:\n{python}"
+      other_lang_batch.append(tokenize_with_assistant_continuation(LLM_code_tokenizer, [{'role': 'user', 'content': prompt2}, {'role': 'assistant', 'content': f"```{other_lang}"}]))
+      other_lang_batch_idxs.append(data["_tmp_idx"])
+    else:
+      logger.warning("Could not parse python " + str(code))
+      if python[-1] != "`":
+        python = python + "```"
+      if random.randint(0,1):
+        #TODO: vary the formatting
+        data['text'] = data['text']+"<|endoftext|>Q: I have the following Python code. Can you tell what is wrong with it?"+python+"\n===\nA: Yes, I think the error could be this: " + err_str
+      else:
+        prompt2 = "The following Python code has a syntax error. Can you fix it?\n"+python+"\n===\nSyntax Error:\n " + err_str
+        redo_batch.append(tokenize_with_assistant_continuation(LLM_code_tokenizer, [{'role': 'user', 'content': prompt2}, {'role': 'assistant', 'content': "```python"}]))
+        redo_batch_idxs.append(data["_tmp_idx"])
+                
+  if redo_batch:
+    with torch.no_grad():
+      python_code = generate_with_batching(LLM_code_model, LLM_code_tokenizer, batch, skip_special_tokens=True, batch_size=new_batch_size, max_new_tokens=min(args.LLM_max_new_tokens, max_new_tokens), return_continuations_only=True , dont_decode_non_english=True)
+    items_processed += len(python_code)
+    for idx, python in zip(redo_batch_idxs, python_code):
+      data = idx2DataHash[idx]
+      code = python.strip("\n `")
+      is_error, err_str = check_python_syntax(code)
+      if not is_error:
+        data['text'] = data['text']+"<|endoftext|>"+python
+      else:
+        logger.warning("Could not parse python " + str(code))
+        if python[-1] != "`":
+          python = python + "```"
+        data['text'] = data['text']+"<|endoftext|>Q: I have the following Python code. Can you tell what is wrong with it?"+python+"\n===\nA: Yes, I think the error could be this: " + err_str
+
+  if other_lang_batch:
+    with torch.no_grad():
+      other_lang_code = generate_with_batching(LLM_code_model, LLM_code_tokenizer, other_lang_batch, skip_special_tokens=True, batch_size=new_batch_size, max_new_tokens=min(args.LLM_max_new_tokens, max_new_tokens), return_continuations_only=True , dont_decode_non_english=True)
+    items_processed += len(other_lang_code)
+    for label, idx, other_lang in zip(other_lang_batch_labels, other_lang_batch_idxs, other_lang_code):
+      data = idx2DataHash[idx]
+      other_lang = f"```{label}"+other_lang
+      #TODO: do a other_lang syntax check
+      data['text'] = data['text']+"<|endoftext|>"+other_lang
+      
+  model_time = time.time()-t0
+  data_list = [data for data in data_list if data['_tmp_idx'] not in problem_idxs]
+  logger.warning("created " + str(len(data_list)) + " python plus")
+  return data_list, model_time, items_processed, list(problem_idxs)
+    
+example_array = [  
+"""### Python code:
+```python
+def solution(A, B):
+    return A - B
+```
+### Math word problem: 
+Lin had {A} bowls of noodles. She was trying to sell noodles to feed her family If she sells {B} bowls to cusotmers. How many bowls does Lin have left?""",
+"""### Python code:
+```python
+def solution(E, F, G, H):
+    years = H * 10 # number of years
+    Y = F * G * years
+    people = E * Y
+    max_F = 5 # 5 days a week
+    max_G = 52 # 52 weeks in a year
+    max_Y = max_F * max_G * years
+    max_people = E * max_Y
+    return people, max_people
+```
+### Math word problem: 
+A country has one border crossing that has many migrants seeking refuge. The country lets in {E} migrants per day. If the crossing operates for {F} weekdays a week and {G} weeks per year, how many people does the country let in in {H} decades?
+What is the maximum number of migrants per year assuming {E} per day for {H} decades?""",
+"""### Python code:
+```python
+def solution(I, J, K, L):
+    return (I * J * K) / (L / 100)
+```
+### Math word problem: 
+A hospital has {I} docotors. Each doctor puts on their timesheet that she worked {J} hours per week. If the average hourly wage is ${K} and the hosptial spends {L} percent of its revenue on salaries, please compute the hospital's weekly revenue.""",
+"""### Python code:
+```python
+def solution(D, E, F):
+    X = D // E
+    F = F / 100
+    Y = int(D * F)
+    Z = Y // E
+    return (X, Y)
+```
+### Math word problem: 
+A city has {D} police officers on duty. If {E} police officers retire once every year, how many years will before there are no more police officers?
+Now assume the city will need to re-hire police officers when the number of officers is {F}% of {D}. In what year will the city need to hire a new police officer?
+Tell me the answer for both questions.""",
+"""### Python code:
+```python
+def solution(B, C, D):
+    steps = []
+    step_num = 0
+    steps.append(f"{step_num}. Let's solve the problem step-by-step:\n")
+    step_num +=1 
+    X = (C + D)
+    steps.append(f"\n{step_num}. First, let's compute how many students and teachers, let's call them `X`.\n`X = ( C + D )`.\nHere, `{X}= ({C} + {D})`")
+    step_num +=1
+    steps.append(f"\n{step_num}. Next, let's compute how many of these people are in each classroom. We know from the problem that all the people in the school, and thus in each class are either student or teachers. So each classroom has X people, which is {X}.")
+    step_num += 1
+    answer =  X * B
+    steps.append(f"\n{step_num}. Now let's compute the number of total people in the whole school, assuming there are only classrooms in the school. Here, it would be `answer = X * B`, or `{answer} = {X} * {B}`.")
+    step_num +=1 
+    steps.append(f"\n{step_num}. Thus, the total number of peoples in the whole school is {answer}.")
+    step_num +=1 
+    return answer, steps
+```
+### Math word problem: 
+A school has B classrooms. If each classroom has C students and D teachers, and there are only students and teachers in the school, how many people are in the school? Give me both the answer, and a description showing your work step-by-step, and note any assumptions.""",
+  ]
+
+def generate_math_cot_python_code(data_list, max_new_tokens=512):
+  idx2DataHash = dict([(data['_tmp_idx'], data) for data in data_list])
+  new_batch_size = args.batch_size  
+  if '3b' not in args.LLM_code_model and '1b' not in args.LLM_code_model:
+    # to account for mismatches between the smaller image geeneration
+    # and caption_generator_model models and the large LLMs, create sub_batches to
+    # prevent OOM.
+    new_batch_size = max(1, int(args.batch_size/2))
+  prompts = []
+  t0 = time.time()
+  problem_idxs = []
+  items_processed = 0
+  for data in data_list:
+    context = data['text']
+    if len(context) > 1500: context = context[:1500]
+    random.shuffle(example_array )
+    examples ="\n".join(example_array)
+    
+    prompt = f"""You are a highly qualified expert in writing math word problems and writing Python code for a given math problem in natural language.
+Below are some valid, multi-step Python functions that solves math word problems exactly.
+
+Here are some examples:
+{examples}
+====
+
+Now provide me another creative Python code inspired by the following context:
+
+Context document:
+{context}
+
+====
+
+In addition to being inspired by the context, the Python code must be multi-steps, and must include the operations: '"""+ \
+    ", ".join(random.sample(["*", "**", "//", "+", "-", "%"], 2))+"' and include the concepts for " + random.choice(math_concepts) + "."
+    
+#Remember that the math word problems must use the exact same parameters as the `solution` function. The word problems should be generic and should not include real numbers. You should not answer the word problems. 
+#The word problems must include the concepts for """ + random.choice(math_concepts) + "."
+
+    prompts.append(tokenize_with_assistant_continuation(LLM_code_tokenizer, [{'role': 'user', 'content': prompt}, {'role': 'assistant', 'content': "### Python code:\n```python\ndef solution("}]))
+  with torch.no_grad():
+    # we potenially doubled the size of the batch, so do this upsampling with the original batch_size
+      python_and_word_problems = generate_with_batching(LLM_code_model, LLM_code_tokenizer, prompts, skip_special_tokens=True, batch_size=new_batch_size, max_new_tokens=min(args.LLM_max_new_tokens, max_new_tokens), return_continuations_only=True , dont_decode_non_english=True)
+  items_processed += len(python_and_word_problems)
+  for data, code_and_word_problem in zip(data_list, python_and_word_problems):
+    logger.warning("problem idxs " + str(len(problem_idxs)))    
+    logger.warning(code_and_word_problem)
+    if "### Math" in code_and_word_problem:
+      code, word_problem = code_and_word_problem.split("### Math",1)
+      word_problem = word_problem.split(":",1)[-1].split("\n")[-1]
+    elif "```" in code_and_word_problem.strip("```"):
+      code, word_problem = code_and_word_problem.strip("```").split("```",1)
+    elif "problem:" in code_and_word_problem:
+      code, word_problem = code_and_word_problem.split("problem:",1)
+      code = "\n".join(code.split("\n")[:-1])
+    else:
+      logger.warning("could not parse out math and word problem " + str(code_and_word_problem))
+      problem_idxs.append(data['_tmp_idx'])
+      continue
+    code = code.strip("`\n ")
+    if code.startswith("python"):
+      code = code[len("python"):].split("`")[0].strip("`\n ")
+    word_problem = word_problem.strip()
+    code = code.replace("solution (", "solution(")
+    if not code.startswith("def ") or "solution(" not in code:
+      problem_idxs.append(data['_tmp_idx'])
+      continue
+    mapping = [a.strip() for a in code.split("solution(",1)[1].split(")",1)[0].strip().split(",")]
+    word_problem = " " + word_problem + " "
+    missing_var = False
+    for var in mapping:
+      if "{"+var+"}" in word_problem:
+        continue
+      for after in ["%", "$", "ft", "cm", "lbs"]:
+        if " "+var +after in word_problem:
+          word_problem = word_problem.replace(" " + var + after, " "+ var+ " " + after)
+          break
+      for before in ["%", "$", ]:
+        if before+var +" " in word_problem:
+          word_problem = word_problem.replace(before+ var + " ", before+" "+var+" ")
+          break
+        if before+var +"." in word_problem:
+          word_problem = word_problem.replace(before+ var + ".", before+" "+var+" .")
+          break
+        if before+var +"," in word_problem:
+          word_problem = word_problem.replace(before+ var + ",", before+" "+var+" ,")
+          break
+        if before+var +":" in word_problem:
+          word_problem = word_problem.replace(before+ var + ":", before+" "+var+" :")
+          break
+        if before+var+before in word_problem:
+          word_problem = word_problem.replace(before + var + before, before+" "+var+" "+ before)
+          break
+      if " " + var + " " in word_problem:
+        word_problem = word_problem.replace(" " + var + " ", " {"+var+"} ")
+        continue
+      missing_var = True
+      break
+    if missing_var:
+      logger.warning("missing vars " + str(data))
+      problem_idxs.append(data['_tmp_idx'])
+      continue
+    for _ in range(3):
+      inputs = create_random_input(mapping)
+      answer = execute_python_code(code, inputs)
+      if answer is None:
+        problem_idxs.append(data['_tmp_idx'])
+        logger.warning("Code could not be executed " + code)
+        break
+    if problem_idxs[-1] == data['_tmp_idx']:
+      continue
+    data['text'] = data['text']+"<|endoftext|>"+f"### Python code:\n```python\n{code}```\n### Math word problem:\n{word_problem}"
+  model_time = time.time()-t0
+  problem_idxs = set(problem_idxs)
+  data_list = [data for data in data_list if data['_tmp_idx'] not in problem_idxs]
+  logger.warning("created " + str(len(data_list)) + " math and code")
+  return data_list, model_time, items_processed, list(problem_idxs)
+
+
+def tmp():
+  for answer, inputs in zip(answer_set, input_set):
+      word_problem_with_inputs = word_problem.format(**inputs)
+      word_problem_templates.append(word_problem)
+      codes.append(code)
+      answers.append(answer)
+      idxs2.append(data['_tmp_idx'])
+      batch2.append(tokenize_with_assistant_continuation(LLM_code_tokenizer, [{'role': 'user', 'content':word_problem_with_inputs+"\nSolve this problem step-by-step."}, {'role': 'assistant', 'content': "Let's think step-by-step:\n"}]))
+  with torch.no_grad():
+    cot_answers = generate_with_batching(LLM_code_model, LLM_code_tokenizer, batch2, skip_special_tokens=True, batch_size=new_batch_size, max_new_tokens=min(args.LLM_max_new_tokens, max_new_tokens), return_continuations_only=True , dont_decode_non_english=True)
+  items_processed += len(cot_answers)    
+  for code, word_problem_template, cot_answer, answer, idx, prompt in zip(codes, word_problem_templates, cot_answers, answers, idxs2, batch2):
+    answer = str(answer)
+    end_of_cot = cot_answer[-min(len(cot_answer), 50)]
+    if " "+answer in end_of_cot or "\n"+answer in end_of_cot or "#" +answer in cot_answer:
+      data = idx2Data[idx]
+      data['text'] = "Q:\n"+prompt+"\nA:\n"+cot_answer
+      data['metadata']['params']['num_verified'] =   data['metadata']['params'].get('num_verified', 0) + 1
+      data['metadata']['params']['answer'] = answer
+      data['metadata']['params']['code'] = code
+      data['metadata']['params']['word_problem_template'] = word_problem_template
+      
+    
+  for data in data_list:
+    if data['_tmp_idx'] in problem_idxs: continue
+    if data['metadata']['params']['num_verified'] < 2:
+      problem_idxs.append(data['_tmp_idx'])
+      logger.warning("math item self-consistency check failed " + str(data))
+      
+  model_time = time.time()-t0
+  problem_idxs = set(problem_idxs)
+  data_list = [data for data in data_list if data['_tmp_idx'] not in problem_idxs]
+  return data_list, model_time, items_processed, list(problem_idxs)
+
+
+
+def generate_caption_from_instr(data_list):
+  idx2DataHash = dict([(data['idx'], data) for data in data_list])  
+  new_batch_size = args.batch_size  
+  if args.use_LLM_size == 'large':
+    # to account for mismatches between the smaller image geeneration
+    # and caption_generator_model models and the large LLMs, create sub_batches to
+    # prevent OOM.
+    new_batch_size = max(1, int(args.batch_size/2))
   
   idxs = []
   problem_idxs = []
@@ -898,7 +1406,7 @@ def generate_caption_from_instr(data_list):
   for data in data_list:
     instr = data['text'].split("### Response:",1)[0].split("### Instruction:")[-1]  
     prefix = random.choice(["an image of", "a photo of", "a photograph of", "a picture of", "a screenshot of", "a screen shot of"])
-    prompts.append(tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary.\n\n{instr}"},
+    prompts.append(tokenize_with_assistant_continuation(LLM_tokenizer, [{"role": "user", "content": f"Create an image caption that would be useful for answering this instruction, including topics, people, places, things and details as necessary.\n\n{instr}"},
                                                     {"role": "assistant", "content": f"Caption: {prefix}"}]))
     idxs.append(data['idx'])
     if len(instr.split()) <= 2:
@@ -906,7 +1414,7 @@ def generate_caption_from_instr(data_list):
 
   t0 = time.time()  
   with torch.no_grad():
-    captions = generate_with_batching(model, tokenizer, prompts, batch_size=new_batch_size)
+    captions = generate_with_batching(LLM_model, LLM_tokenizer, prompts, skip_special_tokens=True, batch_size=new_batch_size, max_new_tokens=args.LLM_max_new_tokens, return_continuations_only=True , dont_decode_non_english=True)
   model_time = time.time()-t0
   items_processed = len(captions)
 
@@ -925,38 +1433,26 @@ def generate_caption_from_instr(data_list):
 
 def generate_revised_instr_response(data_list):
   idx2DataHash = dict([(data['idx'], data) for data in data_list])  
-
-  model = None
-  tokenizer = None
-  new_batch_size = args.batch_size
-  if args.use_LLM_size == 'small':
-    model = LLM_small_model
-    tokenizer = LLM_small_tokenizer
-  elif args.use_LLM_size == 'large':
-    model = LLM_large_model
-    tokenizer = LLM_large_tokenizer
+  new_batch_size = args.batch_size  
+  if args.use_LLM_size == 'large':
     # to account for mismatches between the smaller image geeneration
     # and caption_generator_model models and the large LLMs, create sub_batches to
     # prevent OOM.
     new_batch_size = max(1, int(args.batch_size/2))
-  else:
-    model = LLM_medium_model
-    tokenizer = LLM_medium_tokenizer
   
   problem_idxs = []
   prompts = []
-  idxs = [data['idx'] for data in data_list]
   captions = [data['media_list'][0] for data in data_list]
   instrs = [data['text'].split("### Response:",1)[0].split("### Instruction:")[-1] for data in data_list]
   revised_instrs = generate_image_aware_instruction(captions, instrs, model, tokenizer)
-  responses = [data['chosen'] for data in data_list]
-  prompts = [tokenizer.apply_chat_template([{"role": "user", "content": instruction}, {"role": "assistant", "content": response},
+  responses = [data['chosen_response'] for data in data_list]
+  prompts = [tokenize_with_chat_template(LLM_tokenizer, [{"role": "user", "content": instruction}, {"role": "assistant", "content": response},
                                               {"role": "user", "content": f"Given the below image:\n{caption}\n===\n{revised_instruction}\nIf instruction cannot be answered based on the image alone, refer to the prior conversation, and explain why. Do not refer to any context document in your answer. If the question cannot be answered by the image state so politely and state why."}], tokenize=False)
               for caption, instruction, revised_instruction, response in zip(captions, instrs, revised_instrs, responses)]
 
-  t0 = time.time()  
+  t0 = time.time()
   with torch.no_grad():
-    revised_responses = generate_with_batching(model, tokenizer, prompts, batch_size=new_batch_size)
+    revised_responses = generate_with_batching(LLM_model, LLM_tokenizer, prompts, skip_special_tokens=True, batch_size=new_batch_size, max_new_tokens=args.LLM_max_new_tokens,  return_continuations_only=True , dont_decode_non_english=True)
   model_time = time.time()-t0
   items_processed = len(revised_responses)
 
@@ -969,7 +1465,6 @@ def generate_revised_instr_response(data_list):
 
     #clean
     revised_response = revised_response.replace("\n\n", "\n").strip()
-    data['metadata']['params'] = json.loads(data['metadata']['params'])
     data['metadata']['params']['revised_instruction'] = revised_instr
     data['metadata']['params']['revised_response'] = revised_response
     data['metadata']['params']['revised_instr_response_prompt'] = prompt
@@ -978,92 +1473,169 @@ def generate_revised_instr_response(data_list):
   data_list = [data for data in data_list if data['idx'] not in problem_idxs]
   return data_list, model_time, items_processed, list(problem_idxs)
 
-def generate_autoredteam(data_list):
-  _data_list, data_list = copy.deepcopy(data_list), []
-  model = None
-  tokenizer = None
-  new_batch_size = args.batch_size
-  if args.use_LLM_size == 'small':
-    model = LLM_small_model
-    tokenizer = LLM_small_tokenizer
-  elif args.use_LLM_size == 'large':
-    model = LLM_large_model
-    tokenizer = LLM_large_tokenizer
+# This function will likely return MORE data than what is in data_list. It expands that list.
+def generate_autoredteam(data_list, max_new_tokens=400):
+  global LLM_small_model, \
+      LLM_small_tokenizer, \
+      LLM_medium_model, \
+      LLM_medium_tokenizer, \
+      LLM_large_model, \
+      LLM_large_tokenizer, \
+      LLM_redteam_target_model, \
+      LLM_redteam_target_tokenizer, \
+      evaluator_model, \
+      evaluator_tokenizer, \
+      small_evaluator_model, \
+      small_evaluator_tokenizer, \
+      vlm_evalurator_model, \
+      vlm_evalurator_processor
+
+  new_batch_size = args.batch_size  
+  if args.use_LLM_size == 'large' or not ('3b' in args.LLM_redteam_target_model or '1b' in args.LLM_redteam_target_model):
     # to account for mismatches between the smaller image geeneration
     # and caption_generator_model models and the large LLMs, create sub_batches to
     # prevent OOM.
     new_batch_size = max(1, int(args.batch_size/2))
+  is_small_evaluator = False
+  if evaluator_model is None:
+    if small_evaluator_model is None:
+      assert False, "You need to have an evaluator to run redteaming"
+    else:
+      evaluator = small_evaluator_model
+      eval_tokenizer = small_evaluator_tokenizer
+      evaluator_batch_size = new_batch_size
+      is_small_evaluator = True      
   else:
-    model = LLM_medium_model
-    tokenizer = LLM_medium_tokenizer
+      evaluator = evaluator_model
+      eval_tokenizer = evaluator_tokenizer
+      evaluator_batch_size = max(5, new_batch_size)      
+      if "7b" in args.evaluator_model:
+        evaluator_batch_size = max(5,args.batch_size//10)
   
-  t0 = time.time()  
-  for row in _data_list:
-    data = auto_redteam(
-                    target_model=model, target_tokenizer=tokenizer, 
-                    purpleteam_generative_model=model, purpleteam_generative_tokenizer=tokenizer, 
-                    blueteam_llamaguard_model=evaluator_model, blueteam_llamaguard_tokenizer=evaluator_tokenizer,
-                    verb_type=row["verb_type"], obj_type=row["obj_type"], batch_size=new_batch_size, blueteam_batch_size=new_batch_size,
-                  )
-    data_list.extend(data)
+  problem_idxs = []
+  t0 = time.time()
+  new_data_list = []
+  seen = {}
+  
+  for data in  auto_redteam(logger=logger, target_model=LLM_redteam_target_model, target_tokenizer=LLM_redteam_target_tokenizer,
+                            LLM_model=LLM_model, LLM_tokenizer=LLM_tokenizer,
+                            answer_max_new_tokens=min(args.LLM_max_new_tokens, max_new_tokens),
+                            instruction_max_new_tokens=min(args.LLM_max_new_tokens, 100),
+                            eval_max_new_tokens=min(args.LLM_max_new_tokens, 100),
+                            evaluator_model=evaluator, evaluator_tokenizer=eval_tokenizer,
+                            data_list = data_list, batch_size=new_batch_size, evaluator_batch_size=evaluator_batch_size,
+                            is_small_evaluator=is_small_evaluator,
+  ):
+    idx = data['_tmp_idx']
+    if idx in seen:
+      seen[idx] += 1
+      data['_tmp_idx'] = idx + "_"+ str(seen[idx])
+    else:
+      seen[idx] = 0
+    logger.warning('generated ' + str( data))
+    new_data_list.append(data)
   model_time = time.time()-t0
-  items_processed = len(data_list)
-  return data_list, model_time, items_processed, []
+  # this does not account for multiple llm calls or problem items. should be really passed into auto_redteam. this is the wrong number.
+  items_processed = len(new_data_list) 
+  return new_data_list, model_time, items_processed, problem_idxs
 
 ### MAIN FUNCTIONS THAT CALLS THE GENERATE FUNCTIONS
-def write_image(image_then_path_list):
-  for image, image_path in image_then_path_list:
+
+# write_images. for other media, we will need to create other write
+# functions
+def write_image(image_and_path_list):
+  #logger.warning("Starting to write images "+ str(len(image_and_path_list)))
+  for image, image_path in image_and_path_list:
     image.save(image_path)
+  #logger.warning("Finished write images "+ str(len(image_and_path_list))    )
 
-# for other media, we will need to create other write functions
 
-def do_one_batch(base_path, outfile, rng, pool, generate_function, curr_data, all_writers, save_time=0, all_model_time=0, items_processed=0):
-  # this is a map_reduce function.
-  # this function maps one batch into each GPU/process and then reduces back to a single output file.
-  # optionally separate images can be written to disk as well in a thread so that the writing is faster.
+# to prevent blocking between sub-batches, we create a yield, which
+# returns a chunk as soon as available.  there is still a block
+# between finishing one input file and starting another file. if this
+# is significant, we can consider doing yield_batches over many files.
+def yield_batches(step_size, all_data):
   global num_devices, args, node_name
+  for rng in range(0, len(all_data), step_size):
+    curr_data = all_data[rng: min(len(all_data), rng+step_size)]
+    yield curr_data
+  
+def do_all_batches_and_save(base_path, output_file, pool, generate_function, all_data, all_writers, save_time=0, all_model_time=0, items_processed=0):
+  # this is a map_reduce function.  this function maps one batch into
+  # each GPU/process and then reduces back to a single output file.
+  # optionally separate images can be written to disk as well in a
+  # thread so that the writing is faster.  ASSUMES all_data is not a
+  # generator, or at least a generator that doesn't produce too much
+  # data since we load all_data into memory for faster processing.
+  global num_devices, args, node_name
+  # each generate function is responsible for managing it's own
+  # batching. we send in chunks of > batch_size to improve
+  # throughput. in some cases, problem items may be filtered, and we
+  # want maximum usage of GPU.
+  step_size = args.batch_size * 3
+  # be careful to do this BEFORE setting the tmp_idx, as the cleanup
+  # routine will delete this field.
+  all_data = cleanup_data_batch(all_data) 
+  for idx, data in enumerate(all_data):
+    data['_tmp_idx'] = str(idx)
   problem_idxs = []
-  # curr_data = cleanup_data_batch(curr_data) 
-  for idx, data in enumerate(curr_data):
-    data['idx'] = idx+rng # these are temporary indexes
-  chunks = chunkify(curr_data, num_devices)
   seen_subdir = {}
-  for batch, model_time, new_items_processed, new_problem_idxs in pool.imap_unordered(generate_function, chunks, chunksize=1): # imap_unordered doesn't seem to speed things up??
-    problem_idxs.extend(new_problem_idxs)
-    image_and_path = []
-    all_model_time += model_time
-    items_processed += new_items_processed
-    t0 = time.time()
-    for data in batch:
-
-      # Image handling
-      # for other media, we will need to write other write functions
-      if data["media_list"] and type(data["media_list"][0]) is PIL.Image.Image:
-        #TODO - do for other media like sound, video and images
-        idx = data['idx']
-        images = data['media_list']
-        data['media_list'] = []
-        #TODO, see if we have already saved this image by using SH-1 fingerprint, so we don't save to disk drive
-        for image_idx, image in enumerate(images):
-          if not image: continue
-          subdir = int(idx//1000) # for 1M records, there will be 1000 directories, each with 1000 files.
-          if subdir not in seen_subdir:
+  with open(output_file, "w") as outfile:   
+    for batch, model_time, new_items_processed, new_problem_idxs in pool.imap_unordered(generate_function, yield_batches(step_size, all_data)):
+      problem_idxs.extend(new_problem_idxs)
+      image_and_path = []
+      all_model_time += model_time
+      items_processed += new_items_processed
+      t0 = time.time()
+      for data in batch:
+        # we need to save separately things that are not json
+        # serializable. E.g., Image handling and for other media. We
+        # will need to write other write functions
+        if data["media_list"] and data["media_list"][0] and type(data["media_list"][0]) is not str:
+          # check if PIL.Image.Image or other types, like Jpeg
+          #TODO - do for other media like sound, video and images,
+          idx = data['_tmp_idx']
+          images = data['media_list']
+          data['media_list'] = []
+          #TODO, see if we have already saved this image by using SH-1
+          #fingerprint, so we don't save to disk drive
+          for image_idx, image in enumerate(images):
+            if not image: continue
             width, height = image.size
-            os.makedirs(f"{args.output_dir}/{base_path}/{subdir}/", exist_ok=True)
-            seen_subdir[subdir] = 1
-          image_and_path.append((image, f"{args.output_dir}/{base_path}/{subdir}/{idx}-{image_idx}-{width}x{height}.png"))
-          #image.save(f"{args.output_dir}/{base_path}-{idx}-{image_idx}.png")
-          data["media_list"].append(f"{base_path}/{subdir}/{idx}-{image_idx}-{width}x{height}.png")
-
-      data["metadata"]["source"] += f"|{args.input_path}.{node_name}.{args.task}.{idx}"
-      if 'idx' in data: del data['idx'] # these are termporary indexes
-      data = cleanup_and_serialize_params(data)
-      outfile.write(json.dumps(data)+"\n")
-      data = None
-    if image_and_path:
-      all_writers.append(threading.Thread(target=write_image, args=(image_and_path,)))
-      all_writers[-1].start()
-    save_time += time.time()-t0
+            idx2 = idx
+            if "_" in idx:
+              idx2 = idx.split("_")
+            # for 1M records, there will be 1000 directories, each
+            # with 1000 files.
+            subdir = int(int(idx2)//1000) 
+            if subdir not in seen_subdir:
+              logger.warning("creating directory "+ f"{args.output_dir}/{base_path}/{subdir}/")
+              os.makedirs(f"{args.output_dir}/{base_path}/{subdir}/", exist_ok=True)
+              logger.warning("finished creating dir")
+              seen_subdir[subdir] = 1
+            image_and_path.append((image, f"{args.output_dir}/{base_path}/{subdir}/{idx}-{image_idx}-{width}x{height}.png"))
+            #image.save(f"{args.output_dir}/{base_path}/{subdir}/{idx}-{image_idx}-{width}x{height}.png")
+            data["media_list"].append(f"{base_path}/{subdir}/{idx}-{image_idx}-{width}x{height}.png")
+        assert not any (s for s in data['media_list'] if type(s) is not str), "Something went wrong and we are saving something other than a string"
+        data["metadata"]["source"] += f"|{base_path}|{node_name}.{args.task}.{idx}"
+        del data['_tmp_idx'] # these are termporary indexes
+        data = cleanup_and_serialize_params(data)
+        outfile.write(json.dumps(data)+"\n")
+        data = None
+        
+      if image_and_path:
+        all_writers.append(threading.Thread(target=write_image, args=(image_and_path,)))
+        all_writers[-1].start()
+      #cleanup the writers that are no longer alive
+      for j, writer in enumerate(all_writers):
+        if writer:
+          if not writer.is_alive():
+            writer.join()
+            all_writers[j] = None
+      # TODO: let's cleaup threads that are dead
+      save_time += time.time()-t0
+      logger.warning("saved one batch of " + str(len(batch)) + " items per " + str(time.time()-t0) + " secs ")
+      
   return all_writers, save_time, all_model_time, items_processed, problem_idxs
 
 #TODO: set tansformers logging in args
@@ -1097,75 +1669,20 @@ def main_standard_format():
     for input_file, output_file in zip(input_files, output_files):
       base_path = output_file.split(args.output_dir,1)[-1].lstrip("/").replace(".jsonl", "")
       os.makedirs(args.output_dir+"/"+base_path, exist_ok=True)
-      with open(output_file, "w") as outfile: 
-        # read data of various forms
-        # potentially have a reader thread to read while we wait for GPUs to finish
-        t0 = time.time()
-        all_data = [json.loads(l) for l in open(input_file).read().split("\n") if l.strip()]
-        data_load_time += time.time()-t0
-        # to get the true batch per caption, we need to get the average num of captions and divde by the batch size
-        if 'caption' in args.task or 'image' in args.task:
-          avg_num_caption = max(1, sum(data['text'].count("<caption>") for data in all_data)/len(all_data)) 
-          avg_num_image = max(1, sum(len(data['media_list']) for data in all_data)/len(all_data))
-          avg_num = max(avg_num_caption, avg_num_image)
-        else:
-          avg_num = 1
-        # create super batches for each of the N GPUs
-        step_size = max(1, int(args.batch_size/avg_num))*num_devices
-        for rng in range(0, len(all_data), step_size):
-          curr_data = all_data[rng: min(len(all_data), rng+step_size)]
-          all_writers, save_time, all_model_time, items_processed, new_problem_idxs = do_one_batch(base_path, outfile, rng, pool, generate_function, curr_data, all_writers, save_time, all_model_time, items_processed)
-          problem_idxs.extend(new_problem_idxs)
+      # read data of various forms
+      # potentially have a reader thread to read while we wait for GPUs to finish
+      t0 = time.time()
+      all_data = [json.loads(l) for l in open(input_file).read().split("\n") if l.strip()]
+      data_load_time += time.time()-t0
+      all_writers, save_time, all_model_time, items_processed, new_problem_idxs = do_all_batches_and_save(base_path, output_file, pool, generate_function, all_data, all_writers, save_time, all_model_time, items_processed)
+      problem_idxs.extend(new_problem_idxs)
+            
   for writer in all_writers:
-    writer.join()
+    if writer:
+      writer.join()
   stop = time.time()
   total_time = stop-start
   # consider writing a log file per outputfile so that we can push the data for that shard to HF                                                                                                                                                                               
-  logger.warning(f"{node_name}.{args.task} : {items_processed} in {total_time} seconds total time on {num_devices} GPUs and processes. All model time took {all_model_time}. Disk load time took {data_load_time}. Disk save time took {save_time} " + str(args))
-  logger.warning(f"{node_name}.{args.task} : Problem items " + str(problem_idxs))
-
-def main_autoredteam():
-  # reads verb and obj pairs from 'templates/seed.py' , and processes into our standard format, with the generate_function applied to each data item
-  global args, node_name
-  task = args.task
-  generate_function = tasks_configs[task]['generate_function']
-  all_writers = []
-  start = time.time()
-  items_processed = 0
-  all_model_time = 0
-  save_time = 0
-  problem_idxs = []
-  data_load_time = 0
-  # #TODO - do multiple input files
-  if not args.output_path:
-    args.output_path = args.output_dir+"/"+args.output_suffix+".jsonl"
-  base_path = args.output_path.split(args.output_dir,1)[-1].lstrip("/").replace(".jsonl", "")
-  os.makedirs(args.output_dir, exist_ok=True)
-  os.makedirs(args.output_dir+"/"+base_path, exist_ok=True)
-  multiprocessing.set_start_method('spawn', force=True)
-  with  multiprocessing.Pool(processes=num_devices) as pool:
-    initialize_gpus_and_models(pool, args)
-    # consider whether we want to use imap_unordered instead of startmap so we get data right away and start processing.
-    # might not matter as all GPUs will probably finish at the same time.
-    # consider creating an outputfile per inputfile, and passing in inputfile patterns
-    with open(args.output_path, "w") as outfile: 
-        # read data of various forms
-        # potentially have a reader thread to read while we wait for GPUs to finish, if we do multiple files at the same time
-        t0 = time.time()
-        all_data = [{"verb_type": verb_type, "obj_type": obj_type} for verb_type in verb_templates.keys() for obj_type in obj_templates.keys()]
-        data_load_time += time.time() - t0
-        avg_num = 1 # there is only one image.
-        # create super batches for each of the N GPUs
-        step_size = max(1, int(args.batch_size/avg_num))*num_devices
-        for rng in range(0, len(all_data), step_size):
-          curr_data = all_data[rng: min(len(all_data), rng+step_size)]
-          all_writers, save_time, all_model_time, items_processed, new_problem_idxs = do_one_batch(base_path, outfile, rng, pool, generate_function, curr_data, all_writers, save_time, all_model_time, items_processed)
-          problem_idxs.extend(new_problem_idxs)
-  for writer in all_writers:
-    writer.join()
-  stop = time.time()
-  total_time = stop-start
-  # consider writing a log file per outputfile so that we can push the data for that shard to HF
   logger.warning(f"{node_name}.{args.task} : {items_processed} in {total_time} seconds total time on {num_devices} GPUs and processes. All model time took {all_model_time}. Disk load time took {data_load_time}. Disk save time took {save_time} " + str(args))
   logger.warning(f"{node_name}.{args.task} : Problem items " + str(problem_idxs))
 
@@ -1196,28 +1713,61 @@ def main_commoncatalog():
     # consider whether we want to use imap_unordered instead of startmap so we get data right away and start processing.
     # might not matter as all GPUs will probably finish at the same time.
     # consider creating an outputfile per inputfile, and passing in inputfile patterns
-    with open(args.output_path, "w") as outfile: 
-        # read data of various forms
-        # potentially have a reader thread to read while we wait for GPUs to finish, if we do multiple files at the same time
-        t0 = time.time()
-        df = parquet.read_table(args.input_path)
-        all_data = []
-        for image, caption, blip_text, title, usertags, url in zip(df['jpg'], df['caption'], df['blip2_caption'], df['title'], df['usertags'], df['downloadurl']):
-          all_data.append({'media_list': [image], 'text': unquote((title.as_py()+": "+ blip_text.as_py()+". In more detail: "+caption.as_py()).replace("+", " ")),\
-                           'metadata': {'source': '', 'params': { 'title': title.as_py(), 'blip_text': blip_text.as_py(), 'orig_caption': caption.as_py(), 'usertags': usertags.as_py(), 'url': url.as_py()}}})
-        df = None
-        data_load_time += time.time() - t0
-        avg_num = 1 # there is only one image.
-        step_size = max(1, int(args.batch_size/avg_num))
-        for idx, data in enumerate(all_data):
-            data['media_list'] = [Image.open(BytesIO(image.as_py()))  for image in data['media_list']]
-        all_writers, save_time, all_model_time, items_processed, new_problem_idxs = do_all_batch(base_path, outfile, pool, generate_function, all_data, step_size, all_writers, save_time, all_model_time, items_processed)
-        problem_idxs.extend(new_problem_idxs)
+    # read data of various forms
+    # potentially have a reader thread to read while we wait for GPUs to finish, if we do multiple files at the same time
+    t0 = time.time()
+    df = parquet.read_table(args.input_path)
+    all_data = []
+    for image, caption, blip_text, title, usertags, url in zip(df['jpg'], df['caption'], df['blip2_caption'], df['title'], df['usertags'], df['downloadurl']):
+      all_data.append({'media_list': [image], 'text': '',\
+                       'metadata': {'source': '', 'params': { 'title': title.as_py(), 'blip_text': blip_text.as_py(), 'orig_caption': caption.as_py(), 'usertags': usertags.as_py(), 'url': url.as_py()}}})
+    df = None
+    data_load_time += time.time() - t0
+    for idx, data in enumerate(all_data):
+        data['media_list'] = [Image.open(BytesIO(image.as_py()))  for image in data['media_list']]
+    all_writers, save_time, all_model_time, items_processed, new_problem_idxs = do_all_batches_and_save(base_path, args.output_path, pool, generate_function, all_data, all_writers, save_time, all_model_time, items_processed)
+    problem_idxs.extend(new_problem_idxs)
   for writer in all_writers:
-    writer.join()
+    if writer: writer.join()
   stop = time.time()
   total_time = stop-start
   # consider writing a log file per outputfile so that we can push the data for that shard to HF
+  logger.warning(f"{node_name}.{args.task} : {items_processed} in {total_time} seconds total time on {num_devices} GPUs and processes. All model time took {all_model_time}. Disk load time took {data_load_time}. Disk save time took {save_time} " + str(args))
+  logger.warning(f"{node_name}.{args.task} : Problem items " + str(problem_idxs))
+
+
+def main_autoredteam():
+  # reads verb and obj pairs from 'templates/seed.py' , and processes into our standard format, with the generate_function applied to each data item
+  global args, node_name
+  task = args.task
+  generate_function = tasks_configs[task]['generate_function']
+  all_writers = []
+  start = time.time()
+  items_processed = 0
+  all_model_time = 0
+  save_time = 0
+  problem_idxs = []
+  data_load_time = 0
+  if not args.output_path:
+    args.output_path = args.output_dir+"/"+args.output_suffix+".jsonl"
+  base_path = args.output_path.split(args.output_dir,1)[-1].lstrip("/").replace(".jsonl", "")
+  os.makedirs(args.output_dir, exist_ok=True)
+  os.makedirs(args.output_dir+"/"+base_path, exist_ok=True)
+  multiprocessing.set_start_method('spawn', force=True)
+  with  multiprocessing.Pool(processes=num_devices) as pool:
+    initialize_gpus_and_models(pool, args)
+    # read data of various forms                                                                                                                                                                                                                                           
+    t0 = time.time()
+    all_data = [{'text': '','chosen': '', 'rejected_list': [], 'metadata': {'params': { "verb_type": verb_type, "obj_type": obj_type}}} for verb_type in verb_templates.keys() for obj_type in obj_templates.keys()]
+    data_load_time += time.time() - t0
+    all_writers, save_time, all_model_time, items_processed, new_problem_idxs = do_all_batches_and_save(base_path, args.output_path, pool, generate_function, all_data, all_writers, save_time, all_model_time, items_processed)
+    problem_idxs.extend(new_problem_idxs)
+  for writer in all_writers:
+    if writer:
+      writer.join()
+  stop = time.time()
+  total_time = stop-start
+  # consider writing a log file per outputfile so that we can push the data for that shard to HF 
   logger.warning(f"{node_name}.{args.task} : {items_processed} in {total_time} seconds total time on {num_devices} GPUs and processes. All model time took {all_model_time}. Disk load time took {data_load_time}. Disk save time took {save_time} " + str(args))
   logger.warning(f"{node_name}.{args.task} : Problem items " + str(problem_idxs))
 
@@ -1225,23 +1775,27 @@ def main_commoncatalog():
 
 tasks_configs = {"generate_images": {"models_needed": ["image_generator", ], "main_function": main_standard_format, 'generate_function': generate_images},
                  "generate_captions": {"models_needed": ["caption_generator", ], "main_function": main_standard_format, 'generate_function': generate_captions_and_dont_clear_images},
-                 "generate_stories": {"models_needed": ["LLM_model"], "main_function": main_standard_format, 'generate_function': generate_stories},                                                   
-                 "generate_images_then_recaption": {"models_needed": ["caption_generator", 'image_generator'],  "main_function": main_standard_format, 'generate_function': generate_images_then_recaptions},                 
+                 "generate_stories": {"models_needed": ["LLM_model"], "main_function": main_standard_format, 'generate_function': generate_stories},
+                 "generate_math_cot_python_code": {"models_needed": ["LLM_code"], "main_function": main_standard_format, 'generate_function': generate_math_cot_python_code},
+                 "generate_python_plus": {"models_needed": ["LLM_code"], "main_function": main_standard_format, 'generate_function': generate_python_plus},                 
+                 "generate_images_then_captions": {"models_needed": ["caption_generator", 'image_generator'],  "main_function": main_standard_format, 'generate_function': generate_images_then_captions},                 
                  "generate_captions_then_images": {"models_needed": ["caption_generator", 'image_generator'],  "main_function": main_standard_format, 'generate_function': generate_captions_then_images},
                  "generate_interleaved_images_and_captions_from_text": {"models_needed": ["caption_generator", 'image_generator'],  "main_function": main_standard_format, 'generate_function': generate_interleaved_images_and_captions_from_text},                 
-                 # common catalog voersion
+                 # common catalog version
                  "generate_captions_from_commoncatalog": {"models_needed": ["caption_generator", ], "main_function": main_commoncatalog, 'generate_function': generate_captions_and_clear_images},
                  "generate_stories_from_commoncatalog": {"models_needed": ["LLM_model"], "main_function": main_commoncatalog, 'generate_function': generate_stories},                                  
                  "generate_images_from_commoncatalog": {"models_needed": ["image_generator", ], "main_function": main_commoncatalog, 'generate_function': generate_images},
-                 "generate_captions_then_generate_people_images_from_commoncatalog": {"models_needed": ["caption_generator", "image_generator"], "main_function": main_commoncatalog, 'generate_function': generate_captions_then_generate_people_images},
-                 "generate_images_then_recaption_from_commoncatalog": {"models_needed": ["box_segmenter", "image_text_scorer", "caption_generator", 'image_generator'],  "main_function": main_commoncatalog, 'generate_function': generate_images_then_recaptions},
+                 "generate_captions_then_filter_people_images": {"models_needed": ["caption_generator",], "main_function": main_commoncatalog, 'generate_function': generate_captions_then_filter_people_images},
+                 "generate_images_then_captions_from_commoncatalog": {"models_needed": ["box_segmenter", "image_text_scorer", "caption_generator", 'image_generator'],  "main_function": main_commoncatalog, 'generate_function': generate_images_then_captions},
                  "generate_captions_then_images_from_commoncatalog": {"models_needed": ["caption_generator", 'image_generator'],  "main_function": main_commoncatalog, 'generate_function': generate_captions_then_images},
-                 # auto redteam voersion
-                 "generate_autoredteam": {"models_needed": ["LLM_model", "evaluator"], "main_function": main_autoredteam, 'generate_function': generate_autoredteam},
+                 # auto redteam version
+                 "generate_autoredteam": {"models_needed": ["LLM_model", "LLM_redteam_target", "evaluator"], "main_function": main_autoredteam, 'generate_function': generate_autoredteam},
+                 "generate_autoredteam_small": {"models_needed": ["LLM_model", "LLM_redteam_target", "small_evaluator"], "main_function": main_autoredteam, 'generate_function': generate_autoredteam},                                  
                  "generate_captions_from_autoredteam": {"models_needed": ["LLM_model"], "main_function": main_standard_format, 'generate_function': generate_caption_from_instr},
-                 "generate_images_then_recaption_from_autoredteam": {"models_needed": ["box_segmenter", "image_text_scorer", "caption_generator", 'image_generator'], "main_function": main_standard_format, 'generate_function': generate_images_then_recaptions},
+                 "generate_images_then_captions_from_autoredteam": {"models_needed": ["box_segmenter", "image_text_scorer", "caption_generator", 'image_generator'], "main_function": main_standard_format, 'generate_function': generate_images_then_captions},
                  "generate_revised_instruction_then_response_from_autoredteam": {"models_needed": ["LLM_model"], "main_function": main_standard_format, 'generate_function': generate_revised_instr_response},
-                }
+
+}
 
 def parse_args():
   global args, node_name
@@ -1256,15 +1810,21 @@ def parse_args():
   parser.add_argument("--max_detections", type=int, default=5, help="Maximum number of boxes to detect")  
   parser.add_argument("--score_cutoff", type=float, default=0.14, help="score cutoff")
   parser.add_argument("--cache_dir", type=str, default="/leonardo_work/EUHPC_E03_068/.cache", help="Path to cache directory.")
+  parser.add_argument("--LLM_code_model", type=str, default="Qwen/Qwen2.5-Coder-7B-Instruct", help="Coder model, hf path.")
+  parser.add_argument("--LLM_math_model", type=str, default="Qwen/Qwen2.5-Math-7B-Instruct", help="Math model, hf path.")  
+  parser.add_argument("--LLM_redteam_target_model", type=str, default="Qwen/Qwen2.5-3B-Instruct", help="Target model to auto-redteam, hf path.")  
   parser.add_argument("--LLM_small_model", type=str, default="Qwen/Qwen2.5-1.5B-Instruct", help="Small LLM generative model hf path.")
   parser.add_argument("--LLM_medium_model", type=str, default="Qwen/Qwen2.5-3B-Instruct", help="Medium LLM generative model hf path.")
-  parser.add_argument("--LLM_large_model", type=str, default="Qwen/Qwen2.5-7B-Instruct", help="Large LLM generative model hf path.")  
+  parser.add_argument("--LLM_large_model", type=str, default="Qwen/Qwen2.5-7B-Instruct", help="Large LLM generative model hf path.")
+  parser.add_argument("--LLM_max_new_tokens", type=int, default=2048, help="LLM generative model default max new tokens. Can be made shorter by specific generate args and functions.")  
+  parser.add_argument("--VLM_evaluator", type=str, default="AIML-TUDA/LlavaGuard-v1.1-7B-hf", help="Llavaguard model hf path.")  
   parser.add_argument("--image_text_score_model", type=str, default="openai/clip-vit-base-patch32", help="Model used to get the image-text cosine similarity.")
-  parser.add_argument("--caption_generator_model", type=str, default='microsoft/Florence-2-large', help="Model used for generating caption of an image.")
+  parser.add_argument("--caption_generator_model", type=str, default='microsoft/Florence-2-large', help="Model used for generating caption of an image.") #microsoft/Florence-2-large
   parser.add_argument("--image_generator_model", type=str, default="black-forest-labs/FLUX.1-schnell", help="Image generator model compatible with diffuser")
   parser.add_argument("--box_segementer_config_path", type=str, default="/leonardo_work/EUHPC_E03_068/safellm/src/frcnn/config.jsonl", help="local config file for frcnn")
-  parser.add_argument("--box_segementer_model", type=str, default="unc-nlp/frcnn-vg-finetuned", help="Model used to do mox segmentation")
-  parser.add_argument("--evaluator_model", type=str, default="llamas-community/LlamaGuard-7b", help="Evaluator model for generating policy based data") 
+  parser.add_argument("--box_segementer_model", type=str, default="unc-nlp/frcnn-vg-finetuned", help="Model used to do mox segmentation") 
+  parser.add_argument("--evaluator_model", type=str, default="llamas-community/LlamaGuard-7b", help="Evaluator model for generating policy based data")
+  parser.add_argument("--small_evaluator_model", type=str, default="alpindale/Llama-Guard-3-1B", help="Small evaluator model for generating policy based data")  
   parser.add_argument("--input_dir", type=str, default="", help="Path to the input file.")    
   parser.add_argument("--output_dir", type=str, default="", help="Path to the input file.")
   parser.add_argument("--output_path", type=str, default="", help="Path to save output for this step. If the output_path is empty, we will assume it is output_dir/input_name+output_suffix.jsonl")
@@ -1286,12 +1846,16 @@ def parse_args():
   logger.warning(f"RUNNING: {node_name} on {num_devices} GPUs")
   logger.warning(args)
 
+logging.basicConfig(
+    format='%(asctime)s : %(processName)s : %(threadName)s : %(levelname)s : %(message)s',
+    level=logging.WARNING)
 
 ## NOTE that model load time can be quite long (in minutes), so we
 ## should process as many items in one run as possible to amortize
 ## that time cost. DO NOT launch this script multiple times for small
 ## shards of a dataset. Instead, loop through the shards.
 if __name__ == "__main__":
+  logger.warning("Starting Create Multimodal Data")
   parse_args()
   main = tasks_configs[args.task]['main_function']
   main()

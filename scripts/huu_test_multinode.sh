@@ -2,7 +2,7 @@
 #SBATCH --account EUHPC_E03_068
 #SBATCH -p boost_usr_prod
 #SBATCH --time 16:00:00     # format: HH:MM:SS
-#SBATCH -N 1                # 1 node
+#SBATCH -N 5                # 1 node
 #SBATCH --cpus-per-task=10
 #SBATCH --ntasks-per-node=1 # 4 tasks out of 32
 #SBATCH --gpus-per-node=4
@@ -26,21 +26,21 @@ cache_dir="/leonardo_work/EUHPC_E03_068/.cache"
 directory="/leonardo_work/EUHPC_E03_068/staging_data/huu-commoncatalog-test"
 mkdir -p $directory
 
+#     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-5902856173521346022-881c09c0-8d26-4696-ab27-ae38e76eef3e-4766908-1-c000.parquet \
 
-
-echo 'creating captions from commoncatalog'
-srun python -m src.create_multimodal_data \
-     --task generate_captions_then_filter_people_images_from_commoncatalog \
-     --input_dir /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/ \
-     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-6066117112843696575-22627380-9161-4c5a-b773-d9113a6f5744-75336-1-c000.parquet \
-     --output_dir $directory \
-     --output_path $directory/commoncatalog_recaption.jsonl     
-
-#echo 'creating images'
+#echo 'creating captions from commoncatalog'
 #srun python -m src.create_multimodal_data \
-#     --task generate_images \
-#     --input_dir $directory \
+#     --task generate_captions_then_filter_people_images_from_commoncatalog \
+#     --input_dir /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/ \
+#     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/*.parquet \
 #     --output_dir $directory \
-#     --input_path $directory/commoncatalog_recaption*.jsonl \
-#     --output_path $directory/commoncatalog_image_with_recaption.jsonl
+#     --output_path $directory/commoncatalog_recaption.jsonl     
+
+echo 'creating images'
+srun python -m src.create_multimodal_data \
+     --task generate_images \
+     --input_dir $directory \
+     --output_dir $directory \
+     --input_path $directory/commoncatalog_recaption*.jsonl \
+     --output_path $directory/commoncatalog_image_with_recaption.jsonl
 

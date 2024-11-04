@@ -15,6 +15,12 @@ from io import BytesIO
 import numpy as np
 from numpy import asarray
 from collections import deque
+import numpy as np
+import torch
+import torchvision
+from torchvision.transforms.functional import InterpolationMode
+from transformers import AutoModel, AutoTokenizer
+import random
 
 import torch
 import PIL
@@ -179,6 +185,79 @@ text_mentioning_phrases = [
 
 text_mentioning_phrases.sort(key=lambda a: len(a), reverse=True)
 
+# this corresponds to the TurkuNLP registries. Add this when we know the type of registry a particular text is.
+styles = ["Lyrical", "Spoken", "Interview", "Interactive Discussion", "Narrative", "News Report", "Sports Report", "Narrative Blog", "How-to", "Recipe", "Informational Description",
+         "Encyclopedia Article", "Research Article", "Descriptive Article", "FAQ", "Opinion", "Review", "Opinion Blog",
+         "Denominational Religious Blog or Sermon", "Informational Persuasion", "Sales Pitch", "News and Opinon Blog or Editoral", ]
+
+length = ["Long", "Short", "Medium", "One Paragraph", "Two Paragraph", "Five Paragraph", "1000 words", "10 words", "100 words"]
+
+professions = [
+    "Engineer",
+    "Doctor",
+    "Nurse",
+    "Teacher",
+    "Software Developer",
+    "Data Scientist",
+    "Lawyer",
+    "Pharmacist",
+    "Researcher",
+    "Accountant",
+    "Architect",
+    "Chef",
+    "Dentist",
+    "Journalist",
+    "Pilot",
+    "Photographer",
+    "Police Officer",
+    "Veterinarian",
+    "Writer",
+    "Painter",
+    "Musician",
+    "Athlete",
+    "Actor",
+    "Psychologist",
+    "Carpenter",
+    "Electrician",
+    "Plumber",
+    "Social Worker",
+    "Farmer",
+    "Mechanic"
+]
+
+# Use this if there is no life-skill involved (e.g., non-how-to videos)
+tasks_template_list = [
+    "Critical Thinking",
+    "Problem Solving",
+    "Communication",
+    "Teamwork",
+    "Adaptability",
+    "Time Management",
+    "Organization",
+    "Creativity",
+    "Emotional Intelligence",
+    "Leadership",
+    "Self-Motivation",
+    "Stress Management",
+    "Decision Making",
+    "Assertiveness",
+    "Resilience",
+    "Empathy",
+    "Negotiation",
+    "Conflict Resolution",
+    "Budgeting",
+    "Computer Literacy",
+    "Foreign Language",
+    "Cultural Awareness",
+    "Networking",
+    "Personal Hygiene",
+    "Cooking",
+    "First Aid",
+    "Document Drafting",
+    "Purchasing",
+    "Selling",
+    "Risk Management",
+]
 
 ### BASIC UTILITIES
 def get_target_path(shard_path: Path, dst_file_path: Path) -> Path:
@@ -390,6 +469,11 @@ def cleanup_and_serialize_params(data):
 
 import re
 
+def non_english_detect(text):
+    if re.search("[\u0000-\u00BF]", text):
+        return False
+    return True
+    
 def cjk_detect(text):
     # chinese
     if re.search("[\u4e00-\u9FFF]", text):
@@ -410,6 +494,9 @@ def cjk_detect(text):
 
 def get_cjk_tokens(tokenizer):
     return [tokenizer.decode([idx]) for idx in range(len(tokenizer)) if cjk_detect(tokenizer.decode([idx]))]
+
+def get_non_english_tokens(tokenizer):
+    return [tokenizer.decode([idx]) for idx in range(len(tokenizer)) if non_english_detect(tokenizer.decode([idx]))]
 
 def chatml_format_instructions_old(system, instruction, response=""):
   system= system.strip()
@@ -475,32 +562,125 @@ def get_tokens_as_list(word_list, tokenizer):
         tokens_list.append(tokenized_word)
     return tokens_list
 
-
-
-# generate output from a batch of inputs
-# we don't want to empty the cache every generation. this could really slow things down. this should be done per batch i think. to prevent fagmentation
-# qwen has a problem of sometimes outputing cjk randomly.
-
-def generate_with_batching(model, tokenizer, data, use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, temperature=0.85, max_new_tokens=400, batch_size=2, return_continuations_only=True, dont_decode_cjk=True, **args):
-  if dont_decode_cjk and not hasattr(tokenizer, 'cjk_ids'):
-    tokenizer.cjk_ids = get_tokens_as_list(get_cjk_tokens(tokenizer), tokenizer)
     
+# generate output from a batch of inputs
+def generate_with_batching(model, tokenizer, prompts, use_cache=True, repetition_penalty=1.2,  max_new_tokens=400, batch_size=2, skip_special_tokens=True, return_continuations_only=True, dont_decode_non_english=False, dont_decode_cjk=False, supress_tokens=[], media_list=None, **args):
+
+  # this is the InternVL2 batch chat function adapted to our purposes. We don't need to use the conv template because
+  # we already send the data into the model in the right chat format.
+  def internvlm_batch_chat(self, tokenizer, pixel_values, questions, generation_config, num_patches_list=None,
+                         IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>',
+                         IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', verbose=False, image_counts=None, return_continuations_only=True,
+                         skip_special_tokens=True):
+
+        img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
+        self.img_context_token_id = img_context_token_id
+
+        if verbose and pixel_values is not None:
+            image_bs = pixel_values.shape[0]
+            print(f'dynamic ViT batch size: {image_bs}')
+
+        queries = []
+        for idx, num_patches in enumerate(num_patches_list):
+            question = questions[idx]
+            if pixel_values is not None and '<image>' not in question:
+                question = '<image>\n' + question
+            image_tokens = IMG_START_TOKEN + IMG_CONTEXT_TOKEN * self.num_image_token * num_patches + IMG_END_TOKEN
+            query = question.replace('<image>', image_tokens, 1)
+            queries.append(query)
+
+        tokenizer.padding_side = 'left'
+        model_inputs = tokenizer(queries, return_tensors='pt', padding=True, add_special_tokens=False)
+        input_ids = model_inputs['input_ids'].to(self.device)
+        prompt_len = model_inputs["input_ids"].shape[-1]        
+        attention_mask = model_inputs['attention_mask'].to(self.device)
+        #eos_token_id = tokenizer.convert_tokens_to_ids(template.sep)
+        #generation_config['eos_token_id'] = eos_token_id
+        generation_output = self.generate(
+            pixel_values=pixel_values,
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            **generation_config
+        )
+        if return_continuations_only:
+            generation_output = generation_output[:, prompt_len:]
+        responses = tokenizer.batch_decode(generation_output, skip_special_tokens=skip_special_tokens)
+        return responses
+  
+  if dont_decode_cjk and not hasattr(tokenizer, 'cjk_ids'):
+      str_list = get_cjk_tokens(tokenizer)
+      tokenizer.cjk_ids = get_tokens_as_list(str_list, tokenizer)
+          
+  if dont_decode_non_english and not hasattr(tokenizer, 'non_english_ids'):
+      str_list = get_non_english_tokens(tokenizer)
+      tokenizer.non_english_ids = get_tokens_as_list(str_list, tokenizer)    
+  # qwen has a problem of sometimes outputing cjk randomly. we fix this by including cjk token in the bad_words_ids
+
   device = model.device
   #torch.cuda.empty_cache()
   output = []
-  for rng in range(0, len(data), batch_size):
-    d = data[rng:min(len(data), rng+batch_size)]
-    if d:
-      with torch.no_grad():
-        input_ids = tokenizer(d, truncation=True, padding=True, return_tensors="pt", add_special_tokens=False, ).to(device)
-        prompt_len = input_ids["input_ids"].shape[-1]
-        if dont_decode_cjk:
-            output.extend(tokenizer.batch_decode(model.generate(**input_ids, bad_words_ids=tokenizer.cjk_ids,
-                                                                use_cache=use_cache, repetition_penalty=repetition_penalty, no_repeat_ngram_size=no_repeat_ngram_size, max_new_tokens=max_new_tokens, temperature=temperature, **args)[:, prompt_len:])) # , skip_special_tokens=True
-        else:
-            output.extend(tokenizer.batch_decode(model.generate(**input_ids,
-                          use_cache=use_cache, repetition_penalty=repetition_penalty, no_repeat_ngram_size=no_repeat_ngram_size, max_new_tokens=max_new_tokens, temperature=temperature, **args)[:, prompt_len:])) # , skip_special_tokens=True
+  bad_words_ids = []
+  if supress_tokens:
+    if hasattr(tokenizer, 'supress_tokens_hash'):
+        supress_tokens_hash = tokenizer.supress_tokens_hash
+    else:
+        supress_tokens_hash = tokenizer.supress_tokens_hash = {}
+    for word in supress_tokens:
+        if word in supress_tokens_hash: continue
+        tokenized_ids = tokenizer([word], add_special_tokens=False).input_ids
+        if len(tokenized_ids) > 1:
+            logger.warning(f"Supress token word {word} is not a single token. skipping")
+            continue
+        supress_tokens_hash[word] =  tokenized_ids[0]
+    bad_words_ids.extend([supress_tokens_hash[word] for word in supress_tokens])
+  if dont_decode_cjk:
+      bad_words_ids.extend(tokenizer.bad_words_ids)
+  if dont_decode_non_english:
+      bad_words_ids.extend(tokenizer.non_english_ids)
+  if media_list:
+      assert len(media_list) == len(prompts), "media_list is a list of lists of images for each prompt. the len of media_list must be the same as the len of prompts"
+  with torch.no_grad():
+      for rng in range(0, len(prompts), batch_size):
+          d = prompts[rng:min(len(prompts), rng+batch_size)]
+          if media_list and hasattr(model, 'batch_chat') and any(s for s in d if "<image>" in s):
+              # this is a internVLM situation
+              generation_config = copy.copy(args)
+              generation_config['use_cache'] = use_cache
+              generation_config['repetition_penalty'] = repetition_penalty
+              generation_config['max_new_tokens'] = max_new_tokens
+              if bad_words_ids:
+                  generation_config['bad_words_ids']=bad_words_ids
+              imgs = media_list[rng:min(len(prompts), rng+batch_size)]
+              pixel_values = []
+              num_patches_list = []
+              for img_list in enumerate(imgs):
+                if not img_list:
+                    num_patches_list.append(0)
+                    continue
+                pixel_list = [preprocess_image_for_internvlm(image) for image in img_list]
+                if len(pixel_list) > 1:
+                    pixel_values.append(torch.cat(*pixel_list, dim=0))
+                else:
+                  pixel_values.append(pixel_list[0])
+                num_patches_list.append(pixel_value.size(0))
+              pixel_values = torch.cat(*pixel_values, dim=0).to(device)
+              responses = internvlm_batch_chat(tokenizer, pixel_values, questions=d, num_patches_list=num_patches_list, generation_config=generation_config, return_continuations_only=return_continuations_only, skip_special_tokens=skip_special_tokens,)
+              output.extend(responses)
+          elif d:
+              model_inputs = tokenizer(d, truncation=True, padding=True, return_tensors="pt", add_special_tokens=False, ).to(device)
+              prompt_len = model_inputs["input_ids"].shape[-1]
+              if bad_words_ids:
+                  model_output = model.generate(**model_inputs, bad_words_ids=bad_words_ids,
+                                                use_cache=use_cache, repetition_penalty=repetition_penalty,  max_new_tokens=max_new_tokens,  **args)
+              else:
+                  model_output = model.generate(**model_inputs,
+                                                            use_cache=use_cache, repetition_penalty=repetition_penalty,  max_new_tokens=max_new_tokens,  **args )
+              if return_continuations_only:
+                  model_output = model_output[:, prompt_len:]
+              output.extend(tokenizer.batch_decode(model_output, skip_special_tokens=skip_special_tokens,))
+                      
   #torch.cuda.empty_cache()
+  # we don't want to empty the cache every generation. this could really slow things down. this should be done per batch i think. to prevent fagmentation
   return output
 
 def chunkify(sequence, n):
@@ -517,6 +697,82 @@ def chunkify(sequence, n):
         result.append(chunk)
 
     return result
+
+### IMAGE PROCESSING FOR INTERNVLM
+
+IMAGENET_MEAN = (0.485, 0.456, 0.406)
+IMAGENET_STD = (0.229, 0.224, 0.225)
+
+def build_transform(input_size):
+    MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
+    transform = torchvision.transforms.Compose([
+        torchvision.transforms.Lambda(lambda img: img.convert('RGB') if img.mode != 'RGB' else img),
+        torchvision.transforms.Resize((input_size, input_size), interpolation=InterpolationMode.BICUBIC),
+        torchvision.transforms.ToTensor(),
+        torchvision.transforms.Normalize(mean=MEAN, std=STD)
+    ])
+    return transform
+
+def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_size):
+    best_ratio_diff = float('inf')
+    best_ratio = (1, 1)
+    area = width * height
+    for ratio in target_ratios:
+        target_aspect_ratio = ratio[0] / ratio[1]
+        ratio_diff = abs(aspect_ratio - target_aspect_ratio)
+        if ratio_diff < best_ratio_diff:
+            best_ratio_diff = ratio_diff
+            best_ratio = ratio
+        elif ratio_diff == best_ratio_diff:
+            if area > 0.5 * image_size * image_size * ratio[0] * ratio[1]:
+                best_ratio = ratio
+    return best_ratio
+
+def dynamic_preprocess(image, min_num=1, max_num=12, image_size=448, use_thumbnail=False):
+    orig_width, orig_height = image.size
+    aspect_ratio = orig_width / orig_height
+
+    # calculate the existing image aspect ratio
+    target_ratios = set(
+        (i, j) for n in range(min_num, max_num + 1) for i in range(1, n + 1) for j in range(1, n + 1) if
+        i * j <= max_num and i * j >= min_num)
+    target_ratios = sorted(target_ratios, key=lambda x: x[0] * x[1])
+
+    # find the closest aspect ratio to the target
+    target_aspect_ratio = find_closest_aspect_ratio(
+        aspect_ratio, target_ratios, orig_width, orig_height, image_size)
+
+    # calculate the target width and height
+    target_width = image_size * target_aspect_ratio[0]
+    target_height = image_size * target_aspect_ratio[1]
+    blocks = target_aspect_ratio[0] * target_aspect_ratio[1]
+
+    # resize the image
+    resized_img = image.resize((target_width, target_height))
+    processed_images = []
+    for i in range(blocks):
+        box = (
+            (i % (target_width // image_size)) * image_size,
+            (i // (target_width // image_size)) * image_size,
+            ((i % (target_width // image_size)) + 1) * image_size,
+            ((i // (target_width // image_size)) + 1) * image_size
+        )
+        # split the image
+        split_img = resized_img.crop(box)
+        processed_images.append(split_img)
+    assert len(processed_images) == blocks
+    if use_thumbnail and len(processed_images) != 1:
+        thumbnail_img = image.resize((image_size, image_size))
+        processed_images.append(thumbnail_img)
+    return processed_images
+
+def preprocess_image_for_internvlm(image, input_size=448, max_num=12):
+    image = image.convert('RGB')
+    transform = build_transform(input_size=input_size)
+    images = dynamic_preprocess(image, image_size=input_size, use_thumbnail=True, max_num=max_num)
+    pixel_values = [transform(image) for image in images]
+    pixel_values = torch.stack(pixel_values)
+    return pixel_values
 
 ### FINDING TEXT IN CAPTIONS
 
@@ -1058,7 +1314,7 @@ def draw_text_in_rectangle_bgr(image, rect, text, replace_color, clear_backgroun
         cv2.putText(image, line, (text_x, text_y), font, font_scale, font_color, font_thickness, line_type)
 
 #### CREATE IMAGE + TEXT DATA
-def tokenie_with_chat_template(tokenizer, messages):
+def tokenize_with_chat_template(tokenizer, messages):
   return tokenizer.apply_chat_template(messages, tokenize=False)
 
 def tokenize_with_assistant_continuation(tokenizer, messages):
@@ -1067,7 +1323,11 @@ def tokenize_with_assistant_continuation(tokenizer, messages):
     tokenizer.assistant_ending = msg.split("@@@@@@")[-1]
     msg = tokenizer.apply_chat_template([{"role": "user", "content": "!!!!!!!!"}, {"role": "assistant", "content":  "@@@@@@"}, {"role": "user", "content": "<<<<<<<"}], tokenize=False)
     tokenizer.assistant_beginning = msg.split("@@@@@@",1)[0].split("!!!!!!!!",1)[-1]
-    tokenizer.user_beginning = msg.split("!!!!!!!!",1)[0]
+    user_beginning = msg.split("!!!!!!!!",1)[0]
+    user_beginning2 = msg.split( "<<<<<<<",1)[0].split("@@@@@@",1)[-1]
+    if len(user_beginning2) < len(user_beginning):
+        user_beginning = user_beginning2
+    tokenizer.user_beginning  = user_beginning
     tokenizer.user_ending = msg.split( "<<<<<<<",1)[-1]
     
   if not messages: return ""
@@ -1079,7 +1339,11 @@ def tokenize_with_user_continuation(tokenizer, messages):
     tokenizer.assistant_ending = msg.split("@@@@@@")[-1]
     msg = tokenizer.apply_chat_template([{"role": "user", "content": "!!!!!!!!"}, {"role": "assistant", "content":  "@@@@@@"}, {"role": "user", "content": "<<<<<<<"}], tokenize=False)
     tokenizer.assistant_beginning = msg.split("@@@@@@",1)[0].split("!!!!!!!!",1)[-1]
-    tokenizer.user_beginning = msg.split("!!!!!!!!",1)[0]
+    user_beginning = msg.split("!!!!!!!!",1)[0]
+    user_beginning2 = msg.split( "<<<<<<<",1)[0].split("@@@@@@",1)[-1]
+    if len(user_beginning2) < len(user_beginning):
+        user_beginning = user_beginning2
+    tokenizer.user_beginning  = user_beginning
     tokenizer.user_ending = msg.split( "<<<<<<<",1)[-1]
 
   if not messages: return ""
@@ -1409,7 +1673,7 @@ def add_img_context_to_instruction(instruction):
     return instruction
 
 #TODO: put all these prompts in a prompt library/config file
-
+# should probably move this to create_multimodal data
 def generate_image_aware_instruction(captions, instructions, model, tokenizer):
   device = model.device
   if random.randint(0, 1):
@@ -1487,10 +1751,122 @@ Do not start with classic sentences like "Once upon a time", "The sun hung low i
 #    print(f"Sublist for rank {rank}: {result}")
 
 
-#### PYTHON CODE UTILS
+#### CODE UTILS
+import subprocess
+import json
+import tempfile
+import os
+import sqlite3
+
 def create_random_input(mapping):
     """ Generate a random test input based on variable mappings. """
     return {var: random.randint(1, 500) for var in mapping}
+
+def check_python_syntax(code):
+    try:
+        compile(code, "<string>", "exec")
+        return True, ''
+    except Exception as e:
+        code = code.split("\n")
+        line = str(e)
+        line = line.split("line ")[-1].split()[0].strip(",)")
+        try:
+            line = int(line)
+            e = str(e)+"\n>"+code[line-1]
+        except:
+            print ("couldn't get line", line, code)
+            e = str(e)
+        e = e.replace("<string>,", "at")
+        return False, e
+    
+def check_python_with_guessing(python, min_len=50):
+    if len(python.strip()) < min_len:
+      return '', False, ''
+    if "```python" not in python:
+      python = "```python"+python
+    if "`" not in python[-100:]:
+      python = python + "```"
+    code = python.split("```python")[1]
+    if code.count("```") > 1:
+      code = code.split("```")[1]
+    code = code.split("`")[0].strip("\n ")
+    if len(code.strip()) < min_len:
+      return '', False, ''
+    # TODO: do heuristic check for gabage code
+    is_valid, err_str = check_python_syntax(code)
+    if not is_valid and "'" in code:
+      code2 = code.replace("'", "\"")
+      is_valid, err_str = check_python_syntax(code2)
+      if is_valid:
+          code = code2
+    if not is_valid:
+      code = "\n".join(code.split("\n")[:-1])
+    if len(code.strip()) < min_len:
+      return '', False, ''
+    is_valid, err_str = check_python_syntax(code)
+    if not is_valid:
+      code = "\ndef ".join(code.split("\ndef ")[:-1])
+    if len(code.strip()) < min_len:
+      return '', False, ''
+    is_valid, err_str = check_python_syntax(code)
+    if not is_valid:
+      code = "\nclass ".join(code.split("\nclass ")[:-1])
+    if len(code.strip()) < min_len:
+      return '', False, ''
+    is_valid, err_str = check_python_syntax(code)
+    if is_valid:
+        code = code.strip()
+        before, after = python.split("```python",1)
+        before = before+"```python"
+        after = "```"+after.split("```",1)[-1]
+        python =  before+"\n"+code+"\n"+after
+    return python, is_valid, err_str
+
+#DANGER OF SQL INJECTION!!
+def check_sqlite_syntax(stmnt, temp_db):
+    for st in stmnt.split(";"):
+        try:
+            temp_db.execute(st)
+        except Exception as e:
+            return False, str(e)
+    return True, ''
+
+def check_js_syntax(js_code):
+    """
+    Check JavaScript code for syntax errors using Node.js
+    
+    Args:
+        js_code (str): JavaScript code to check
+        
+    Returns:
+        tuple: (bool, str) - (is_valid, error_message)
+    """
+    # Create a temporary file to store the JavaScript code
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False) as temp_file:
+        temp_file.write(js_code)
+        temp_filename = temp_file.name
+
+    try:
+        # Use Node.js to parse the JavaScript code
+        process = subprocess.run(
+            ['node', '--check', temp_filename],
+            capture_output=True,
+            text=True
+        )
+        
+        # Check if there were any syntax errors
+        if process.returncode == 0:
+            return True, "JavaScript code is syntactically valid"
+        else:
+            return False, process.stderr.strip()
+            
+    except subprocess.CalledProcessError as e:
+        return False, f"Error running Node.js: {str(e)}"
+    except Exception as e:
+        return False, f"Unexpected error: {str(e)}"
+    finally:
+        # Clean up the temporary file
+        os.unlink(temp_filename)
 
 def execute_python_code(code, mapping):
     """
@@ -1502,10 +1878,10 @@ def execute_python_code(code, mapping):
     try:
         exec(wrapped_code, {"__builtins__": None}, local_locals)
         if 'result' in local_locals:
-            return local_locals['result']
+            return local_locals['result'], ''
         else:
-            print("No 'result' key was found in the local variables after executing the code.")
-            return None
+            #print("No 'result' key was found in the local variables after executing the code.")
+            return None, ''
     except Exception as e:
-        print(f"Error when executing Python code: {e}")
-        return None
+        #print(f"Error when executing Python code: {e}")
+        return None, str(e)

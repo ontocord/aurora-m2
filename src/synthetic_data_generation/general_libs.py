@@ -11,12 +11,11 @@ import spacy
 import scispacy
 
 
-subprocess.run(["python", "-m", "wn", "download", "oewn:2023"])
-subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
-
 en_wn = wn.Wordnet('oewn:2023', lemmatizer=Morphy())
-sci_spacy = spacy.load("en_ner_bc5cdr_md")
 spacy_nlp = spacy.load('en_core_web_sm')
+spacy_nlp = spacy.load('en_core_web_sm')    
+#sci_spacy = spacy.load("en_ner_bc5cdr_md")
+
 
 
 def getpreferredencoding(do_setlocale=True):

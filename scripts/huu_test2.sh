@@ -29,15 +29,16 @@ mkdir -p $directory
 echo 'generating autoredteam data'
 
 #srun --mpi=list
+#      --LLM_small_model artificialguybr/Qwen2.5-0.5B-OpenHermes2.5 \
 
-srun python -m src.create_multimodal_data \
-      --batch_size 20 \
-      --task generate_autoredteam \
-      --LLM_small_model artificialguybr/Qwen2.5-0.5B-OpenHermes2.5 \
-      --use_LLM_size medium \
-      --cache_dir $cache_dir \
-      --output_dir $directory \
-      --output_path $directory/autoredteam.jsonl  \
+
+#srun python -m src.create_multimodal_data \
+#      --batch_size 20 \
+#      --task generate_autoredteam \
+#      --use_LLM_size medium \
+#      --cache_dir $cache_dir \
+#      --output_dir $directory \
+#      --output_path $directory/autoredteam.jsonl  \
 
 
 #     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-5902856173521346022-881c09c0-8d26-4696-ab27-ae38e76eef3e-4766908-1-c000.parquet \
@@ -46,12 +47,12 @@ srun python -m src.create_multimodal_data \
 
 #echo 'creating captions'
 #and people images from commoncatalog'
-#srun python -m src.create_multimodal_data \
-#     --task generate_captions_then_filter_people_images \
-#     --input_dir /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/ \
-#     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-4706868160279389178-bbe490c0-37b3-4c20-a536-22eb9efb5fea-74701-1-c000.parquet \
-#     --output_dir $directory \
-#     --output_path $directory/commoncatalog_captions.jsonl     
+srun python -m src.create_multimodal_data \
+     --task generate_captions_then_filter_people_images \
+     --input_dir /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/ \
+     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-4706868160279389178-bbe490c0-37b3-4c20-a536-22eb9efb5fea-74701-1-c000.parquet \
+     --output_dir $directory \
+     --output_path $directory/commoncatalog_captions.jsonl     
 
 
 

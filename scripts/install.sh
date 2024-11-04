@@ -1,0 +1,14 @@
+module load cuda
+module load git-lfs
+pip install torch==2.4.0
+pip install flash-attn>=2.6.3
+cd ../../llm-foundry
+pip install -e ".[gpu]"
+cd ../safellm/
+pip install -r requirements.txt
+python -m wn download oewn:2023
+python -m spacy download en_core_web_sm
+cd ../llm-foundry
+pip install -e ".[gpu]"
+cd ../safellm/scripts
+

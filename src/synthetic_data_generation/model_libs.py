@@ -41,11 +41,11 @@ from .prompt_config import (
 )
 
 
-subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
-if not os.path.exists("./riverbed"):
-    subprocess.run(["git", "clone", "https://huggingface.co/ontocord/riverbed"])
-if not os.path.exists("fasttext_model.bin"):
-    subprocess.run(["wget", "http://dl.turkunlp.org/register-labeling-model/fasttext_model.bin"])
+#subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
+#if not os.path.exists("./riverbed"):
+#    subprocess.run(["git", "clone", "https://huggingface.co/ontocord/riverbed"])
+#if not os.path.exists("fasttext_model.bin"):
+#    subprocess.run(["wget", "http://dl.turkunlp.org/register-labeling-model/fasttext_model.bin"])
 
 
 # tested on these models
@@ -344,15 +344,6 @@ class MyFilter(Filter):
           yield t
           t.text = t.text[:5]
         yield t
-
-try:
-  if qp is None: assert False
-except:
-  bm25_dir = "./riverbed"
-  index = whoosh_index.open_dir(bm25_dir)
-  searcher = index.searcher()
-  qp = QueryParser("content", schema=index.schema)
-
 
 def get_tokens_as_list(word_list):
     "Converts a sequence of words into a list of tokens"

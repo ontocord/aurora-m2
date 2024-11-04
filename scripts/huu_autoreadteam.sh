@@ -26,21 +26,12 @@ cache_dir="/leonardo_work/EUHPC_E03_068/.cache"
 directory="/leonardo_work/EUHPC_E03_068/staging_data/huu-commoncatalog-test"
 mkdir -p $directory
 
+echo 'generating autoredteam data'
 
-
-echo 'creating captions from commoncatalog'
 srun python -m src.create_multimodal_data \
-     --task generate_captions_then_filter_people_images_from_commoncatalog \
-     --input_dir /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/ \
-     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-6066117112843696575-22627380-9161-4c5a-b773-d9113a6f5744-75336-1-c000.parquet \
-     --output_dir $directory \
-     --output_path $directory/commoncatalog_recaption.jsonl     
-
-#echo 'creating images'
-#srun python -m src.create_multimodal_data \
-#     --task generate_images \
-#     --input_dir $directory \
-#     --output_dir $directory \
-#     --input_path $directory/commoncatalog_recaption*.jsonl \
-#     --output_path $directory/commoncatalog_image_with_recaption.jsonl
-
+      --batch_size 15 \
+      --task generate_autoredteam_small \
+      --use_LLM_size medium \
+      --cache_dir $cache_dir \
+      --output_dir $directory \
+      --output_path $directory/autoredteam.jsonl  \

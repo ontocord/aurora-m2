@@ -23,24 +23,24 @@ cache_dir="/leonardo_work/EUHPC_E03_068/.cache"
 
 #/leonardo_scratch/fast/EUHPC_E03_068/.cache"
 
-directory="/leonardo_work/EUHPC_E03_068/staging_data/huu-commoncatalog-test"
+directory="/leonardo_work/EUHPC_E03_068/staging_data/huu-stories-test"
 mkdir -p $directory
 
+#     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-5902856173521346022-881c09c0-8d26-4696-ab27-ae38e76eef3e-4766908-1-c000.parquet \
 
-
-echo 'creating captions from commoncatalog'
-srun python -m src.create_multimodal_data \
-     --task generate_captions_then_filter_people_images_from_commoncatalog \
-     --input_dir /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/ \
-     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-6066117112843696575-22627380-9161-4c5a-b773-d9113a6f5744-75336-1-c000.parquet \
-     --output_dir $directory \
-     --output_path $directory/commoncatalog_recaption.jsonl     
-
-#echo 'creating images'
+#echo 'creating captions from commoncatalog'
 #srun python -m src.create_multimodal_data \
-#     --task generate_images \
-#     --input_dir $directory \
+#     --task generate_stories \
+#     --input_dir /leonardo_work/EUHPC_E03_068/staging_data/fineweb_test \
+#     --input_path /leonardo_work/EUHPC_E03_068/staging_data/fineweb_test/CC-MAIN-2013-20_1000.jsonl \
 #     --output_dir $directory \
-#     --input_path $directory/commoncatalog_recaption*.jsonl \
-#     --output_path $directory/commoncatalog_image_with_recaption.jsonl
+#     --output_path $directory/stories.jsonl     
+
+echo 'creating images and captions'
+srun python -m src.create_multimodal_data \
+     --task generate_images_then_captions \
+     --input_dir $directory \
+     --output_dir $directory \
+     --input_path $directory/stories.jsonl \
+     --output_path $directory/stories_with_image_and_recaption.jsonl
 

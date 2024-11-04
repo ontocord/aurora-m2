@@ -36,11 +36,11 @@ srun python -m src.create_multimodal_data \
      --output_dir $directory \
      --output_path $directory/commoncatalog_recaption.jsonl     
 
-#echo 'creating images'
-#srun python -m src.create_multimodal_data \
-#     --task generate_images \
-#     --input_dir $directory \
-#     --output_dir $directory \
-#     --input_path $directory/commoncatalog_recaption*.jsonl \
-#     --output_path $directory/commoncatalog_image_with_recaption.jsonl
+echo 'creating images'
+srun python -m src.create_multimodal_data \
+     --task generate_images \
+     --input_dir $directory \
+     --output_dir $directory \
+     --input_path $directory/commoncatalog_recaption*.jsonl \
+     --output_path $directory/commoncatalog_image_with_recaption.jsonl
 
