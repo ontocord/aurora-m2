@@ -1,0 +1,3 @@
+[submodule "src/frcnn"]
+	path = src/frcnn
+	url = https://huggingface.co/ontocord/frcnn
