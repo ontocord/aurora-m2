@@ -71,13 +71,84 @@ if False:
 #model = LlavaForConditionalGeneration.from_pretrained('AIML-TUDA/LlavaGuard-v1.1-7B-hf', cache_dir=cache_dir)
 #processor = AutoProcessor.from_pretrained('AIML-TUDA/LlavaGuard-v1.1-7B-hf', cache_dir=cache_dir)
 #print (model)
+#model_name = "cognitivecomputations/dolphin-2.9.2-Phi-3-Medium"
+import ctranslate2
+langs = ['mul']
 
+['bg',
+ 'hr',
+ 'cs',
+ 'da',
+ 'nl',
+# 'en',
+ 'et',
+ 'fi',
+ 'fr',
+ 'de',
+ 'el',
+ 'hu',
+ 'ga',
+ 'it',
+ 'lv',
+ 'lt',
+ 'mt',
+ 'pl',
+ 'pt',
+ 'ro',
+ 'sk',
+ 'sl',
+ 'es',
+ 'sv', 'vi', 'zh', 'ar', 'ru', 'hi', 'ar', 'sw', 'jap', 'ko', 'id']
+
+for lang in langs:
+    if not os.path.exists(f"{cache_dir}opus-mt-en-{lang}"):
+        try:
+            os.system(f"ct2-transformers-converter --model HPLT/translate-en-{lang}-v1.0-hplt_opus --output_dir {cache_dir}opus-mt-en-{lang}")
+            transformers.AutoTokenizer.from_pretrained(f"HPLT/translate-en-{lang}-v1.0-hplt_opus", cache_dir=cache_dir)
+        except:
+            try:
+                os.system(f"ct2-transformers-converter --model Helsinki-NLP/opus-mt-en-{lang} --output_dir {cache_dir}opus-mt-en-{lang}")
+                transformers.AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-"+lang, cache_dir=cache_dir)
+            except:
+                try:
+                    os.system(f"ct2-transformers-converter --model Helsinki-NLP/opus-mt-tc-big-en-{lang} --output_dir {cache_dir}opus-mt-en-{lang}")
+                    transformers.AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-tc-big-en-"+lang, cache_dir=cache_dir)
+                except:
+                    print (f"NO MODEL FOR en-{lang}")
+                    pass
+    if not os.path.exists(f"{cache_dir}opus-mt-{lang}-en"):
+        try:
+            os.system(f"ct2-transformers-converter --model HPLT/translate-{lang}-en-v1.0-hplt_opus --output_dir {cache_dir}opus-mt-{lang}-en")
+            transformers.AutoTokenizer.from_pretrained(f"HPLT/translate-{lang}-en-v1.0-hplt_opus", cache_dir=cache_dir)
+        except:
+            try:
+                os.system(f"ct2-transformers-converter --model Helsinki-NLP/opus-mt-{lang}-en --output_dir {cache_dir}opus-mt-{lang}-en")
+                transformers.AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-"+lang+"-en", cache_dir=cache_dir)            
+            except:
+                try:
+                    os.system(f"ct2-transformers-converter --model Helsinki-NLP/opus-mt-tc-big-{lang}-en --output_dir {cache_dir}opus-mt-{lang}-en")
+                    transformers.AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-tc-big-"+lang+"-en", cache_dir=cache_dir)
+                except:
+                    print (f"NO MODEL FOR {lang}-en")                    
+                    pass
+
+
+if False:
+    
+    model_name="nhyha/N3N_gemma-2-9b-it_20241029_1532"
+    model_name = "jsgreenawalt/gemma-2-9B-it-advanced-v2.1"
+    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True, cache_dir=cache_dir)
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        trust_remote_code=True, cache_dir=cache_dir)
+
+if False:
 # This AutoModel wrapper class automatically monkey-patches the
 # model with the optimized Liger kernels if the model is supported.
-for model_name in  [ "multimodalart/Florence-2-large-no-flash-attn", "microsoft/Florence-2-large",]:
-    model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir, trust_remote_code=True) 
+    for model_name in  [ "multimodalart/Florence-2-large-no-flash-attn", "microsoft/Florence-2-large",]:
+        model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir, trust_remote_code=True) 
 #transformers==4.43.4
-if True:
+if False: 
   for model_name in  ["Qwen/Qwen2.5-Coder-7B-Instruct", "Qwen/Qwen2.5-Math-7B-Instruct", "NousResearch/Hermes-3-Llama-3.1-8B", "Lyte/Llama-3.2-3B-Overthinker", "artificialguybr/Qwen2.5-0.5B-OpenHermes2.5", "Qwen/Qwen2.5-3B-Instruct", "multimodalart/Florence-2-large-no-flash-attn", "microsoft/Florence-2-large", "argilla/CapybaraHermes-2.5-Mistral-7B", "llamas-community/LlamaGuard-7b", "HuggingFaceH4/zephyr-7b-beta", "alpindale/Llama-Guard-3-1B", "NousResearch/Hermes-3-Llama-3.1-8B", "Lyte/Llama-3.2-3B-Overthinker",  "teknium/OpenHermes-2.5-Mistral-7B"]:
     print (model_name)
     #model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir)

@@ -1,3 +1,4 @@
+import ctranslate2
 import json
 import time
 import argparse
@@ -87,9 +88,18 @@ small_evaluator_model = None
 small_evaluator_tokenizer = None
 VLM_evaluator_model = None
 VLM_evaluator_processor = None
-
+translation_models = {}
+translation_tokenizers = {}
 model_registry = {}
 tokenizer_registry = {}
+
+def get_translation_model_tokenizer(src_lang, target_lang):
+  tran = src_lang+"-"+target_lang
+  if tran not in translation_models:
+    translation_models[tran] = ctranslate2.Translator(args.cache_dir+"/opus-mt-"+tran, device="cuda")
+    translation_tokenizers[tran] = transformers.AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-"+tran, cache_dir=args.cache_dir)
+  logger.warning (str(translation_models[tran].device) + " " + str(translation_models[tran].device_index))
+  return translation_models[tran], translation_tokenizers[tran] 
 
 def initialize(args_new=None, task_on_gpu=None):
   """
@@ -144,7 +154,7 @@ Returns:
       small_evaluator_tokenizer, \
       tasks_configs
 
-  asssert args or args_new, "You have to set the args to global or pass in the args to this function"
+  assert args or args_new, "You have to set the args to global or pass in the args to this function"
   
   args = args_new
   device_number = args.device_number
@@ -161,16 +171,18 @@ Returns:
   if spacy_nlp is None: # this could be an config
     spacy_nlp = spacy.load('en_core_web_sm')  # this could be a config
   if device is None:
-    device = os.environ["CUDA_VISIBLE_DEVICES"] = "cuda:"+str(device_number)
+    device  = "cuda:"+str(device_number)
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(device_number)
     logger.warning ('SETTING '+ device)
-    
+
+      
   #TODO: test to see if fa2 really does make things faster or not. from our prelimnary tests, there were no differences
   if 'image_generator' in models_needed and image_generator is None:
     # is there a way to pass params to the initializer??
     logger.warning (f'CREATING {args.image_generator_model} MODEL '+ device)
     if 'black-forest-labs/FLUX.1-schnell' in args.image_generator_model:
       if model_registry.get(args.image_generator_model) is None:
-        model_registry[args.image_generator_model] = image_generator = FluxPipeline.from_pretrained(args.image_generator_model, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2")
+        model_registry[args.image_generator_model] = image_generator = FluxPipeline.from_pretrained(args.image_generator_model, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").to(device)
       image_generator = model_registry[args.image_generator_model] 
     else:
       assert False, f"{args.image_generator_model} not yet supported"
@@ -178,7 +190,7 @@ Returns:
   if 'caption_generator' in models_needed and caption_generator_processor is None:
     if  model_registry.get(args.caption_generator_model) is None:
       logger.warning(f'CREATING {args.caption_generator_model} MODEL')    
-      model_registry[args.caption_generator_model] = caption_generator_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train()
+      model_registry[args.caption_generator_model] = caption_generator_model = AutoModelForCausalLM.from_pretrained(args.caption_generator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
       tokenizer_registry[args.caption_generator_model] = caption_generator_processor = AutoProcessor.from_pretrained(args.caption_generator_model, trust_remote_code=True, cache_dir=args.cache_dir)
     caption_generator_model  = model_registry[args.caption_generator_model] = caption_generator_model
     caption_generator_processor = tokenizer_registry[args.caption_generator_model]
@@ -186,7 +198,7 @@ Returns:
   if (("LLM_model" in models_needed)  or 'LLM_small' in models_needed) and 'small' in args.use_LLM_size  and LLM_small_tokenizer is None:
     if model_registry.get(args.LLM_small_model) is None:        
       logger.warning(f'CREATING {args.LLM_small_model} MODEL')    
-      model_registry[args.LLM_small_model] = LLM_small_model = AutoModelForCausalLM.from_pretrained(args.LLM_small_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train()
+      model_registry[args.LLM_small_model] = LLM_small_model = AutoModelForCausalLM.from_pretrained(args.LLM_small_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
       tokenizer_registry[args.LLM_small_model] = LLM_small_tokenizer = AutoTokenizer.from_pretrained(args.LLM_small_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
     LLM_small_model = model_registry[args.LLM_small_model]
     LLM_small_tokenizer = tokenizer_registry[args.LLM_small_model] 
@@ -194,7 +206,7 @@ Returns:
   if (("LLM_model" in models_needed) or 'LLM_medium' in models_needed) and 'medium' in args.use_LLM_size  and LLM_medium_tokenizer is None:
     if model_registry.get(args.LLM_medium_model) is None:    
       logger.warning(f'CREATING {args.LLM_medium_model} MODEL')    
-      model_registry[args.LLM_medium_model] = LLM_medium_model = AutoModelForCausalLM.from_pretrained(args.LLM_medium_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train()
+      model_registry[args.LLM_medium_model] = LLM_medium_model = AutoModelForCausalLM.from_pretrained(args.LLM_medium_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
       tokenizer_registry[args.LLM_medium_model] = LLM_medium_tokenizer = AutoTokenizer.from_pretrained(args.LLM_medium_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
     LLM_medium_model = model_registry[args.LLM_medium_model]
     LLM_medium_tokenizer = tokenizer_registry[args.LLM_medium_model] 
@@ -202,7 +214,7 @@ Returns:
   if (("LLM_model" in models_needed) or 'LLM_large' in models_needed) and 'large' in args.use_LLM_size  and LLM_large_tokenizer is None:
     if model_registry.get(args.LLM_large_model) is None:
       logger.warning(f'CREATING {args.LLM_large_model} MODEL')    
-      model_registry[args.LLM_large_model] = LLM_large_model = AutoModelForCausalLM.from_pretrained(args.LLM_large_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train()
+      model_registry[args.LLM_large_model] = LLM_large_model = AutoModelForCausalLM.from_pretrained(args.LLM_large_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
       tokenizer_registry[args.LLM_large_model] = LLM_large_tokenizer = AutoTokenizer.from_pretrained(args.LLM_large_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
     LLM_large_model = model_registry[args.LLM_large_model]
     LLM_large_tokenizer = tokenizer_registry[args.LLM_large_model] 
@@ -220,7 +232,7 @@ Returns:
   if (("quality_ref_model" in models_needed)) and quality_ref_model is None:
     if model_registry.get(args.quality_ref_model) is None:    
       logger.warning(f'CREATING {args.quality_ref_model} MODEL')
-      model_registry[args.quality_ref_model] = quality_ref_model = AutoModelForCausalLM.from_pretrained(args.quality_ref_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train()
+      model_registry[args.quality_ref_model] = quality_ref_model = AutoModelForCausalLM.from_pretrained(args.quality_ref_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
       tokenizer_registry[args.quality_ref_model] = quality_ref_tokenizer = AutoTokenizer.from_pretrained(args.quality_ref_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
     quality_ref_model = model_registry[args.quality_ref_model]
     quality_ref_tokenizer = tokenizer_registry[args.quality_ref_model]
@@ -228,7 +240,7 @@ Returns:
   if (("LLM_redteam_target" in models_needed)) and LLM_redteam_target_model is None:
     if model_registry.get(args.LLM_redteam_target_model) is None:    
       logger.warning(f'CREATING {args.LLM_redteam_target_model} MODEL')
-      model_registry[args.LLM_redteam_target_model] = LLM_redteam_target_model = AutoModelForCausalLM.from_pretrained(args.LLM_redteam_target_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train()
+      model_registry[args.LLM_redteam_target_model] = LLM_redteam_target_model = AutoModelForCausalLM.from_pretrained(args.LLM_redteam_target_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
       tokenizer_registry[args.LLM_redteam_target_model] = LLM_redteam_target_tokenizer = AutoTokenizer.from_pretrained(args.LLM_redteam_target_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
     LLM_redteam_target_model = model_registry[args.LLM_redteam_target_model]
     LLM_redteam_target_tokenizer = tokenizer_registry[args.LLM_redteam_target_model]
@@ -236,7 +248,7 @@ Returns:
   if (("LLM_code" in models_needed)) and LLM_code_model is None:
     if model_registry.get(args.LLM_code_model) is None:    
       logger.warning(f'CREATING {args.LLM_code_model} MODEL')
-      model_registry[args.LLM_code_model] = LLM_code_model = AutoModelForCausalLM.from_pretrained(args.LLM_code_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train()
+      model_registry[args.LLM_code_model] = LLM_code_model = AutoModelForCausalLM.from_pretrained(args.LLM_code_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
       tokenizer_registry[args.LLM_code_model] = LLM_code_tokenizer = AutoTokenizer.from_pretrained(args.LLM_code_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
     LLM_code_model = model_registry[args.LLM_code_model]
     LLM_code_tokenizer = tokenizer_registry[args.LLM_code_model]
@@ -244,7 +256,7 @@ Returns:
   if (("LLM_math" in models_needed)) and LLM_math_model is None:
     if model_registry.get(args.LLM_math_model) is None:    
       logger.warning(f'CREATING {args.LLM_math_model} MODEL')
-      model_registry[args.LLM_math_model] = LLM_math_model = AutoModelForCausalLM.from_pretrained(args.LLM_math_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train()
+      model_registry[args.LLM_math_model] = LLM_math_model = AutoModelForCausalLM.from_pretrained(args.LLM_math_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
       tokenizer_registry[args.LLM_math_model] = LLM_math_tokenizer = AutoTokenizer.from_pretrained(args.LLM_math_model, trust_remote_code=True, cache_dir=args.cache_dir, padding_side='left')
     LLM_math_model = model_registry[args.LLM_math_model]
     LLM_math_tokenizer = tokenizer_registry[args.LLM_math_model]
@@ -253,7 +265,7 @@ Returns:
     if model_registry.get(args.image_text_score_model) is None:        
       logger.warning(f'CREATING {args.image_text_score_model} MODEL')
       if 'openai/clip' in args.image_text_model:
-        model_registry[args.image_text_score_model] = image_text_model = CLIPModel.from_pretrained(args.image_text_score_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir).eval()
+        model_registry[args.image_text_score_model] = image_text_model = CLIPModel.from_pretrained(args.image_text_score_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir).eval().to(device)
         tokenizer_registry[args.image_text_score_model] = image_text_processor = CLIPProcessor.from_pretrained(args.image_text_score_model, cache_dir=args.cache_dir)
       else:
         assert False, f"{args.image_text_score_model} not yet supported"
@@ -266,7 +278,7 @@ Returns:
       if "unc-nlp/frcnn-vg-finetuned" in args.box_segmenter_model:
         frcnn_config = json.load(open(args.box_segmenter_config_path)) 
         frcnn_config = FRCNNConfig(frcnn_config)
-        model_registry[args.box_segementer_model] = box_segmentation_model= GeneralizedRCNN.from_pretrained(args.box_segementer_model, frcnn_config, trust_remote_code=True, cache_dir=args.cache_dir).half().eval()
+        model_registry[args.box_segementer_model] = box_segmentation_model= GeneralizedRCNN.from_pretrained(args.box_segementer_model, frcnn_config, trust_remote_code=True, cache_dir=args.cache_dir).half().eval().to(device)
         tokenizer_registry[args.box_segementer_model] = box_detect_image_preprocessor= FRCNNPreprocess(frcnn_config).half().cuda()
       else:
         assert False, f"{args.box_segmenter_model} not yet supported"
@@ -277,7 +289,7 @@ Returns:
     if model_registry.get(args.evaluator_model) is None:
       logger.warning(f'CREATING {args.evaluator_model} MODEL')    
       if "LlamaGuard-7b" in args.evaluator_model:
-        model_registry[args.evaluator_model] = evaluator_model = AutoModelForCausalLM.from_pretrained(args.evaluator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").eval()
+        model_registry[args.evaluator_model] = evaluator_model = AutoModelForCausalLM.from_pretrained(args.evaluator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").eval().to(device)
         tokenizer_registry[args.evaluator_model] = evaluator_tokenizer = AutoTokenizer.from_pretrained(args.evaluator_model, trust_remote_code=True, cache_dir=args.cache_dir)
       else:
         assert False, f"{args.evaluator_model} not yet supported"
@@ -288,7 +300,7 @@ Returns:
     if model_registry.get(args.small_evaluator_model) is None:
       logger.warning(f'CREATING {args.small_evaluator_model} MODEL')    
       if "Llama-Guard-3-1B" in args.small_evaluator_model:
-        model_registry[args.small_evaluator_model] =small_evaluator_model = AutoModelForCausalLM.from_pretrained(args.small_evaluator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").eval()
+        model_registry[args.small_evaluator_model] =small_evaluator_model = AutoModelForCausalLM.from_pretrained(args.small_evaluator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").eval().to(device)
         tokenizer_registry[args.small_evaluator_model] =small_evaluator_tokenizer = AutoTokenizer.from_pretrained(args.small_evaluator_model, trust_remote_code=True, cache_dir=args.cache_dir)
       else:
         assert False, f"{args.small_evaluator_model} not yet supported"
@@ -299,7 +311,7 @@ Returns:
     if model_registry.get(args.VLM_evaluator_model) is None:
       logger.warning(f'CREATING {args.VLM_evalurator_model} MODEL')    
       if "AIML-TUDA/LlavaGuard-v1.1-7B-hf" in args.VLM_evalurator_model:
-        model_registry[args.VLM_evaluator_model] = VLM_evaluator_model = LlavaForConditionalGeneration.from_pretrained(args.VLM_evalurator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").eval()
+        model_registry[args.VLM_evaluator_model] = VLM_evaluator_model = LlavaForConditionalGeneration.from_pretrained(args.VLM_evalurator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").eval().to(device)
         tokenizer_registry[args.VLM_evaluator_model] = VLM_evaluator_processor = AutoProcessor.from_pretrained(args.VLM_evalurator_model, trust_remote_code=True, cache_dir=args.cache_dir)
       else:
         assert False, f"{args.VLM_evaluator_model} not yet supported"
@@ -310,7 +322,7 @@ Returns:
     if model_registry.get(args.VLM_model) is None:
       logger.warning(f'CREATING {args.VLM_model} MODEL')    
       if "OpenGVLab/InternVL2-4B" in args.VLM_evalurator_model:
-        model_registry[args.VLM_model] = VLM_model = LlavaForConditionalGeneration.from_pretrained(args.VLM_evalurator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train()
+        model_registry[args.VLM_model] = VLM_model = LlavaForConditionalGeneration.from_pretrained(args.VLM_evalurator_model, trust_remote_code=True, torch_dtype=torch.bfloat16, cache_dir=args.cache_dir, attn_implementation="flash_attention_2").train().to(device)
         tokenizer_registry[args.VLM_model] = VLM_processor = AutoProcessor.from_pretrained(args.VLM_evalurator_model, trust_remote_code=True, cache_dir=args.cache_dir, use_fast=False)
       else:
         assert False, f"{args.VLM_model} not yet supported"
@@ -321,14 +333,15 @@ Returns:
     if not hasattr(tokenizer, "pad_token") or not tokenizer.pad_token:
       if hasattr(tokenizer, "eos_token") and tokenizer.eos_token:
         tokenizer.pad_token = tokenizer.eos_token
+  if False: # experimental just in time offload to cpu
+    for model_name, model in model_registry.items():
+      if model_name not in models_needed and model_name not in models_needed_gpu:
+        model = model.cpu()
+      elif model_name not in models_needed_gpu:
+        model =  model.cpu()
+      elif model_name in models_needed_gpu:
+        model = model.to(device)
 
-  for model_name, model in model_registory.items():
-    if model_name not in models_needed and model_name not in models_needed_gpu:
-      model = model.cpu()
-    elif model_name not in models_needed_gpu:
-      model =  model.cpu()
-    elif model_name in models_needed_gpu:
-      model = model.to(device)
   return device
 
 # we measure the perplexity of text with respect to the perplexity of
@@ -406,7 +419,7 @@ Returns:
     arg2.device_number = device_number
     initializer_args.append(arg2)
   for arg2, gpu_device in zip(initializer_args, pool.map(initialize, initializer_args, chunksize=1)):
-    assert f"cuda:{arg2.device_number}" == gpu_device, "Something went wrong with GPU assignment"
+    assert f"cuda:{arg2.device_number}" == gpu_device, f"Something went wrong with GPU assignment {gpu_device}, cuda:{arg2.device_number}"
   init_time = time.time() - t0  
   logger.warning(f"Initializing gpus and models took {init_time} secs")
   return init_time
@@ -466,7 +479,8 @@ Returns:
             caption = "<".join(caption[:-1])
           elif "<" in caption and ">" in caption: 
             if " " not in caption.split(">",1)[0].split("<",1)[-1]: # we might have captions that have <> and not tags? probably do a regex or test??
-              assert False, "<image> or other media tags must occur before or after the caption, and not within the caption"
+              logger.warning( "<image> or other media tags must occur before or after the caption, and not within the caption :" + str(caption))
+            template = template+"<caption>{CAPTION_"+str(j)+"}</caption>"+t.split("</caption>",1)[-1]            
           else:
             template = template+"<caption>{CAPTION_"+str(j)+"}</caption>"+t.split("</caption>",1)[-1]            
           params_hash[f"CAPTION_{j}"] = caption
@@ -475,7 +489,7 @@ Returns:
           template = template + t
           new_text = new_text + t
     data['text'] = new_text
-    #logger.warning ("2 "+ data['text'])
+    logger.warning ("2 "+ data['text'])
     caption_template_hash[data['_tmp_idx']] = template
     params_template_hash[data['_tmp_idx']] = params_hash
     
@@ -1218,7 +1232,7 @@ Returns:
     if len(data['text']) < 100:
       original_text = [data['text']]
     else:
-      text_arr = data['text'].split(".")
+      text_array = data['text'].split(".")
       if len(text_array) <= 5:
         original_text = [data['text']]
       elif len(text_array) <= 10:
@@ -1358,7 +1372,7 @@ Returns:
   items_processed = len(stories)
 
   for idx, story, prompt in zip(idxs, stories, templatized_prompts):
-    # do error checks and throw-away stories that are garbage
+    # TODO: do error checks and throw-away stories that are garbage
     data = idx2DataHash[idx]
     story = story.split("Title:", 1)[-1]
     data['text'] = story
@@ -1958,7 +1972,7 @@ Returns:
   items_processed = len(revised_responses)
 
   for idx, revised_instr, revised_response, prompt in zip(idxs, revised_instrs, revised_responses, prompts):
-    # do error checks and throw-away garbage
+    # TODO: do error checks and throw-away garbage
     data = idx2DataHash[idx]
 
     if len(revised_instr.split()) <= 2 or len(revised_response.split()) <= 2:
@@ -1969,6 +1983,50 @@ Returns:
     data['metadata']['params']['revised_instruction'] = revised_instr
     data['metadata']['params']['revised_response'] = revised_response
     data['metadata']['params']['revised_instr_response_prompt'] = prompt
+                       
+  problem_idxs = set(problem_idxs)
+  data_list = [data for data in data_list if data['_tmp_idx'] not in problem_idxs]
+  return data_list, model_time, items_processed, list(problem_idxs)
+
+
+def generate_translations(data_list):
+  idx2DataHash = dict([(data['_tmp_idx'], data) for data in data_list])
+  src_lang = args.translation_src_lang
+  target_lang = args.translation_target_lang  
+  model, tokenizer = get_translation_model_tokenizer(src_lang, target_lang)
+  new_batch_size = args.batch_size
+  problem_idxs = []
+  t0 = time.time()
+  idxs = []
+  prompts = []
+  for data in data_list:
+    idx = data['_tmp_idx']
+    text_array = data['text'].split(" ")
+    prev = []
+    for rng in range(0, len(text_array), 100):
+      chunk = text_array[rng: min(len(text_array), rng+100)]
+      has_period = [(i, word) for i, word in enumerate(chunk) if word and word[-1] == '.']
+      if has_period:
+        curr = prev+chunk[:has_period[0][0]+1]
+        prev = chunk[has_period[0][0]+1:]
+      else:
+        curr = prev+chunk
+        prev = []
+      prompts.append(" ".join(curr))
+      idxs.append(idx)
+    data['text'] = data['text'] +"<|endoftext|>"+langs2fullname[src_lang] + " to " + langs2fullname[target_lang] +" machine translation:\n"
+
+  with torch.no_grad():
+    translations = ctranslate2_with_batching(model, tokenizer, prompts, batch_size=new_batch_size)
+  #logger.warning(translations)
+  model_time = time.time()-t0
+  items_processed = len(translations)
+  
+  for idx, orig, translation in zip(idxs, prompts, translations):
+    # TODO: do error checks and throw-away garbage
+    data = idx2DataHash[idx]
+    # fix for languags without spaces
+    data['text'] = (data['text'] + " " + translation).strip()
                        
   problem_idxs = set(problem_idxs)
   data_list = [data for data in data_list if data['_tmp_idx'] not in problem_idxs]
@@ -2223,10 +2281,10 @@ Returns:
     else:
       logger.warning("Seed data has no text field to sort by, so be sure to make the seed_data the same across ranks - nodes")
     # let's shard the seed_data so we don't have too many output files.
-    if seed_shard_size > len(seed_data)//word_size:
-      seed_shard_size = len(seed_data)//word_size
+    if seed_shard_size > len(seed_data)//world_size:
+      seed_shard_size = len(seed_data)//world_size
     for rng in range(0, len(seed_data), seed_shard_size):
-      input_shard_or_files.append(seed[rng:min(len(seed_data), rng+seed_shard_size)])
+      input_shard_or_files.append(seed_data[rng:min(len(seed_data), rng+seed_shard_size)])
   else:
     for arg in args.input_path:
       input_shard_or_files.extend([file for file in glob.glob(arg) if file.endswith(input_file_type)])
@@ -2282,7 +2340,7 @@ Description:
   if os.path.exists(output_file.replace(".jsonl", ".uploaded")):
     os.path.unlink(output_file.replace(".jsonl", ".uploaded"))
     
-def cleanup_and_report_stats(start, all_writers, node_name, rank, items_processed, total_time, num_devices, init_time, all_model_time, data_load_time, save_time, problem_idxs, rank2files):
+def cleanup_and_report_stats(start, all_writers, node_name, rank, items_processed, num_devices, init_time, all_model_time, data_load_time, save_time, problem_idxs, rank2files):
   """
 Clean up resources and log statistics for a distributed data processing task, including performance metrics and problem item details.
 
@@ -2292,7 +2350,6 @@ Args:
     node_name (str): The name of the node executing the task.
     rank (int): The rank of the current process in the distributed system.
     items_processed (int): The total number of data items processed.
-    total_time (float): The total time taken for processing, to be updated.
     num_devices (int): The number of GPUs or devices used in the task.
     init_time (float): Time taken for model initialization.
     all_model_time (float): Total time spent on model inference or processing.
@@ -2355,7 +2412,7 @@ Returns:
         data_load_time += time.time()-t0
         all_writers, save_time, all_model_time, items_processed, problem_idxs = do_all_batches_and_save(output_file=output_file, pool=pool, generate_function=generate_function, all_data=all_data, all_writers=all_writers, save_time=save_time, all_model_time=all_model_time, items_processed=items_processed, problem_idxs=problem_idxs)
         finish_one_output_file(output_file)
-  cleanup_and_report_stats(start, all_writers, node_name, rank, items_processed, total_time, num_devices, init_time, all_model_time, data_load_time, save_time, problem_idxs, rank2files)
+  cleanup_and_report_stats(start, all_writers, node_name, rank, items_processed, num_devices, init_time, all_model_time, data_load_time, save_time, problem_idxs, rank2files)
 
 
 def main_commoncatalog():
@@ -2406,7 +2463,7 @@ Returns:
             data['media_list'] = [Image.open(BytesIO(image.as_py()))  for image in data['media_list']]
         all_writers, save_time, all_model_time, items_processed, problem_idxs = do_all_batches_and_save(output_file=output_file, pool=pool, generate_function=generate_function, all_data=all_data, all_writers=all_writers, save_time=save_time, all_model_time=all_model_time, items_processed=items_processed, problem_idxs=problem_idxs)
         finish_one_output_file(output_file)
-  cleanup_and_report_stats(start, all_writers, node_name, rank, items_processed, total_time, num_devices, init_time, all_model_time, data_load_time, save_time, problem_idxs, rank2files)
+  cleanup_and_report_stats(start, all_writers, node_name, rank, items_processed, num_devices, init_time, all_model_time, data_load_time, save_time, problem_idxs, rank2files)
 
 
 def main_pd12m():
@@ -2455,7 +2512,7 @@ Returns:
             data['text'] = data['text'][:min(len(data['text']), 1000)] # there are some junk captions that have repeating words. clean them up here.
         all_writers, save_time, all_model_time, items_processed, problem_idxs = do_all_batches_and_save(output_file=output_file, pool=pool, generate_function=generate_function, all_data=all_data, all_writers=all_writers, save_time=save_time, all_model_time=all_model_time, items_processed=items_processed, problem_idxs=problem_idxs)
         finish_one_output_file(output_file)
-  cleanup_and_report_stats(start, all_writers, node_name, rank, items_processed, total_time, num_devices, init_time, all_model_time, data_load_time, save_time, problem_idxs, rank2files)
+  cleanup_and_report_stats(start, all_writers, node_name, rank, items_processed, num_devices, init_time, all_model_time, data_load_time, save_time, problem_idxs, rank2files)
 
 
 def main_autoredteam():
@@ -2486,7 +2543,7 @@ def main_autoredteam():
         data_load_time += time.time() - t0
         all_writers, save_time, all_model_time, items_processed, problem_idxs = do_all_batches_and_save(output_file=output_file, pool=pool, generate_function=generate_function, all_data=all_data, all_writers=all_writers, save_time=save_time, all_model_time=all_model_time, items_processed=items_processed, problem_idxs=problem_idxs)
         finish_one_output_file(output_file)
-  cleanup_and_report_stats(start, all_writers, node_name, rank, items_processed, total_time, num_devices, init_time, all_model_time, data_load_time, save_time, problem_idxs, rank2files)
+  cleanup_and_report_stats(start, all_writers, node_name, rank, items_processed, num_devices, init_time, all_model_time, data_load_time, save_time, problem_idxs, rank2files)
 
         
 ### TASK CONFIGS
@@ -2494,6 +2551,7 @@ def main_autoredteam():
 tasks_configs = {"generate_images": {"models_needed": ["image_generator", ], "main_function": main_standard_format, 'generate_function': generate_images},
                  "generate_captions": {"models_needed": ["caption_generator", ], "main_function": main_standard_format, 'generate_function': generate_captions_and_dont_clear_images},
                  "generate_stories": {"models_needed": ["LLM_model"], "main_function": main_standard_format, 'generate_function': generate_stories},
+                 "generate_translations": {"models_needed": [], "main_function": main_standard_format, 'generate_function': generate_translations},                 
                  "generate_math_cot_python_code": {"models_needed": ["LLM_code"], "main_function": main_standard_format, 'generate_function': generate_math_cot_python_code},
                  "generate_python_plus": {"models_needed": ["LLM_code"], "main_function": main_standard_format, 'generate_function': generate_python_plus},
                  "generate_python_plus_with_images": {"models_needed": ["image_generator", "VLM_model"], "main_function": main_standard_format, 'generate_function': generate_python_plus_with_images},                 
@@ -2535,11 +2593,14 @@ def parse_args():
   parser.add_argument("--LLM_code_model", type=str, default="Qwen/Qwen2.5-Coder-7B-Instruct", help="Coder model, hf path.")
   parser.add_argument("--LLM_math_model", type=str, default="Qwen/Qwen2.5-Math-7B-Instruct", help="Math model, hf path.")  
   #parser.add_argument("--LLM_redteam_target_model", type=str, default="failspy/Phi-3-medium-4k-instruct-abliterated-v3", help="Target model to auto-redteam, hf path.")
-  parser.add_argument("--LLM_redteam_target_model", type=str, default="Qwen/Qwen2.5-3B-Instruct", help="Target model to auto-redteam, hf path.")  
+  #parser.add_argument("--LLM_redteam_target_model", type=str, default="Qwen/Qwen2.5-3B-Instruct", help="Target model to auto-redteam, hf path.")
+  parser.add_argument("--LLM_redteam_target_model", type=str, default="ibm-granite/granite-3.0-2b-instruct", help="Target model to auto-redteam, hf path.")
+  #parser.add_argument("--quality_ref_model", type=str, default="ibm-granite/granite-3.0-2b-instruct", help="Small LLM generative model to measure perplexity scores of text, hf path.")  
   parser.add_argument("--quality_ref_model", type=str, default="Qwen/Qwen2.5-1.5B-Instruct", help="Small LLM generative model to measure perplexity scores of text, hf path.")  
   parser.add_argument("--LLM_small_model", type=str, default="Qwen/Qwen2.5-1.5B-Instruct", help="Small LLM generative model hf path.")
+  parser.add_argument("--LLM_medium_model", type=str, default="ibm-granite/granite-3.0-2b-instruct", help="Medium LLM generative model hf path.")  
   #parser.add_argument("--LLM_medium_model", type=str, default="failspy/Phi-3-medium-4k-instruct-abliterated-v3", help="Medium LLM generative model hf path.")
-  parser.add_argument("--LLM_medium_model", type=str, default="Qwen/Qwen2.5-3B-Instruct", help="Medium LLM generative model hf path.")  
+  #parser.add_argument("--LLM_medium_model", type=str, default="Qwen/Qwen2.5-3B-Instruct", help="Medium LLM generative model hf path.")  
   parser.add_argument("--LLM_large_model", type=str, default="Qwen/Qwen2.5-7B-Instruct", help="Large LLM generative model hf path.")
   parser.add_argument("--LLM_max_new_tokens", type=int, default=2048, help="LLM generative model default max new tokens. Can be made shorter by specific generate args and functions.")
   parser.add_argument("--VLM_model", type=str, default="OpenGVLab/InternVL2-4B", help="VLM model hf path.")  
@@ -2551,7 +2612,9 @@ def parse_args():
   parser.add_argument("--box_segementer_model", type=str, default="unc-nlp/frcnn-vg-finetuned", help="Model used to do mox segmentation") 
   parser.add_argument("--evaluator_model", type=str, default="llamas-community/LlamaGuard-7b", help="Evaluator model for generating policy based data")
   parser.add_argument("--small_evaluator_model", type=str, default="alpindale/Llama-Guard-3-1B", help="Small evaluator model for generating policy based data")
-  parser.add_argument("--ignore_done_shards", type=int, default=0, help="Skip over all output shards that have .done files.")      
+  parser.add_argument("--ignore_done_shards", type=int, default=1, help="Skip over all output shards that have .done files.")
+  parser.add_argument("--translation_src_lang", type=str, default='en', help="Source language for translation")
+  parser.add_argument("--translation_target_lang", type=str, default='de', help="Target language for translation")          
   parser.add_argument("--input_dir", type=str, default="", help="Path to the input directory.")    
   parser.add_argument("--output_dir", type=str, default="", help="Path to the output directory.")
   parser.add_argument("--output_path", type=str, default="", help="Path to save output for this step. If there are multiple input files, then the output_path will be output_path+output_suffix_num.jsonl. If no path is provided it will be mirror fom the input path in the output_dir.")

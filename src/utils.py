@@ -52,6 +52,200 @@ except:
 
 
 ### GLOBAL VARIABLES
+langs2fullname = {
+        "af": "Afrikaans",
+        "als": "Tosk Albanian",
+        "am": "Amharic",
+        "an": "Aragonese",
+        "ar": "Arabic",
+        "arz": "Egyptian Arabic",
+        "ast": "Asturian",
+        "as": "Assamese",
+        "av": "Avaric",
+        "azb": "South Azerbaijani",
+        "az": "Azerbaijani",
+        "bar": "Bavarian",
+        "ba": "Bashkir",
+        "bcl": "Central Bikol",
+        "be": "Belarusian",
+        "bg": "Bulgarian",
+        "bh": "Bihari",
+        "bn": "Bengali",
+        "bo": "Tibetan",
+        "bpy": "Bishnupriya",
+        "br": "Breton",
+        "bs": "Bosnian",
+        "bxr": "Russia Buriat",
+        "ca": "Catalan",
+        "cbk": "Chavacano",
+        "ceb": "Cebuano",
+        "ce": "Chechen",
+        "ckb": "Central Kurdish",
+        "cs": "Czech",
+        "cv": "Chuvash",
+        "cy": "Welsh",
+        "da": "Danish",
+        "de": "German",
+        "diq": "Dimli",
+        "dsb": "Lower Sorbian",
+        "dv": "Dhivehi",
+        "el": "Modern Greek",
+        "eml": "Emilian-Romagnol",
+        "en": "English",
+        "eo": "Esperanto",
+        "es": "Spanish",
+        "et": "Estonian",
+        "eu": "Basque",
+        "fa": "Persian",
+        "fi": "Finnish",
+        "frr": "Northern Frisian",
+        "fr": "French",
+        "fy": "Western Frisian",
+        "ga": "Irish",
+        "gd": "Scottish Gaelic",
+        "gl": "Galician",
+        "gn": "Guarani",
+        "gom": "Goan Konkani",
+        "gu": "Gujarati",
+        "he": "Hebrew",
+        "hi": "Hindi",
+        "hr": "Croatian",
+        "hsb": "Upper Sorbian",
+        "ht": "Haitian",
+        "hu": "Hungarian",
+        "hy": "Armenian",
+        "ia": "Interlingua",
+        "id": "Indonesian",
+        "ie": "Interlingue",
+        "ilo": "Iloko",
+        "io": "Ido",
+        "is": "Icelandic",
+        "it": "Italian",
+        "ja": "Japanese",
+        "jbo": "Lojban",
+        "jv": "Javanese",
+        "ka": "Georgian",
+        "kk": "Kazakh",
+        "km": "Central Khmer",
+        "kn": "Kannada",
+        "ko": "Korean",
+        "krc": "Karachay-Balkar",
+        "ku": "Kurdish",
+        "kv": "Komi",
+        "kw": "Cornish",
+        "ky": "Kirghiz",
+        "la": "Latin",
+        "lb": "Luxembourgish",
+        "lez": "Lezghian",
+        "li": "Limburgan",
+        "lmo": "Lombard",
+        "lo": "Lao",
+        "lrc": "Northern Luri",
+        "lt": "Lithuanian",
+        "lv": "Latvian",
+        "mai": "Maithili",
+        "mg": "Malagasy",
+        "mhr": "Eastern Mari",
+        "min": "Minangkabau",
+        "mk": "Macedonian",
+        "ml": "Malayalam",
+        "mn": "Mongolian",
+        "mrj": "Western Mari",
+        "mr": "Marathi",
+        "ms": "Malay",
+        "mt": "Maltese",
+        "mwl": "Mirandese",
+        "my": "Burmese",
+        "myv": "Erzya",
+        "mzn": "Mazanderani",
+        "nah": "Nahuatl languages",
+        "nap": "Neapolitan",
+        "nds": "Low German",
+        "ne": "Nepali",
+        "new": "Newari",
+        "nl": "Dutch",
+        "nn": "Norwegian Nynorsk",
+        "no": "Norwegian",
+        "oc": "Occitan",
+        "or": "Oriya",
+        "os": "Ossetian",
+        "pam": "Pampanga",
+        "pa": "Panjabi",
+        "pl": "Polish",
+        "pms": "Piemontese",
+        "pnb": "Western Panjabi",
+        "ps": "Pushto",
+        "pt": "Portuguese",
+        "qu": "Quechua",
+        "rm": "Romansh",
+        "ro": "Romanian",
+        "ru": "Russian",
+        "sah": "Yakut",
+        "sa": "Sanskrit",
+        "scn": "Sicilian",
+        "sd": "Sindhi",
+        "sh": "Serbo-Croatian",
+        "si": "Sinhala",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "so": "Somali",
+        "sq": "Albanian",
+        "sr": "Serbian",
+        "su": "Sundanese",
+        "sv": "Swedish",
+        "sw": "Swahili",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "tg": "Tajik",
+        "th": "Thai",
+        "tk": "Turkmen",
+        "tl": "Tagalog",
+        "tr": "Turkish",
+        "tt": "Tatar",
+        "tyv": "Tuvinian",
+        "ug": "Uighur",
+        "uk": "Ukrainian",
+        "ur": "Urdu",
+        "uz": "Uzbek",
+        "vec": "Venetian",
+        "vi": "Vietnamese",
+        "vo": "Volapük",
+        "war": "Waray",
+        "wa": "Walloon",
+        "wuu": "Wu Chinese",
+        "xal": "Kalmyk",
+        "xmf": "Mingrelian",
+        "yi": "Yiddish",
+        "yo": "Yoruba",
+        "yue": "Yue Chinese",
+        "zh": "Chinese",
+    }
+
+# These are the aurora-m/safellm languages. The 24 EU langs +  vi, zh, ar, ru, hi, ar, sw, ja, ko, id
+langs = ['bg',
+ 'hr',
+ 'cs',
+ 'da',
+ 'nl',
+# 'en',
+ 'et',
+ 'fi',
+ 'fr',
+ 'de',
+ 'el',
+ 'hu',
+ 'ga',
+ 'it',
+ 'lv',
+ 'lt',
+ 'mt',
+ 'pl',
+ 'pt',
+ 'ro',
+ 'sk',
+ 'sl',
+ 'es',
+ 'sv', 'vi', 'zh', 'ar', 'ru', 'hi', 'ar', 'sw', 'ja', 'ko', 'id']
 
 digits_to_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
                   'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen',
@@ -261,21 +455,60 @@ tasks_template_list = [
 
 ### BASIC UTILITIES
 def get_target_path(shard_path: Path, dst_file_path: Path) -> Path:
+    """
+    Generates the target path for a shard file by appending the shard's filename to the destination directory.
+
+    Args:
+        shard_path (Path): Path of the shard file.
+        dst_file_path (Path): Destination directory for storing the shard.
+
+    Returns:
+        Path: The full target path for the shard in the destination directory.
+    """
     filename = shard_path.name
     return dst_file_path / filename
 
 
 def mark_done(filepath: Path):
+    """
+    Marks a file as completed by creating a '.done' file with the same name.
+
+    Args:
+        filepath (Path): Path of the file to mark as completed.
+
+    Returns:
+        None
+    """
     with open(filepath.with_suffix('.done'), "w") as fp:
         pass
     return
 
 
 def check_done(filepath: Path):
+    """
+    Checks if a file is marked as completed by verifying the presence of a '.done' file.
+
+    Args:
+        filepath (Path): Path of the file to check.
+
+    Returns:
+        bool: True if the '.done' file exists, False otherwise.
+    """
     return filepath.with_suffix('.done').exists()
 
 
 def get_sublist(elements, rank, world_size):
+    """
+    Divides a list of elements into sublists based on the rank and world size.
+
+    Args:
+        elements (list): List of elements to split.
+        rank (int): Rank of the current worker.
+        world_size (int): Total number of workers.
+
+    Returns:
+        list: The sublist for the current rank.
+    """
     # Calculate the number of elements in each sublist
     base_size = len(elements) // world_size
     remainder = len(elements) % world_size
@@ -294,6 +527,15 @@ def get_sublist(elements, rank, world_size):
 
 
 def sort_files_by_number(directory: Path):
+    """
+    Sorts files in a directory based on numerical prefixes in filenames.
+
+    Args:
+        directory (Path): Path to the directory containing the files.
+
+    Returns:
+        List[Path]: Sorted list of file paths in the directory.
+    """
     # Get all files in the directory
     files = os.listdir(directory)
 
@@ -320,6 +562,17 @@ def sort_files_by_number(directory: Path):
 
 
 def split_file(input_filename, output_template, shard_size):
+    """
+    Splits a large file into smaller shard files, each containing a specified number of lines.
+
+    Args:
+        input_filename (str): Path to the input file to split.
+        output_template (str): Template for the output shard filenames.
+        shard_size (int): Number of lines per shard.
+
+    Returns:
+        None
+    """
     with open(input_filename, 'r') as infile:
         shard_number = 1
         lines_in_shard = 0
@@ -340,10 +593,33 @@ def split_file(input_filename, output_template, shard_size):
 
 
 def filter_splits(sorted_shards: List[Path], rank: int, world_size: int) -> List[Path]:
+    """
+    Filters a list of shards, assigning a subset to each rank.
+
+    Args:
+        sorted_shards (List[Path]): List of sorted shard paths.
+        rank (int): Rank of the current worker.
+        world_size (int): Total number of workers.
+
+    Returns:
+        List[Path]: Subset of shard paths assigned to the current rank.
+    """
     return get_sublist(sorted_shards, rank, world_size)
 
 
 def get_splits(path, rank: int, world_size: int, samples_per_shard: int):
+    """
+    Splits a large dataset file into shards and distributes them across multiple workers.
+
+    Args:
+        path (Path): Path to the input dataset file.
+        rank (int): Rank of the current worker.
+        world_size (int): Total number of workers.
+        samples_per_shard (int): Number of samples per shard.
+
+    Returns:
+        List[Path]: List of shard paths assigned to the current rank.
+    """
     path = Path(path)
     donefile = path.with_suffix(".split.done")
     if not donefile.exists():
@@ -362,6 +638,17 @@ def get_splits(path, rank: int, world_size: int, samples_per_shard: int):
 
 
 def download_dataset(path, url, rank):
+    """
+    Downloads a dataset if it does not already exist at the specified path.
+
+    Args:
+        path (str): Local path where the dataset should be saved.
+        url (str): URL to download the dataset from.
+        rank (int): Rank of the current worker; only rank 0 downloads the dataset.
+
+    Returns:
+        None
+    """
     if not os.path.exists(path):
         if rank == 0:
             print("downloading dataset")
@@ -374,12 +661,41 @@ def download_dataset(path, url, rank):
 
 
 def postprocess_hf_results(result: List[Dict[str, List[Dict[str, str]]]], result_key: str = "generated_text", txt_key: str = "content") -> List[str]:
+    """
+    Extracts and returns generated text from Hugging Face model results.
+
+    Args:
+        result (List[Dict[str, List[Dict[str, str]]]]): List of result dictionaries from Hugging Face models.
+        result_key (str): Key in the result dictionary to extract the generated text from.
+        txt_key (str): Key within the result dictionary for accessing text content.
+
+    Returns:
+        List[str]: List of generated text strings.
+    """
     return [r[0][result_key][1][txt_key] for r in result]
 
 def postprocess_vllm_results(results):
+    """
+    Extracts generated text from vLLM model results.
+
+    Args:
+        results (List[RequestOutput]): List of RequestOutput objects from vLLM models.
+
+    Returns:
+        List[str]: List of generated text strings.
+    """
     return [i.outputs[0].text for i in results]
 
 def postprocess_results(results):
+    """
+    Generalized function to post-process model results, handling both Hugging Face and vLLM model outputs.
+
+    Args:
+        results (List): List of results from Hugging Face or vLLM models.
+
+    Returns:
+        List[str]: List of generated text strings.
+    """
     if isinstance(results[0], RequestOutput):
         return postprocess_vllm_results(results)
     else:
@@ -387,7 +703,16 @@ def postprocess_results(results):
 
 
 def chunkify(sequence, n):
-    """Splits a sequence into N roughly equal-sized chunks."""
+    """
+    Splits a sequence into approximately equal-sized chunks.
+
+    Args:
+        sequence (iterable): Sequence to split.
+        n (int): Number of chunks to split into.
+
+    Returns:
+        List[List]: List of chunks, each containing a sublist of the original sequence.
+    """
     sequence = list(sequence)
     deque_sequence = deque(sequence)
     result = []
@@ -409,6 +734,17 @@ data_fields = ['text', 'text_type', 'chosen', 'rejected_list', 'media_list', 'me
 metadata_fields = ['source', 'params']
 
 def standardize_data_fields(data):
+    """
+    Ensures that data adheres to a standardized format, transferring fields to `metadata.params`
+    if they don't match the defined schema. Fields ending in `_list` are initialized as empty lists, 
+    and any extra fields are moved to `metadata.params`.
+
+    Args:
+        data (dict): The input data to standardize.
+
+    Returns:
+        dict: Standardized data dictionary.
+    """
     #make sure the data is in the standard format.
     #move everything to the metadata.params field otherwise
     if 'meta' in data and 'metadata' not in data:
@@ -452,12 +788,30 @@ def standardize_data_fields(data):
     return data
 
 def cleanup_data_batch(curr_data):
+    """
+    Applies `standardize_data_fields` to each item in a batch of data.
+
+    Args:
+        curr_data (list): List of data dictionaries to standardize.
+
+    Returns:
+        list: List of standardized data dictionaries.
+    """
     ret = []
     for data in curr_data:
         ret.append(standardize_data_fields(data))
     return ret
 
 def cleanup_and_serialize_params(data):
+    """
+    Standardizes the data fields and serializes the `metadata.params` field to a JSON string if necessary.
+
+    Args:
+        data (dict): The data dictionary to process.
+
+    Returns:
+        dict: The processed data dictionary.
+    """
     standardize_data_fields(data)    
     if not data['metadata']['params']:
         data['metadata']['params'] = "{}"      
@@ -470,11 +824,29 @@ def cleanup_and_serialize_params(data):
 import re
 
 def non_english_detect(text):
+    """
+    Detects if a text contains any non-English characters based on Unicode ranges.
+
+    Args:
+        text (str): Text to check.
+
+    Returns:
+        bool: True if non-English characters are detected, False otherwise.
+    """
     if re.search("[\u0000-\u00BF]", text):
         return False
     return True
     
 def cjk_detect(text):
+    """
+    Detects if a text contains characters from specific East Asian languages (Chinese, Japanese, Korean, Thai, and Traditional Javanese).
+
+    Args:
+        text (str): Text to check.
+
+    Returns:
+        str or None: Language code if detected; otherwise, None.
+    """
     # chinese
     if re.search("[\u4e00-\u9FFF]", text):
         return "zh"
@@ -493,12 +865,41 @@ def cjk_detect(text):
     return None
 
 def get_cjk_tokens(tokenizer):
+    """
+    Retrieves tokens that correspond to East Asian characters (CJK) from a tokenizer.
+
+    Args:
+        tokenizer: The tokenizer instance.
+
+    Returns:
+        list: List of tokens that correspond to CJK characters.
+    """
     return [tokenizer.decode([idx]) for idx in range(len(tokenizer)) if cjk_detect(tokenizer.decode([idx]))]
 
 def get_non_english_tokens(tokenizer):
+    """
+    Retrieves tokens that correspond to non-English characters from a tokenizer.
+
+    Args:
+        tokenizer: The tokenizer instance.
+
+    Returns:
+        list: List of tokens that correspond to non-English characters.
+    """
     return [tokenizer.decode([idx]) for idx in range(len(tokenizer)) if non_english_detect(tokenizer.decode([idx]))]
 
 def chatml_format_instructions_old(system, instruction, response=""):
+  """
+  Formats instructions and system prompts into a specific structure for chat-based models.
+
+  Args:
+      system (str): System message.
+      instruction (str): User instruction.
+      response (str, optional): Assistant response.
+
+  Returns:
+      str: Formatted string for chat-based models.
+  """
   system= system.strip()
   instruction = instruction.strip()
   if system:
@@ -518,6 +919,23 @@ def chatml_format_instructions_old(system, instruction, response=""):
 {response}"""
 
 def generate_with_batching_old(model, tokenizer, data, device,  use_cache=True, repetition_penalty=1.2, no_repeat_ngram_size=4, max_new_tokens=200, batch_size=5, **args):
+  """
+  Generates text using a model in batches for large datasets, with options to customize caching and repetition penalties.
+
+  Args:
+      model: The language model to use.
+      tokenizer: Tokenizer for encoding the data.
+      data (list): List of input text data.
+      device: Device to run the model on.
+      use_cache (bool, optional): Whether to use cache during generation.
+      repetition_penalty (float, optional): Penalty for repeated tokens.
+      no_repeat_ngram_size (int, optional): Size of n-grams to avoid repeating.
+      max_new_tokens (int, optional): Maximum new tokens to generate per input.
+      batch_size (int, optional): Number of inputs per batch.
+
+  Returns:
+      list: Generated outputs.
+  """
   torch.cuda.empty_cache()
   output = []
   for rng in range(0, len(data), batch_size):
@@ -530,6 +948,18 @@ def generate_with_batching_old(model, tokenizer, data, device,  use_cache=True, 
 
 # formats strings to chat_template accepted by a LLM. 
 def chatml_format_instructions(tokenizer, system, instruction, response=""):
+  """
+  Formats instructions and system prompts using a tokenizer, especially for chat-based models.
+
+  Args:
+      tokenizer: Tokenizer instance with chat template support.
+      system (str): System message.
+      instruction (str): User instruction.
+      response (str, optional): Assistant response.
+
+  Returns:
+      str: Formatted string for chat-based models.
+  """
   system= system.strip()
   instruction = instruction.strip()
   if system:
@@ -555,16 +985,83 @@ def chatml_format_instructions(tokenizer, system, instruction, response=""):
 
 
 def get_tokens_as_list(word_list, tokenizer):
-    "Converts a sequence of words into a list of tokens"
+    """
+    Converts a list of words to token IDs using a tokenizer.
+
+    Args:
+        word_list (list): List of words to tokenize.
+        tokenizer: Tokenizer instance.
+
+    Returns:
+        list: List of token IDs for each word.
+    """
     tokens_list = []
     for word in word_list:
         tokenized_word = tokenizer([word], add_special_tokens=False).input_ids[0]
         tokens_list.append(tokenized_word)
     return tokens_list
 
+def ctranslate2_with_batching(model, tokenizer, batch, repetition_penalty=1.2, batch_size=40):
+    """
+    Generates translations for a batch of inputs using a `ctranslate2` model, supporting repetition penalties 
+    to improve translation quality.
+
+    Args:
+        model: The `ctranslate2` model instance used for generating translations.
+        tokenizer: Tokenizer instance that encodes input text and decodes model outputs.
+        batch (list of str): List of input sentences to translate.
+        repetition_penalty (float, optional): Penalty for repeated tokens. Defaults to 1.2.
+        batch_size (int, optional): Number of sentences to process in each batch. Defaults to 40.
+
+    Returns:
+        list of str: List of translated sentences for each input in the batch.
+    """
+    batch= [tokenizer.convert_ids_to_tokens(tokenizer.encode(lst, max_length=512, truncation=True)) for lst in batch]
+    output =  tokenizer.batch_decode([tokenizer.convert_tokens_to_ids(r.hypotheses[0]) for r in model.translate_batch(batch, max_batch_size=batch_size, repetition_penalty=repetition_penalty)])
+    return output
+
     
 # generate output from a batch of inputs
-def generate_with_batching(model, tokenizer, prompts, use_cache=True, repetition_penalty=1.2,  max_new_tokens=400, batch_size=2, skip_special_tokens=True, return_continuations_only=True, dont_decode_non_english=False, dont_decode_cjk=False, supress_tokens=[], media_list=None, **args):
+def generate_with_batching(model, tokenizer, batch, use_cache=True, repetition_penalty=1.2,  max_new_tokens=400, batch_size=2, skip_special_tokens=True, return_continuations_only=True, dont_decode_non_english=False, dont_decode_cjk=False, supress_tokens=[], media_list=None, **args):
+    """
+    Generates text responses from a language model in batches, allowing for flexible decoding options, token suppression, 
+    and multi-modal support with images.
+
+    This function processes a batch of prompts, optionally handling CJK (Chinese, Japanese, Korean) and non-English 
+    token suppression, image-based context (for multi-modal models), and a customizable repetition penalty to 
+    minimize repeated phrases. Media data (images) can be included for specific model types that support 
+    image-text interaction, such as InternVLM. Each batch is tokenized, processed by the model, and decoded 
+    back to text, optionally removing special tokens and truncating the initial input prompt.
+
+    Args:
+        model: Language model instance for text generation.
+        tokenizer: Tokenizer for encoding and decoding text data.
+        batch (list of str): List of text prompts to generate responses for.
+        use_cache (bool, optional): If True, enables model caching for faster generation. Defaults to True.
+        repetition_penalty (float, optional): Penalty to reduce token repetition in the output. Defaults to 1.2.
+        max_new_tokens (int, optional): Maximum tokens to generate for each prompt. Defaults to 400.
+        batch_size (int, optional): Number of prompts processed together in each batch. Defaults to 2.
+        skip_special_tokens (bool, optional): If True, removes special tokens from the final output. Defaults to True.
+        return_continuations_only (bool, optional): If True, excludes the prompt from the output, keeping only generated text.
+        dont_decode_non_english (bool, optional): If True, suppresses non-English tokens in the generated text.
+        dont_decode_cjk (bool, optional): If True, suppresses CJK (Chinese, Japanese, Korean) tokens in the output.
+        supress_tokens (list of str, optional): List of specific tokens to suppress in the output.
+        media_list (list of lists of PIL.Image, optional): List of images for each prompt, allowing image-text interaction.
+        **args: Additional keyword arguments for the model's `generate` function.
+
+    Returns:
+        list of str: Generated responses for each input prompt in the batch.
+
+    Detailed Behavior:
+        - If `media_list` is provided, it must match the length of `batch`, with each element being a list of images 
+          corresponding to a specific prompt.
+        - If using `dont_decode_cjk` or `dont_decode_non_english`, the function will retrieve these tokens from the 
+          tokenizer if not already cached.
+        - For models supporting image-text interaction (e.g., InternVLM), images in `media_list` are converted to model-usable 
+          formats, and input queries are adjusted to incorporate image tokens.
+        - `bad_words_ids` is constructed to hold any undesired tokens (e.g., from `supress_tokens`, `dont_decode_cjk`, etc.)
+          that should be avoided during generation.
+    """
 
   # this is the InternVL2 batch chat function adapted to our purposes. We don't need to use the conv template because
   # we already send the data into the model in the right chat format.
@@ -638,10 +1135,10 @@ def generate_with_batching(model, tokenizer, prompts, use_cache=True, repetition
   if dont_decode_non_english:
       bad_words_ids.extend(tokenizer.non_english_ids)
   if media_list:
-      assert len(media_list) == len(prompts), "media_list is a list of lists of images for each prompt. the len of media_list must be the same as the len of prompts"
+      assert len(media_list) == len(batch), "media_list is a list of lists of images for each prompt. the len of media_list must be the same as the len of batch"
   with torch.no_grad():
-      for rng in range(0, len(prompts), batch_size):
-          d = prompts[rng:min(len(prompts), rng+batch_size)]
+      for rng in range(0, len(batch), batch_size):
+          d = batch[rng:min(len(batch), rng+batch_size)]
           if media_list and hasattr(model, 'batch_chat') and any(s for s in d if "<image>" in s):
               # this is a internVLM situation
               generation_config = copy.copy(args)
@@ -650,7 +1147,7 @@ def generate_with_batching(model, tokenizer, prompts, use_cache=True, repetition
               generation_config['max_new_tokens'] = max_new_tokens
               if bad_words_ids:
                   generation_config['bad_words_ids']=bad_words_ids
-              imgs = media_list[rng:min(len(prompts), rng+batch_size)]
+              imgs = media_list[rng:min(len(batch), rng+batch_size)]
               pixel_values = []
               num_patches_list = []
               for img_list in enumerate(imgs):
@@ -683,20 +1180,20 @@ def generate_with_batching(model, tokenizer, prompts, use_cache=True, repetition
   # we don't want to empty the cache every generation. this could really slow things down. this should be done per batch i think. to prevent fagmentation
   return output
 
-def chunkify(sequence, n):
-    """Splits a sequence into N roughly equal-sized chunks."""
+# def chunkify(sequence, n):
+#     """Splits a sequence into N roughly equal-sized chunks."""
 
-    deque_sequence = deque(sequence)
-    result = []
-    chunk_size = (len(sequence) + n - 1) // n  # Ceiling division
+#     deque_sequence = deque(sequence)
+#     result = []
+#     chunk_size = (len(sequence) + n - 1) // n  # Ceiling division
 
-    while deque_sequence:
-        chunk = []
-        for _ in range(min(chunk_size, len(deque_sequence))):
-            chunk.append(deque_sequence.popleft())
-        result.append(chunk)
+#     while deque_sequence:
+#         chunk = []
+#         for _ in range(min(chunk_size, len(deque_sequence))):
+#             chunk.append(deque_sequence.popleft())
+#         result.append(chunk)
 
-    return result
+#     return result
 
 ### IMAGE PROCESSING FOR INTERNVLM
 
@@ -704,6 +1201,15 @@ IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
 
 def build_transform(input_size):
+    """
+    Builds a transformation pipeline for image preprocessing, including resizing, normalization, and conversion to tensor format.
+
+    Args:
+        input_size (int): The target size to resize the image to, with dimensions (input_size, input_size).
+
+    Returns:
+        torchvision.transforms.Compose: A composed transform that includes RGB conversion, resizing, tensor conversion, and normalization.
+    """
     MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
     transform = torchvision.transforms.Compose([
         torchvision.transforms.Lambda(lambda img: img.convert('RGB') if img.mode != 'RGB' else img),
@@ -714,6 +1220,19 @@ def build_transform(input_size):
     return transform
 
 def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_size):
+    """
+    Finds the aspect ratio in a list of target ratios that is closest to a given aspect ratio.
+
+    Args:
+        aspect_ratio (float): The aspect ratio of the input image (width / height).
+        target_ratios (list of tuples): A list of target aspect ratios to compare.
+        width (int): The width of the original image.
+        height (int): The height of the original image.
+        image_size (int): The desired size for each image split.
+
+    Returns:
+        tuple: The closest matching aspect ratio from target_ratios.
+    """
     best_ratio_diff = float('inf')
     best_ratio = (1, 1)
     area = width * height
@@ -729,6 +1248,19 @@ def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_
     return best_ratio
 
 def dynamic_preprocess(image, min_num=1, max_num=12, image_size=448, use_thumbnail=False):
+    """
+    Dynamically preprocesses an image by resizing it to the closest matching aspect ratio and splitting it into patches.
+
+    Args:
+        image (PIL.Image): The input image to process.
+        min_num (int, optional): Minimum number of patches. Default is 1.
+        max_num (int, optional): Maximum number of patches. Default is 12.
+        image_size (int, optional): The target size for each patch. Default is 448.
+        use_thumbnail (bool, optional): Whether to add a thumbnail version of the resized image at the end. Default is False.
+
+    Returns:
+        list of PIL.Image: List of image patches.
+    """
     orig_width, orig_height = image.size
     aspect_ratio = orig_width / orig_height
 
@@ -767,6 +1299,17 @@ def dynamic_preprocess(image, min_num=1, max_num=12, image_size=448, use_thumbna
     return processed_images
 
 def preprocess_image_for_internvlm(image, input_size=448, max_num=12):
+    """
+    Preprocesses an image for the InternVLM model, including resizing, patch splitting, and normalization.
+
+    Args:
+        image (PIL.Image): The input image to preprocess.
+        input_size (int, optional): The size of each patch. Default is 448.
+        max_num (int, optional): Maximum number of patches. Default is 12.
+
+    Returns:
+        torch.Tensor: A tensor of shape (num_patches, 3, input_size, input_size) containing normalized image patches.
+    """
     image = image.convert('RGB')
     transform = build_transform(input_size=input_size)
     images = dynamic_preprocess(image, image_size=input_size, use_thumbnail=True, max_num=max_num)
@@ -777,6 +1320,15 @@ def preprocess_image_for_internvlm(image, input_size=448, max_num=12):
 ### FINDING TEXT IN CAPTIONS
 
 def remove_quotes(text):
+  """
+  Removes single quotes in text by replacing them with alternative tokens, then reinstates them with formatting as needed.
+
+  Args:
+      text (str): Text containing quotes to be formatted.
+
+  Returns:
+      str: Formatted text with alternative tokens replacing quotes.
+  """
   text = text = text.replace("\"", "'")
   text = text.replace("'s ", " @s@ ").replace("'ve ", " @ve@ ").replace("'m ", " @m@ ").replace("'t ", " @t@ ")
   ret_text = []
@@ -793,6 +1345,15 @@ def remove_quotes(text):
   return text
 
 def find_quotes(text):
+  """
+  Finds and returns quoted segments of text.
+
+  Args:
+      text (str): The text to search for quoted segments.
+
+  Returns:
+      list of str: List of text segments within single quotes.
+  """
   accum = []
   text = text.replace("'s ", " @s@ ").replace("'ve ", " @ve@ ").replace("'m ", " @m@ ").replace("'t ", " @t@ ")
   for idx, segment in enumerate(text.split("'")):
@@ -803,6 +1364,15 @@ def find_quotes(text):
   return accum
 
 def strip_left_stopwords(e_text):
+  """
+  Removes common stopwords from the left side of a text until a significant word is found.
+
+  Args:
+      e_text (str): The text to strip from the left side.
+
+  Returns:
+      str: Text with left-side stopwords removed.
+  """
   e_text2 = []
   add_rest = False
   for et in e_text.split():
@@ -813,6 +1383,15 @@ def strip_left_stopwords(e_text):
 
 
 def strip_right_stopwords(e_text):
+  """
+  Removes common stopwords from the right side of a text until a significant word is found.
+
+  Args:
+      e_text (str): The text to strip from the right side.
+
+  Returns:
+      str: Text with right-side stopwords removed.
+  """
   e_text2 = []
   add_rest = False
   e_text_arr = e_text.split()
@@ -823,8 +1402,48 @@ def strip_right_stopwords(e_text):
         e_text2.append(et)
   return " ".join(reversed(e_text2))
 
-# remove text like info from captions
-def augment_for_quotes(caption_array, text_cutoff=20):
+def replace_text_in_captions_with_color_rectangles(caption_array, text_cutoff=20):
+    """
+    Current image generators have problems with displaying correct text specified in the prompt. We have developed a method to create a simpler prompt with the text, so that we can insert the text back using standard graphics processing libraries for text.
+
+    The function augments a list of image captions by replacing textual content with descriptions of solid colored rectangles, based on certain patterns and rules.
+
+    This function identifies quotes and specific text patterns within captions. If such text is found, it replaces them with phrases describing the location of solid colored rectangles in the image. It also processes raw captions to introduce additional context or replace text content with visual descriptions.
+
+    A generated image using the generated caption can then be processed with `replace_color_rectangles_with_text` to insert back the text at the location of the colored rectangles.
+
+ 
+    Parameters:
+        caption_array (list of str): List of original captions to process.
+        text_cutoff (int, optional): Maximum length of text to preserve in the caption before replacing it. Default is 20 characters.
+
+    Returns:
+        list of tuples: 
+            Each tuple contains:
+                - A modified caption where specific text elements are replaced with rectangle descriptions.
+                - A second version of the modified caption.
+                - A list of replaced elements, including the rectangle color, its position, and associated text.
+    
+    Example:
+        Input:
+            caption_array = ["At the top, there is the following text 'Hello World'.", "This document states 'Important Notice'."]
+        
+        Output:
+            [
+                ("At the top, there is a large red solid rectangle.", 
+                 "At the top, there is a large red solid rectangle.", 
+                 [('red', [('top', 'Hello World')])]),
+                ("This document with a large blue solid rectangle in the center.", 
+                 "This document with a large blue solid rectangle in the center.", 
+                 [('blue', [('center', 'Important Notice')])])
+            ]
+    
+    Notes:
+        - Specific phrases indicating text positions (e.g., 'At the top') are parsed and replaced.
+        - Randomized colors and rectangle descriptions are added based on available side indicators and predefined colors.
+        - Ensures that textual elements are removed or substituted while keeping the captions contextually meaningful.
+    """
+    
     # Modify the original caption by appending adversarial suffix
     caption_array2 = []
 
@@ -1009,14 +1628,55 @@ def augment_for_quotes(caption_array, text_cutoff=20):
       
     return caption_array2
 
-### FUNCTIONS TO INSERT TEXT INTO IMAGES
+### FUNCTIONS TO INSERT TEXT BACK INTO IMAGES
 # Function to convert a color name to an HSV tuple directly for color detection
 def get_hsv_from_name(color_name):
+    """
+    Converts a color name to its approximate HSV values, calculated from the upper and lower bounds of 
+    the color's HSV range.
+
+    Args:
+        color_name (str): Name of the color (e.g., "red", "blue") as defined in `hsv_color_ranges`.
+
+    Returns:
+        list of int: A list representing the HSV color, where each component (Hue, Saturation, Value) is averaged from 
+                     the color's range boundaries.
+    
+    Example:
+        >>> get_hsv_from_name("red")
+        [120, 255, 255]
+    """
     upper, lower =  hsv_color_ranges.get(color_name)
     return [int(upper[0]+lower[0]/2), int(upper[1]+lower[1]/2), int(upper[2]+lower[2]/2) ]
 
 # Function to map rectangles to relative positions
 def get_position(x, y, w, h, img_width, img_height):
+    """
+    Determines the relative position of a rectangle within an image, based on the rectangle's center point 
+    and the image dimensions.
+
+    Args:
+        x (int): The x-coordinate of the rectangle's top-left corner.
+        y (int): The y-coordinate of the rectangle's top-left corner.
+        w (int): The width of the rectangle.
+        h (int): The height of the rectangle.
+        img_width (int): The width of the image.
+        img_height (int): The height of the image.
+
+    Returns:
+        str: The relative position of the rectangle within the image. Possible values include:
+             'upper left', 'lower left', 'left', 'upper right', 'lower right', 'right', 'top', 'bottom', 'center'.
+    
+    Example:
+        >>> get_position(10, 10, 50, 50, 200, 200)
+        'upper left'
+    
+    Notes:
+        - The image is divided into nine sections based on thirds of the width and height. This allows the function
+          to map the rectangle's center to an approximate position (e.g., 'top', 'bottom', 'center').
+        - If the center is near the left or right thirds, it may be classified as 'left' or 'right'.
+        - Similar logic applies to top, bottom, and center zones of the image.
+    """
     cx, cy = x + w // 2, y + h // 2  # Center of the rectangle
 
     # Determine if the rectangle is primarily aligned on the left, right, top, or bottom
@@ -1042,6 +1702,18 @@ def get_position(x, y, w, h, img_width, img_height):
         return "center"
 
 def create_default_rectangles(img_width, img_height):
+    """
+    Creates default rectangular regions for text insertion at common locations within an image.
+
+    Args:
+        img_width (int): Width of the image.
+        img_height (int): Height of the image.
+
+    Returns:
+        OrderedDict: An ordered dictionary with keys representing relative positions (e.g., 'top', 'bottom', 'center') 
+                     and values representing bounding boxes for each rectangle. Each bounding box is defined as a 
+                     tuple (x, y, width, height).
+    """
     # Create the OrderedDict with the specified order of rectangles
     default_rectangles = OrderedDict([
         ("top", (int(0.01 * img_width), int(0.01 * img_height), int(0.98 * img_width), int(0.2 * img_height))),
@@ -1058,10 +1730,27 @@ def create_default_rectangles(img_width, img_height):
     return default_rectangles
 
 
-# Main function to detect rectangles and assign text. Given a list of
-# [(color, ((position, text) ....], find color rectangles and clear
-# the recatangel to the background color, and write in the text
 def replace_color_rectangles_with_text(image, replace_list, clear_background=True):
+    """
+    Detects colored rectangles in an image and replaces them with associated text.
+
+    This function takes an image and a list of color-text mappings. It identifies the specified colored rectangles in the image, clears the rectangle area if requested, and writes the corresponding text into those areas.
+
+    Parameters:
+        image (PIL.Image): The input image containing colored rectangles.
+        replace_list (list of tuples): A list of tuples where each tuple contains:
+            - A detection color (str).
+            - A list of tuples with position (str) and text (str) to be written.
+        clear_background (bool, optional): If True, the rectangle's background will be cleared to the average image color. Default is True.
+
+    Returns:
+        PIL.Image: The modified image with text written in place of colored rectangles.
+
+    Notes:
+        - The input image is converted between PIL (RGB) and OpenCV (BGR) formats for processing.
+        - Supports multiple colors with associated HSV ranges.
+        - Uses contours to detect rectangles and replaces them with text.
+    """
     # Convert to PIL RGB to cv2, BGR
     original_image = np.array(image)
     original_image = original_image[:, :, ::-1]
@@ -1073,6 +1762,29 @@ def replace_color_rectangles_with_text(image, replace_list, clear_background=Tru
 
 
 def replace_color_rectangles_with_text_bgr(original_image, image, text_list, detection_color="pink", clear_background=True):
+
+    """
+    Processes an image to detect colored rectangles in BGR format and replaces them with text.
+
+    Parameters:
+        original_image (numpy.ndarray): The original image in BGR format.
+        image (numpy.ndarray): A working copy of the image in BGR format to modify.
+        text_list (list of tuples): A list of text items to place in the detected rectangles.
+            Each tuple contains:
+                - position (str): The position label (e.g., "upper right").
+                - text (str): The text to write in the rectangle.
+        detection_color (str, optional): The color to detect in the image. Default is "pink".
+        clear_background (bool, optional): If True, clears the rectangle's background to a uniform color. Default is True.
+
+    Notes:
+        - Detects rectangles in the image by color using HSV thresholds.
+        - If no rectangles are detected, default positions and rectangles are used.
+        - Writes text in the detected or default rectangles.
+        - Supports fallback mechanisms for similar colors (e.g., "magenta" for "pink").
+
+    Returns:
+        None: Modifies the image in-place.
+    """
 
     # Get the HSV range for the specified detection color
     lower_bound, upper_bound = hsv_color_ranges.get(detection_color, hsv_color_ranges["white"])
@@ -1203,6 +1915,24 @@ def replace_color_rectangles_with_text_bgr(original_image, image, text_list, det
 
 
 def get_color_name(rgb_value, tolerance=100):
+    """
+    Finds the closest color name for a given RGB value within a specified tolerance.
+
+    This function loops through a predefined color table (`color_table_bgr`), checking each color to see if it 
+    falls within the specified tolerance of the provided `rgb_value`. If a match is found, the function returns the
+    color name; otherwise, it returns "Unknown color".
+
+    Args:
+        rgb_value (tuple of int): The RGB color value to identify, as a tuple (R, G, B).
+        tolerance (int, optional): Tolerance level for matching the RGB values. Default is 100.
+
+    Returns:
+        str: The name of the closest matching color within the tolerance; "Unknown color" if no match is found.
+
+    Example:
+        >>> get_color_name((200, 0, 0))
+        'red'
+    """
     # Define the color table
 
     def is_within_range(color1, color2, tolerance):
@@ -1218,6 +1948,28 @@ def get_color_name(rgb_value, tolerance=100):
 # Function to draw text inside a rectangle, using random fonts, random justification, random line types, and larger text size
 # NOTE: image is in BGR not RGB
 def draw_text_in_rectangle_bgr(image, rect, text, replace_color, clear_background=True):
+    """
+    Draws text inside a rectangle on an image with configurable styling, including font, alignment, and line thickness.
+
+    The function allows for drawing multiline text within a specified rectangle area on an image. It uses random fonts, 
+    alignments, and line styles, adjusting font size to ensure text fits within the rectangle. The background can be 
+    cleared (filled with `replace_color`) to enhance text visibility.
+
+    Args:
+        image (numpy.ndarray): Image in BGR format.
+        rect (tuple of int): Coordinates and dimensions of the rectangle, as (x, y, width, height).
+        text (str): Text to display within the rectangle, supporting multiline with `\n`.
+        replace_color (tuple of int): Background color for the rectangle, in BGR format.
+        clear_background (bool, optional): If True, fills the background with `replace_color`. Default is True.
+
+    Returns:
+        None: The function modifies the input `image` in-place.
+
+    Notes:
+        - The function automatically adjusts font scale to fit text within the rectangle's width and height.
+        - The font color is selected based on the brightness of `replace_color`.
+        - Justification can be left, center, or right-aligned within the rectangle.
+    """
     x, y, w, h = rect
     # Function to determine if the background color is dark
     def is_color_dark(b, g, r):
@@ -1315,9 +2067,32 @@ def draw_text_in_rectangle_bgr(image, rect, text, replace_color, clear_backgroun
 
 #### CREATE IMAGE + TEXT DATA
 def tokenize_with_chat_template(tokenizer, messages):
+  """
+  Tokenizes a list of chat messages using a template provided by the tokenizer.
+
+  Args:
+      tokenizer: Tokenizer instance with support for chat templates.
+      messages (list of dict): List of messages, each represented as a dictionary with 'role' and 'content' keys.
+
+  Returns:
+      str: Tokenized chat conversation as a single string.
+  """
   return tokenizer.apply_chat_template(messages, tokenize=False)
 
 def tokenize_with_assistant_continuation(tokenizer, messages):
+  """
+  Tokenizes chat messages, returning the content up to the assistant's response without any ending tokens.
+
+  This function adapts the tokenization for assistant responses in chat-based templates. It trims any 
+  standard ending associated with the assistant's response for continuity in conversations.
+
+  Args:
+      tokenizer: Tokenizer instance with support for chat templates and continuation markers.
+      messages (list of dict): List of messages in chat format, each having 'role' and 'content' keys.
+
+  Returns:
+      str: Tokenized message sequence without the assistant's ending token.
+  """
   if not hasattr(tokenizer, "assistant_ending"):
     msg = tokenizer.apply_chat_template([{"role": "user", "content": ""}, {"role": "assistant", "content": "@@@@@@"}], tokenize=False)
     tokenizer.assistant_ending = msg.split("@@@@@@")[-1]
@@ -1334,6 +2109,19 @@ def tokenize_with_assistant_continuation(tokenizer, messages):
   return tokenizer.apply_chat_template(messages, tokenize=False)[:-len(tokenizer.assistant_ending)]
 
 def tokenize_with_user_continuation(tokenizer, messages):
+  """
+  Tokenizes chat messages, returning content up to the user’s response without any ending tokens.
+
+  This function adapts tokenization for user responses in chat-based templates. It trims any standard ending 
+  associated with the user's response to enable continuity in conversations.
+
+  Args:
+      tokenizer: Tokenizer instance with support for chat templates and continuation markers.
+      messages (list of dict): List of messages in chat format, each having 'role' and 'content' keys.
+
+  Returns:
+      str: Tokenized message sequence without the user’s ending token.
+  """
   if not hasattr(tokenizer, "user_ending"):
     msg = tokenizer.apply_chat_template([{"role": "user", "content": ""}, {"role": "assistant", "content": "@@@@@@"}], tokenize=False)
     tokenizer.assistant_ending = msg.split("@@@@@@")[-1]
@@ -1350,6 +2138,15 @@ def tokenize_with_user_continuation(tokenizer, messages):
   return tokenizer.apply_chat_template(messages, tokenize=False)[:-len(tokenizer.user_ending)]
 
 def strip_left_stopwords(e_text):
+  """
+  Removes common stopwords from the start of a text string until reaching a significant word.
+
+  Args:
+      e_text (str): The input text to clean.
+
+  Returns:
+      str: Text with initial stopwords removed.
+  """
   e_text2 = []
   add_rest = False
   for et in e_text.split():
@@ -1359,16 +2156,32 @@ def strip_left_stopwords(e_text):
   return " ".join(e_text2)
 
 def assign_uuid(input_string: str = None) -> uuid.UUID:
-    """Assign a UUID to a string using MD5 hash.
-    
-    input_string: str
-        The string to be hashed.
+    """
+    Generates a UUID for a given string or creates a random UUID if no input is provided.
+
+    If `input_string` is provided, it generates a UUID based on the MD5 hash of the string. 
+    Otherwise, it returns a random UUID.
+
+    Args:
+        input_string (str, optional): Input string to convert to a UUID. Defaults to None.
+
+    Returns:
+        uuid.UUID: The generated UUID.
     """
     if input_string is None:
         return str(uuid.uuid4())
     return uuid.UUID(hashlib.md5(input_string.encode('UTF-8')).hexdigest())
 
 def pil_image_to_base64(image):
+    """
+    Converts a PIL image to a base64-encoded string in PNG format.
+
+    Args:
+        image (PIL.Image): The input image to encode.
+
+    Returns:
+        str: Base64-encoded string of the image in PNG format.
+    """
     buffered = BytesIO()
     image.save(buffered, format="PNG")  # You can change the format if needed (JPEG, etc.)
     img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
@@ -1377,6 +2190,27 @@ def pil_image_to_base64(image):
 #### IMAGE + TEXT FUSION ROUTINES
 
 def cosim_eval(images, texts):
+    """
+    Evaluates the similarity between images and text descriptions using CLIP embeddings and cosine similarity.
+
+    The function calculates the similarity between the image and text features generated by a CLIP model. 
+    It processes images and text to create feature vectors, then computes cosine similarity scores.
+
+    Args:
+        images (list of PIL.Image): List of images for similarity evaluation.
+        texts (list of str): List of text descriptions for each image.
+
+    Returns:
+        torch.Tensor: Cosine similarity scores between image and text features, one score per image-text pair.
+    
+    Example:
+        >>> cosim_eval([image1, image2], ["A cat on a mat", "A dog in the park"])
+        tensor([0.876, 0.543])
+
+    Notes:
+        - Uses the `clip_processor` and `clip_model` for image and text feature extraction.
+        - `cosine_similarity` calculates the similarity scores.
+    """
     # evaluate the generated text by comparing its similarity with flux generated image 
     inputs = clip_processor(images=images, return_tensors="pt")
     clip_vision_output = clip_model.vision_model(**inputs)
@@ -1393,6 +2227,50 @@ def clip_image_to_multitext_score(clip_model, clip_processor, image, text_array,
                                   cls_weight=.9, box_add_factor=.65, decompose_image=True, normalized_boxes=None, \
                                   ignore_from_box=None, num_boxes=5, box_segmentation_model=None, image_preprocessor=None,\
                                   score_cutoff = 0.2):
+  """
+  Computes similarity scores between an image and multiple text elements using CLIP, optionally segmenting the image 
+  into regions and evaluating text-image associations within each region.
+
+  This function supports advanced features like bounding box detection using a segmentation model, decomposing images 
+  into regions, and weighting certain features to refine similarity scoring. By generating similarity scores for 
+  the whole image and its segmented parts, it can highlight associations between text and specific image regions.
+
+  Args:
+      clip_model: CLIP model instance for computing image-text similarity.
+      clip_processor: Processor instance for preparing images and text for the CLIP model.
+      image (PIL.Image or np.array): Input image to analyze.
+      text_array (list of str): List of text descriptions to compare with the image.
+      clip_vision_output (optional): Precomputed vision model output for the image.
+      text_features (optional): Precomputed text features for `text_array`.
+      cls_weight (float, optional): Weight factor for CLS token in decomposed image features.
+      box_add_factor (float, optional): Weight factor for similarity scores of image regions.
+      decompose_image (bool, optional): If True, decompose the image into smaller regions for finer scoring.
+      normalized_boxes (optional): Precomputed normalized bounding boxes for image regions.
+      ignore_from_box (list, optional): List of text entries to ignore when scoring image regions.
+      num_boxes (int, optional): Maximum number of boxes to consider in the image segmentation. Default is 5.
+      box_segmentation_model (optional): Model to detect and segment boxes in the image.
+      image_preprocessor (optional): Preprocessor for the image segmentation model.
+      score_cutoff (float, optional): Minimum score threshold to include a box-text association.
+
+  Returns:
+      dict: Contains the following keys:
+          - 'image': Original image.
+          - 'box_images': Cropped images of detected boxes.
+          - 'image_features': Image feature tensor for the whole image.
+          - 'normalized_boxes': Normalized bounding boxes for detected regions.
+          - 'coords': Pixel coordinates of detected boxes.
+          - 'box_image_features': Feature tensor for each image box.
+          - 'box2element': Mapping of box to associated text, with score and position information.
+          - 'scores': Similarity scores for each text in `text_array`.
+          - 'clip_vision_output': Output from the CLIP vision model.
+          - 'text_features': Feature tensor for `text_array`.
+
+  Notes:
+      - The function calculates image-text similarity by comparing text features with both the whole image 
+        and each detected box within the image.
+      - Bounding boxes are generated and scored only if `box_segmentation_model` is provided.
+      - `ignore_from_box` excludes certain text entries from being considered in region-wise scoring.
+  """
   assert len(text_array) > 0, "No text_array"
   if ignore_from_box is None: ignore_from_box = {}
   p = next(clip_model.parameters())
@@ -1507,6 +2385,43 @@ def get_element_to_img(matched_sentence, img, box_segmentation_model,\
   image_preprocessor, clip_processor, clip_model, ignore_from_box=[], other_element_arr=[],\
   get_box_images=True, num_boxes=5, box_add_factor=0.65, box_detect_verbs=True, use_longest_subsuming_text=True,\
                          score_cutoff=0.2, ignore_digits=True, ignore_quotes=True):
+  """
+  Analyzes an image for elements within a sentence by segmenting the image and matching each segment to 
+  detected named entities, nouns, and verbs.
+
+  This function uses a segmentation model to detect image regions (boxes) and attempts to match each box 
+  to key elements from a text description. It scores similarity using CLIP embeddings and returns text-image 
+  associations, along with a set of descriptive sentences about element positions within the image.
+
+  Args:
+      matched_sentence (str): The sentence to analyze for elements that could match image regions.
+      img (PIL.Image): Input image for analysis.
+      box_segmentation_model: Model for identifying regions (boxes) within the image.
+      image_preprocessor: Preprocessor for `box_segmentation_model`.
+      clip_processor: CLIP processor instance for preparing image and text inputs.
+      clip_model: CLIP model instance for scoring image-text similarity.
+      ignore_from_box (list, optional): List of text elements to ignore in box scoring.
+      other_element_arr (list, optional): Additional elements to consider in text-image matching.
+      get_box_images (bool, optional): If True, captures cropped box images.
+      num_boxes (int, optional): Maximum number of boxes to use in the analysis. Default is 5.
+      box_add_factor (float, optional): Weight factor for box similarity scores.
+      box_detect_verbs (bool, optional): If True, includes verbs in text matching.
+      use_longest_subsuming_text (bool, optional): If True, only considers longest subsuming text elements.
+      score_cutoff (float, optional): Minimum score to count an element-box match.
+      ignore_digits (bool, optional): If True, removes digit words from `matched_sentence`.
+      ignore_quotes (bool, optional): If True, removes quoted text from `matched_sentence`.
+
+  Returns:
+      tuple: Contains the following:
+          - dict: Mapping of elements in `matched_sentence` to their highest similarity scores and associated box images.
+          - list of str: List of sentences describing relationships among detected elements.
+
+  Notes:
+      - This function decomposes `matched_sentence` into key elements using named entity recognition (NER),
+        noun, and verb detection. Elements are then compared to image regions to create associations.
+      - Additional context sentences are generated to describe spatial relationships among elements.
+      - `score_cutoff` can be used to filter weaker associations.
+  """
   global spacy_nlp
 
   if ignore_digits:
@@ -1623,6 +2538,23 @@ def get_element_to_img(matched_sentence, img, box_segmentation_model,\
 
 
 def add_img_context_to_instruction(instruction):
+    """
+    Adds context phrases to an instruction to make it image-aware by including phrases referencing an image.
+
+    This function inserts a random phrase related to image context into the beginning or end of an instruction, 
+    making it sound as though the instruction is intended for analyzing an image. It avoids specific references 
+    like "image description" but adds context like "Given the image..." or "Look at the picture..."
+
+    Args:
+        instruction (str): The original instruction text.
+
+    Returns:
+        str: Revised instruction with added image context.
+
+    Example:
+        >>> add_img_context_to_instruction("Describe the person.")
+        "Given the image, describe the person."
+    """
     added_text = ""
     prefix = suffix = False
     if random.randint(0,1) and "scene" not in instruction and "image" not in instruction and "picture" not in instruction:
@@ -1675,6 +2607,35 @@ def add_img_context_to_instruction(instruction):
 #TODO: put all these prompts in a prompt library/config file
 # should probably move this to create_multimodal data
 def generate_image_aware_instruction(captions, instructions, model, tokenizer):
+  """
+  Revises a list of instructions to make them image-aware, incorporating context from image captions and refining
+  the instructions to be relevant to the depicted content.
+
+  This function uses a language model to process instructions so that they directly refer to objects, actions, 
+  or concepts in given image captions. It can also rewrite instructions to remove specific references and focus 
+  on broader concepts in the images, preserving the intent but making the instructions image-aware.
+
+  Args:
+      captions (list of str): List of captions describing images.
+      instructions (list of str): Original instructions to revise based on image content.
+      model: Language model used for generating revised instructions.
+      tokenizer: Tokenizer compatible with the language model.
+
+  Returns:
+      list of str: Revised image-aware instructions.
+
+  Example:
+      >>> generate_image_aware_instruction(
+          ["What is happening here?"], 
+          model, tokenizer)
+      ["Referring to this image, what is happening here?"]
+
+  Notes:
+      - The function uses multiple techniques to add image context, including removing specific words or phrases 
+        from the instruction that overlap with the caption content.
+      - `tokenize_with_assistant_continuation` is used to adjust tokenization for assistant-style responses.
+      - Randomly selects prompts to create more natural and varied instructions.
+  """
   device = model.device
   if random.randint(0, 1):
     instr_revision_prompts = [tokenize_with_assistant_continuation(tokenizer, [{"role": "user", "content": f"You are given the below image:\n{caption}\n===\nRevise the below instruction such that events, physical conditions, attributes, color, actions, feelings, objects, people or other information from the image are removed from the instruction, and the instruction refers to those things in the image instead. Do not refer to proper names in the instruction if those names are already in the image. Do not refer to any context document. Do not refer to the 'description' of the image. Retain the theme of the instruction. Do not repeat this instruction or the information from the image in your revised instruction. The instruction is:\n{instruction}"}, 
@@ -1759,10 +2720,27 @@ import os
 import sqlite3
 
 def create_random_input(mapping):
-    """ Generate a random test input based on variable mappings. """
+    """
+    Generates a random input dictionary where each key is a variable name, and each value is a random integer.
+
+    Args:
+        mapping (dict): Dictionary of variable names as keys.
+
+    Returns:
+        dict: Random input dictionary with each variable mapped to a random integer (between 1 and 500).
+    """
     return {var: random.randint(1, 500) for var in mapping}
 
 def check_python_syntax(code):
+    """
+    Checks Python code for syntax errors.
+
+    Args:
+        code (str): The Python code to check.
+
+    Returns:
+        tuple: (bool, str) - Boolean indicating if the code is valid, and an error message if it's invalid.
+    """
     try:
         compile(code, "<string>", "exec")
         return True, ''
@@ -1780,6 +2758,20 @@ def check_python_syntax(code):
         return False, e
     
 def check_python_with_guessing(python, min_len=50):
+    """
+    Validates Python code within a string, attempting to correct common formatting issues.
+
+    Args:
+        python (str): Python code as a string.
+        min_len (int, optional): Minimum length for valid code. Default is 50.
+
+    Returns:
+        tuple: (str, bool, str) - Corrected Python code string, validity flag, and error message if invalid.
+
+    Notes:
+        - The function attempts to correct common syntax errors by removing trailing lines and adjusting quotes.
+        - Uses `check_python_syntax` to validate the syntax at multiple stages.
+    """
     if len(python.strip()) < min_len:
       return '', False, ''
     if "```python" not in python:
@@ -1824,6 +2816,20 @@ def check_python_with_guessing(python, min_len=50):
 
 #DANGER OF SQL INJECTION!!
 def check_sqlite_syntax(stmnt, temp_db):
+    """
+    Validates SQLite SQL syntax by executing statements in a temporary database.
+
+    Args:
+        stmnt (str): SQL statement(s) to validate.
+        temp_db (sqlite3.Connection): Connection object for the temporary database.
+
+    Returns:
+        tuple: (bool, str) - Boolean indicating if the syntax is valid and an error message if invalid.
+
+    Notes:
+        - Assumes no SQL injection risk as it executes directly on temporary in-memory databases.
+        - Syntax errors are raised when SQLite encounters an invalid statement.
+    """
     for st in stmnt.split(";"):
         try:
             temp_db.execute(st)
@@ -1833,13 +2839,18 @@ def check_sqlite_syntax(stmnt, temp_db):
 
 def check_js_syntax(js_code):
     """
-    Check JavaScript code for syntax errors using Node.js
-    
+    Checks JavaScript code for syntax errors using Node.js.
+
     Args:
-        js_code (str): JavaScript code to check
-        
+        js_code (str): JavaScript code to check.
+
     Returns:
-        tuple: (bool, str) - (is_valid, error_message)
+        tuple: (bool, str) - Boolean indicating if the syntax is valid and an error message if invalid.
+
+    Notes:
+        - Requires Node.js to be installed on the system to perform syntax checking.
+        - Creates a temporary file to store the JavaScript code, which is checked by the Node.js `--check` option.
+        - Cleans up the temporary file after checking.
     """
     # Create a temporary file to store the JavaScript code
     with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False) as temp_file:
@@ -1870,8 +2881,20 @@ def check_js_syntax(js_code):
 
 def execute_python_code(code, mapping):
     """
-    Executes Python code with a specified input mapping.
-    This code assumes the function 'solution' is defined within the passed code.
+    Executes Python code in a restricted environment, passing a specified input mapping.
+
+    The code should define a function named `solution` that accepts the arguments specified in `mapping`.
+
+    Args:
+        code (str): Python code containing a `solution` function.
+        mapping (dict): Dictionary of variable names and values to pass as arguments to `solution`.
+
+    Returns:
+        tuple: (result, error_message) - The result of executing `solution` and an error message if any.
+
+    Notes:
+        - `exec` is used with restricted `__builtins__` for security, but caution is still advised.
+        - Code assumes the function `solution` is defined, and uses the provided `mapping` as arguments.
     """
     local_locals = mapping.copy()
     wrapped_code = code + f"\nresult = solution({', '.join(f'{k}={v}' for k, v in mapping.items())})"

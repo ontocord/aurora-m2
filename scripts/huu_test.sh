@@ -19,22 +19,30 @@ export TRANSFORMERS_OFFLINE=1
 export HF_HUB_OFFLINE=1
 source ~/miniconda3/bin/activate
 
-cache_dir="/leonardo_work/EUHPC_E03_068/.cache"
+cache_dir="/leonardo_work/EUHPC_E03_068/.cache/"
 
 #/leonardo_scratch/fast/EUHPC_E03_068/.cache"
 
-directory="/leonardo_work/EUHPC_E03_068/staging_data/huu-commoncatalog-test"
+directory="/leonardo_work/EUHPC_E03_068/staging_data/fineweb/"
 mkdir -p $directory
 
-
-
-echo 'creating captions from commoncatalog'
 srun python -m src.create_multimodal_data \
-     --task generate_captions_then_filter_people_images_from_commoncatalog \
-     --input_dir /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/ \
-     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-6066117112843696575-22627380-9161-4c5a-b773-d9113a6f5744-75336-1-c000.parquet \
+     --task generate_translations \
+     --translation_src_lang en \
+     --translation_target_lang de \
+     --input_dir $directory \
+     --input_path $directory/000_00000.jsonl \
      --output_dir $directory \
-     --output_path $directory/commoncatalog_recaption.jsonl     
+     --output_path $directory/000_00000_en_de.jsonl
+
+
+#echo 'creating captions from commoncatalog'
+#srun python -m src.create_multimodal_data \
+#     --task generate_captions_then_filter_people_images_from_commoncatalog \
+#     --input_dir /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/ \
+#     --input_path /leonardo_work/EUHPC_E03_068/staging_data/commoncatalog_test/part-00000-tid-6066117112843696575-22627380-9161-4c5a-b773-d9113a6f5744-75336-1-c000.parquet \
+#     --output_dir $directory \
+#     --output_path $directory/commoncatalog_recaption.jsonl     
 
 #echo 'creating images'
 #srun python -m src.create_multimodal_data \

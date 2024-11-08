@@ -19,19 +19,20 @@ export TRANSFORMERS_OFFLINE=1
 export HF_HUB_OFFLINE=1
 source ~/miniconda3/bin/activate
 
-cache_dir="/leonardo_work/EUHPC_E03_068/.cache"
+cache_dir="/leonardo_work/EUHPC_E03_068/.cache/"
 
 #/leonardo_scratch/fast/EUHPC_E03_068/.cache"
 
-directory="/leonardo_work/EUHPC_E03_068/staging_data/huu-autoredteam-test"
-mkdir -p $directory
-
-echo 'generating autoredteam data'
+intput_directory="/leonardo_work/EUHPC_E03_068/datasets/safellm/data/stage1/fineweb_gov_deduped/"
+output_directory="/leonardo_work/EUHPC_E03_068/datasets/safellm/data/stage1/fineweb_gov_deduped_en_de/"
+mkdir -p $output_directory
 
 srun python -m src.create_multimodal_data \
-      --batch_size 15 \
-      --task generate_autoredteam_small \
-      --use_LLM_size medium \
-      --cache_dir $cache_dir \
-      --output_dir $directory \
-      --output_path $directory/autoredteam.jsonl  \
+     --task generate_translations \
+     --translation_src_lang en \
+     --translation_target_lang de \
+     --input_dir $output_directory \
+     --input_path $input_directory/*/* \
+     --output_dir $output_directory \
+     --output_suffix _en_de
+

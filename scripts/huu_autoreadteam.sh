@@ -2,7 +2,7 @@
 #SBATCH --account EUHPC_E03_068
 #SBATCH -p boost_usr_prod
 #SBATCH --time 16:00:00     # format: HH:MM:SS
-#SBATCH -N 1                # 1 node
+#SBATCH -N 10                # 1 node
 #SBATCH --cpus-per-task=10
 #SBATCH --ntasks-per-node=1 # 4 tasks out of 32
 #SBATCH --gpus-per-node=4
@@ -23,7 +23,7 @@ cache_dir="/leonardo_work/EUHPC_E03_068/.cache"
 
 #/leonardo_scratch/fast/EUHPC_E03_068/.cache"
 
-directory="/leonardo_work/EUHPC_E03_068/staging_data/huu-commoncatalog-test"
+directory="/leonardo_work/EUHPC_E03_068/staging_data/huu-autoredteam-test"
 mkdir -p $directory
 
 echo 'generating autoredteam data'

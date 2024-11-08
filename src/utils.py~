@@ -52,6 +52,200 @@ except:
 
 
 ### GLOBAL VARIABLES
+langs2fullname = {
+        "af": "Afrikaans",
+        "als": "Tosk Albanian",
+        "am": "Amharic",
+        "an": "Aragonese",
+        "ar": "Arabic",
+        "arz": "Egyptian Arabic",
+        "ast": "Asturian",
+        "as": "Assamese",
+        "av": "Avaric",
+        "azb": "South Azerbaijani",
+        "az": "Azerbaijani",
+        "bar": "Bavarian",
+        "ba": "Bashkir",
+        "bcl": "Central Bikol",
+        "be": "Belarusian",
+        "bg": "Bulgarian",
+        "bh": "Bihari",
+        "bn": "Bengali",
+        "bo": "Tibetan",
+        "bpy": "Bishnupriya",
+        "br": "Breton",
+        "bs": "Bosnian",
+        "bxr": "Russia Buriat",
+        "ca": "Catalan",
+        "cbk": "Chavacano",
+        "ceb": "Cebuano",
+        "ce": "Chechen",
+        "ckb": "Central Kurdish",
+        "cs": "Czech",
+        "cv": "Chuvash",
+        "cy": "Welsh",
+        "da": "Danish",
+        "de": "German",
+        "diq": "Dimli",
+        "dsb": "Lower Sorbian",
+        "dv": "Dhivehi",
+        "el": "Modern Greek",
+        "eml": "Emilian-Romagnol",
+        "en": "English",
+        "eo": "Esperanto",
+        "es": "Spanish",
+        "et": "Estonian",
+        "eu": "Basque",
+        "fa": "Persian",
+        "fi": "Finnish",
+        "frr": "Northern Frisian",
+        "fr": "French",
+        "fy": "Western Frisian",
+        "ga": "Irish",
+        "gd": "Scottish Gaelic",
+        "gl": "Galician",
+        "gn": "Guarani",
+        "gom": "Goan Konkani",
+        "gu": "Gujarati",
+        "he": "Hebrew",
+        "hi": "Hindi",
+        "hr": "Croatian",
+        "hsb": "Upper Sorbian",
+        "ht": "Haitian",
+        "hu": "Hungarian",
+        "hy": "Armenian",
+        "ia": "Interlingua",
+        "id": "Indonesian",
+        "ie": "Interlingue",
+        "ilo": "Iloko",
+        "io": "Ido",
+        "is": "Icelandic",
+        "it": "Italian",
+        "ja": "Japanese",
+        "jbo": "Lojban",
+        "jv": "Javanese",
+        "ka": "Georgian",
+        "kk": "Kazakh",
+        "km": "Central Khmer",
+        "kn": "Kannada",
+        "ko": "Korean",
+        "krc": "Karachay-Balkar",
+        "ku": "Kurdish",
+        "kv": "Komi",
+        "kw": "Cornish",
+        "ky": "Kirghiz",
+        "la": "Latin",
+        "lb": "Luxembourgish",
+        "lez": "Lezghian",
+        "li": "Limburgan",
+        "lmo": "Lombard",
+        "lo": "Lao",
+        "lrc": "Northern Luri",
+        "lt": "Lithuanian",
+        "lv": "Latvian",
+        "mai": "Maithili",
+        "mg": "Malagasy",
+        "mhr": "Eastern Mari",
+        "min": "Minangkabau",
+        "mk": "Macedonian",
+        "ml": "Malayalam",
+        "mn": "Mongolian",
+        "mrj": "Western Mari",
+        "mr": "Marathi",
+        "ms": "Malay",
+        "mt": "Maltese",
+        "mwl": "Mirandese",
+        "my": "Burmese",
+        "myv": "Erzya",
+        "mzn": "Mazanderani",
+        "nah": "Nahuatl languages",
+        "nap": "Neapolitan",
+        "nds": "Low German",
+        "ne": "Nepali",
+        "new": "Newari",
+        "nl": "Dutch",
+        "nn": "Norwegian Nynorsk",
+        "no": "Norwegian",
+        "oc": "Occitan",
+        "or": "Oriya",
+        "os": "Ossetian",
+        "pam": "Pampanga",
+        "pa": "Panjabi",
+        "pl": "Polish",
+        "pms": "Piemontese",
+        "pnb": "Western Panjabi",
+        "ps": "Pushto",
+        "pt": "Portuguese",
+        "qu": "Quechua",
+        "rm": "Romansh",
+        "ro": "Romanian",
+        "ru": "Russian",
+        "sah": "Yakut",
+        "sa": "Sanskrit",
+        "scn": "Sicilian",
+        "sd": "Sindhi",
+        "sh": "Serbo-Croatian",
+        "si": "Sinhala",
+        "sk": "Slovak",
+        "sl": "Slovenian",
+        "so": "Somali",
+        "sq": "Albanian",
+        "sr": "Serbian",
+        "su": "Sundanese",
+        "sv": "Swedish",
+        "sw": "Swahili",
+        "ta": "Tamil",
+        "te": "Telugu",
+        "tg": "Tajik",
+        "th": "Thai",
+        "tk": "Turkmen",
+        "tl": "Tagalog",
+        "tr": "Turkish",
+        "tt": "Tatar",
+        "tyv": "Tuvinian",
+        "ug": "Uighur",
+        "uk": "Ukrainian",
+        "ur": "Urdu",
+        "uz": "Uzbek",
+        "vec": "Venetian",
+        "vi": "Vietnamese",
+        "vo": "Volapük",
+        "war": "Waray",
+        "wa": "Walloon",
+        "wuu": "Wu Chinese",
+        "xal": "Kalmyk",
+        "xmf": "Mingrelian",
+        "yi": "Yiddish",
+        "yo": "Yoruba",
+        "yue": "Yue Chinese",
+        "zh": "Chinese",
+    }
+
+# These are the aurora-m/safellm languages. The 24 EU langs +  vi, zh, ar, ru, hi, ar, sw, ja, ko, id
+langs = ['bg',
+ 'hr',
+ 'cs',
+ 'da',
+ 'nl',
+# 'en',
+ 'et',
+ 'fi',
+ 'fr',
+ 'de',
+ 'el',
+ 'hu',
+ 'ga',
+ 'it',
+ 'lv',
+ 'lt',
+ 'mt',
+ 'pl',
+ 'pt',
+ 'ro',
+ 'sk',
+ 'sl',
+ 'es',
+ 'sv', 'vi', 'zh', 'ar', 'ru', 'hi', 'ar', 'sw', 'ja', 'ko', 'id']
 
 digits_to_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
                   'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen',
@@ -562,9 +756,18 @@ def get_tokens_as_list(word_list, tokenizer):
         tokens_list.append(tokenized_word)
     return tokens_list
 
+def ctranslate2_with_batching(model, tokenizer, batch, repetition_penalty=1.2, batch_size=40):
+    ret = []
+    for rng in range(0, len(batch), batch_size):
+        batch2 = batch[rng: min(len(batch), rng+batch_size)]
+        batch2= [tokenizer.convert_ids_to_tokens(tokenizer.encode(lst, max_length=512, truncation=True)) for lst in batch2]
+        output =  tokenizer.batch_decode([tokenizer.convert_tokens_to_ids(r.hypotheses[0]) for r in model.translate_batch(batch2, repetition_penalty=repetition_penalty)])
+        ret.extend(output)
+    return ret
+
     
 # generate output from a batch of inputs
-def generate_with_batching(model, tokenizer, prompts, use_cache=True, repetition_penalty=1.2,  max_new_tokens=400, batch_size=2, skip_special_tokens=True, return_continuations_only=True, dont_decode_non_english=False, dont_decode_cjk=False, supress_tokens=[], media_list=None, **args):
+def generate_with_batching(model, tokenizer, batch, use_cache=True, repetition_penalty=1.2,  max_new_tokens=400, batch_size=2, skip_special_tokens=True, return_continuations_only=True, dont_decode_non_english=False, dont_decode_cjk=False, supress_tokens=[], media_list=None, **args):
 
   # this is the InternVL2 batch chat function adapted to our purposes. We don't need to use the conv template because
   # we already send the data into the model in the right chat format.
@@ -638,10 +841,10 @@ def generate_with_batching(model, tokenizer, prompts, use_cache=True, repetition
   if dont_decode_non_english:
       bad_words_ids.extend(tokenizer.non_english_ids)
   if media_list:
-      assert len(media_list) == len(prompts), "media_list is a list of lists of images for each prompt. the len of media_list must be the same as the len of prompts"
+      assert len(media_list) == len(batch), "media_list is a list of lists of images for each prompt. the len of media_list must be the same as the len of batch"
   with torch.no_grad():
-      for rng in range(0, len(prompts), batch_size):
-          d = prompts[rng:min(len(prompts), rng+batch_size)]
+      for rng in range(0, len(batch), batch_size):
+          d = batch[rng:min(len(batch), rng+batch_size)]
           if media_list and hasattr(model, 'batch_chat') and any(s for s in d if "<image>" in s):
               # this is a internVLM situation
               generation_config = copy.copy(args)
@@ -650,7 +853,7 @@ def generate_with_batching(model, tokenizer, prompts, use_cache=True, repetition
               generation_config['max_new_tokens'] = max_new_tokens
               if bad_words_ids:
                   generation_config['bad_words_ids']=bad_words_ids
-              imgs = media_list[rng:min(len(prompts), rng+batch_size)]
+              imgs = media_list[rng:min(len(batch), rng+batch_size)]
               pixel_values = []
               num_patches_list = []
               for img_list in enumerate(imgs):
@@ -823,8 +1026,48 @@ def strip_right_stopwords(e_text):
         e_text2.append(et)
   return " ".join(reversed(e_text2))
 
-# remove text like info from captions
-def augment_for_quotes(caption_array, text_cutoff=20):
+def replace_text_in_captions_with_color_rectangles(caption_array, text_cutoff=20):
+    """
+    Current image generators have problems with displaying correct text specified in the prompt. We have developed a method to create a simpler prompt with the text, so that we can insert the text back using standard graphics processing libraries for text.
+
+    The function augments a list of image captions by replacing textual content with descriptions of solid colored rectangles, based on certain patterns and rules.
+
+    This function identifies quotes and specific text patterns within captions. If such text is found, it replaces them with phrases describing the location of solid colored rectangles in the image. It also processes raw captions to introduce additional context or replace text content with visual descriptions.
+
+    A generated image using the generated caption can then be processed with `replace_color_rectangles_with_text` to insert back the text at the location of the colored rectangles.
+
+ 
+    Parameters:
+        caption_array (list of str): List of original captions to process.
+        text_cutoff (int, optional): Maximum length of text to preserve in the caption before replacing it. Default is 20 characters.
+
+    Returns:
+        list of tuples: 
+            Each tuple contains:
+                - A modified caption where specific text elements are replaced with rectangle descriptions.
+                - A second version of the modified caption.
+                - A list of replaced elements, including the rectangle color, its position, and associated text.
+    
+    Example:
+        Input:
+            caption_array = ["At the top, there is the following text 'Hello World'.", "This document states 'Important Notice'."]
+        
+        Output:
+            [
+                ("At the top, there is a large red solid rectangle.", 
+                 "At the top, there is a large red solid rectangle.", 
+                 [('red', [('top', 'Hello World')])]),
+                ("This document with a large blue solid rectangle in the center.", 
+                 "This document with a large blue solid rectangle in the center.", 
+                 [('blue', [('center', 'Important Notice')])])
+            ]
+    
+    Notes:
+        - Specific phrases indicating text positions (e.g., 'At the top') are parsed and replaced.
+        - Randomized colors and rectangle descriptions are added based on available side indicators and predefined colors.
+        - Ensures that textual elements are removed or substituted while keeping the captions contextually meaningful.
+    """
+    
     # Modify the original caption by appending adversarial suffix
     caption_array2 = []
 
@@ -1009,7 +1252,7 @@ def augment_for_quotes(caption_array, text_cutoff=20):
       
     return caption_array2
 
-### FUNCTIONS TO INSERT TEXT INTO IMAGES
+### FUNCTIONS TO INSERT TEXT BACK INTO IMAGES
 # Function to convert a color name to an HSV tuple directly for color detection
 def get_hsv_from_name(color_name):
     upper, lower =  hsv_color_ranges.get(color_name)
@@ -1058,10 +1301,27 @@ def create_default_rectangles(img_width, img_height):
     return default_rectangles
 
 
-# Main function to detect rectangles and assign text. Given a list of
-# [(color, ((position, text) ....], find color rectangles and clear
-# the recatangel to the background color, and write in the text
 def replace_color_rectangles_with_text(image, replace_list, clear_background=True):
+    """
+    Detects colored rectangles in an image and replaces them with associated text.
+
+    This function takes an image and a list of color-text mappings. It identifies the specified colored rectangles in the image, clears the rectangle area if requested, and writes the corresponding text into those areas.
+
+    Parameters:
+        image (PIL.Image): The input image containing colored rectangles.
+        replace_list (list of tuples): A list of tuples where each tuple contains:
+            - A detection color (str).
+            - A list of tuples with position (str) and text (str) to be written.
+        clear_background (bool, optional): If True, the rectangle's background will be cleared to the average image color. Default is True.
+
+    Returns:
+        PIL.Image: The modified image with text written in place of colored rectangles.
+
+    Notes:
+        - The input image is converted between PIL (RGB) and OpenCV (BGR) formats for processing.
+        - Supports multiple colors with associated HSV ranges.
+        - Uses contours to detect rectangles and replaces them with text.
+    """
     # Convert to PIL RGB to cv2, BGR
     original_image = np.array(image)
     original_image = original_image[:, :, ::-1]
@@ -1073,6 +1333,29 @@ def replace_color_rectangles_with_text(image, replace_list, clear_background=Tru
 
 
 def replace_color_rectangles_with_text_bgr(original_image, image, text_list, detection_color="pink", clear_background=True):
+
+    """
+    Processes an image to detect colored rectangles in BGR format and replaces them with text.
+
+    Parameters:
+        original_image (numpy.ndarray): The original image in BGR format.
+        image (numpy.ndarray): A working copy of the image in BGR format to modify.
+        text_list (list of tuples): A list of text items to place in the detected rectangles.
+            Each tuple contains:
+                - position (str): The position label (e.g., "upper right").
+                - text (str): The text to write in the rectangle.
+        detection_color (str, optional): The color to detect in the image. Default is "pink".
+        clear_background (bool, optional): If True, clears the rectangle's background to a uniform color. Default is True.
+
+    Notes:
+        - Detects rectangles in the image by color using HSV thresholds.
+        - If no rectangles are detected, default positions and rectangles are used.
+        - Writes text in the detected or default rectangles.
+        - Supports fallback mechanisms for similar colors (e.g., "magenta" for "pink").
+
+    Returns:
+        None: Modifies the image in-place.
+    """
 
     # Get the HSV range for the specified detection color
     lower_bound, upper_bound = hsv_color_ranges.get(detection_color, hsv_color_ranges["white"])
