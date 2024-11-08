@@ -52,24 +52,51 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src-accelerator-module">src.accelerator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.accelerator">src.accelerator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src-create-multimodal-data-module">src.create_multimodal_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src-create-multimodal-data-harsh-module">src.create_multimodal_data-harsh module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src-create-shard-prorotype-module">src.create_shard_prorotype module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src-create-shard-prorotype-old-module">src.create_shard_prorotype_old module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src-execution-module">src.execution module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.execution">src.execution module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.execution.TimeoutException"><code class="docutils literal notranslate"><span class="pre">TimeoutException</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.execution.WriteOnlyStringIO"><code class="docutils literal notranslate"><span class="pre">WriteOnlyStringIO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.execution.chdir"><code class="docutils literal notranslate"><span class="pre">chdir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.execution.check_correctness"><code class="docutils literal notranslate"><span class="pre">check_correctness()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.execution.create_tempdir"><code class="docutils literal notranslate"><span class="pre">create_tempdir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.execution.redirect_stdin"><code class="docutils literal notranslate"><span class="pre">redirect_stdin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.execution.reliability_guard"><code class="docutils literal notranslate"><span class="pre">reliability_guard()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.execution.swallow_io"><code class="docutils literal notranslate"><span class="pre">swallow_io()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.execution.time_limit"><code class="docutils literal notranslate"><span class="pre">time_limit()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#src-interleave-base64-module">src.interleave_base64 module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src-interleave-encoding-module">src.interleave_encoding module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src-node-js-validation-module">src.node_js_validation module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src-pipeline-module">src.pipeline module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src-prompts-module">src.prompts module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src-slurm-utils-module">src.slurm_utils module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src-story-generation-module">src.story_generation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.node_js_validation">src.node_js_validation module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.node_js_validation.check_js_syntax"><code class="docutils literal notranslate"><span class="pre">check_js_syntax()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.node_js_validation.test_js_syntax"><code class="docutils literal notranslate"><span class="pre">test_js_syntax()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.pipeline">src.pipeline module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.pipeline.get_hf_llm"><code class="docutils literal notranslate"><span class="pre">get_hf_llm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.pipeline.get_llm"><code class="docutils literal notranslate"><span class="pre">get_llm()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.pipeline.get_vllm_llm"><code class="docutils literal notranslate"><span class="pre">get_vllm_llm()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.prompts">src.prompts module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.slurm_utils">src.slurm_utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.slurm_utils.get_rank"><code class="docutils literal notranslate"><span class="pre">get_rank()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.slurm_utils.get_world_size"><code class="docutils literal notranslate"><span class="pre">get_world_size()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.story_generation">src.story_generation module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src-test-args-module">src.test_args module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src-translate-module">src.translate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src-upload-to-hf-module">src.upload_to_hf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src.upload_to_hf">src.upload_to_hf module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.upload_to_hf.check_completion"><code class="docutils literal notranslate"><span class="pre">check_completion()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#src-utils-module">src.utils module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-src">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -111,7 +138,10 @@
 <li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#src-purpleteam-autoredteam-module">src.purpleteam.autoredteam module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#src-purpleteam-autoredteam-old-module">src.purpleteam.autoredteam-old module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#src-purpleteam-blueteam-module">src.purpleteam.blueteam module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#module-src.purpleteam.blueteam">src.purpleteam.blueteam module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.purpleteam.html#src.purpleteam.blueteam.blueteam_classify_conversation"><code class="docutils literal notranslate"><span class="pre">blueteam_classify_conversation()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#src-purpleteam-create-caption-module">src.purpleteam.create_caption module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#src-purpleteam-create-caption-and-recaption-module">src.purpleteam.create_caption_and_recaption module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#src-purpleteam-create-caption-fa2-module">src.purpleteam.create_caption_fa2 module</a></li>
@@ -127,20 +157,20 @@
 <li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#src-purpleteam-create-multiturn-conv-module">src.purpleteam.create_multiturn_conv module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#src-purpleteam-create-revised-instr-response-module">src.purpleteam.create_revised_instr_response module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#src-purpleteam-utils-module">src.purpleteam.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.purpleteam.html#module-src.purpleteam">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="src.synthetic_data_generation.html">src.synthetic_data_generation package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="src.synthetic_data_generation.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html">src.synthetic_data_generation.prompt_config package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#src-synthetic-data-generation-prompt-config-prompt-module">src.synthetic_data_generation.prompt_config.prompt module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#src-synthetic-data-generation-prompt-config-step1-module">src.synthetic_data_generation.prompt_config.step1 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#src-synthetic-data-generation-prompt-config-step2-module">src.synthetic_data_generation.prompt_config.step2 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#src-synthetic-data-generation-prompt-config-step3-module">src.synthetic_data_generation.prompt_config.step3 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#src-synthetic-data-generation-prompt-config-step4-module">src.synthetic_data_generation.prompt_config.step4 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#src-synthetic-data-generation-prompt-config-step5-module">src.synthetic_data_generation.prompt_config.step5 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#module-contents">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#module-src.synthetic_data_generation.prompt_config.prompt">src.synthetic_data_generation.prompt_config.prompt module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#module-src.synthetic_data_generation.prompt_config.step1">src.synthetic_data_generation.prompt_config.step1 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#module-src.synthetic_data_generation.prompt_config.step2">src.synthetic_data_generation.prompt_config.step2 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#module-src.synthetic_data_generation.prompt_config.step3">src.synthetic_data_generation.prompt_config.step3 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#module-src.synthetic_data_generation.prompt_config.step4">src.synthetic_data_generation.prompt_config.step4 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#module-src.synthetic_data_generation.prompt_config.step5">src.synthetic_data_generation.prompt_config.step5 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="src.synthetic_data_generation.prompt_config.html#module-src.synthetic_data_generation.prompt_config">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -149,7 +179,7 @@
 <li class="toctree-l2"><a class="reference internal" href="src.synthetic_data_generation.html#src-synthetic-data-generation-general-libs-module">src.synthetic_data_generation.general_libs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.synthetic_data_generation.html#src-synthetic-data-generation-load-whoosh-module">src.synthetic_data_generation.load_whoosh module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.synthetic_data_generation.html#src-synthetic-data-generation-model-libs-module">src.synthetic_data_generation.model_libs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.synthetic_data_generation.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.synthetic_data_generation.html#module-src.synthetic_data_generation">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -158,8 +188,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="src-accelerator-module">
-<h2>src.accelerator module<a class="headerlink" href="#src-accelerator-module" title="Link to this heading"></a></h2>
+<section id="module-src.accelerator">
+<span id="src-accelerator-module"></span><h2>src.accelerator module<a class="headerlink" href="#module-src.accelerator" title="Link to this heading"></a></h2>
 </section>
 <section id="src-create-multimodal-data-module">
 <h2>src.create_multimodal_data module<a class="headerlink" href="#src-create-multimodal-data-module" title="Link to this heading"></a></h2>
@@ -173,8 +203,103 @@
 <section id="src-create-shard-prorotype-old-module">
 <h2>src.create_shard_prorotype_old module<a class="headerlink" href="#src-create-shard-prorotype-old-module" title="Link to this heading"></a></h2>
 </section>
-<section id="src-execution-module">
-<h2>src.execution module<a class="headerlink" href="#src-execution-module" title="Link to this heading"></a></h2>
+<section id="module-src.execution">
+<span id="src-execution-module"></span><h2>src.execution module<a class="headerlink" href="#module-src.execution" title="Link to this heading"></a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="src.execution.TimeoutException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.execution.</span></span><span class="sig-name descname"><span class="pre">TimeoutException</span></span><a class="reference internal" href="_modules/src/execution.html#TimeoutException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.TimeoutException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.execution.WriteOnlyStringIO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.execution.</span></span><span class="sig-name descname"><span class="pre">WriteOnlyStringIO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'\n'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#WriteOnlyStringIO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.WriteOnlyStringIO" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">StringIO</span></code></p>
+<p>StringIO that throws an exception when it’s read from</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.execution.WriteOnlyStringIO.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#WriteOnlyStringIO.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.WriteOnlyStringIO.read" title="Link to this definition"></a></dt>
+<dd><p>Read at most size characters, returned as a string.</p>
+<p>If the argument is negative or omitted, read until EOF
+is reached. Return an empty string at EOF.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.execution.WriteOnlyStringIO.readable">
+<span class="sig-name descname"><span class="pre">readable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#WriteOnlyStringIO.readable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.WriteOnlyStringIO.readable" title="Link to this definition"></a></dt>
+<dd><p>Returns True if the IO object can be read.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.execution.WriteOnlyStringIO.readline">
+<span class="sig-name descname"><span class="pre">readline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#WriteOnlyStringIO.readline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.WriteOnlyStringIO.readline" title="Link to this definition"></a></dt>
+<dd><p>Read until newline or EOF.</p>
+<p>Returns an empty string if EOF is hit immediately.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.execution.WriteOnlyStringIO.readlines">
+<span class="sig-name descname"><span class="pre">readlines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#WriteOnlyStringIO.readlines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.WriteOnlyStringIO.readlines" title="Link to this definition"></a></dt>
+<dd><p>Return a list of lines from the stream.</p>
+<p>hint can be specified to control the number of lines read: no more
+lines will be read if the total size (in bytes/characters) of all
+lines so far exceeds hint.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.execution.chdir">
+<span class="sig-prename descclassname"><span class="pre">src.execution.</span></span><span class="sig-name descname"><span class="pre">chdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#chdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.chdir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.execution.check_correctness">
+<span class="sig-prename descclassname"><span class="pre">src.execution.</span></span><span class="sig-name descname"><span class="pre">check_correctness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">completion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">completion_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="_modules/src/execution.html#check_correctness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.check_correctness" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the functional correctness of a completion by running the test
+suite provided in the problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>completion_id</strong> – an optional completion ID so we can match
+the results later even if execution finishes asynchronously.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.execution.create_tempdir">
+<span class="sig-prename descclassname"><span class="pre">src.execution.</span></span><span class="sig-name descname"><span class="pre">create_tempdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#create_tempdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.create_tempdir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.execution.redirect_stdin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.execution.</span></span><span class="sig-name descname"><span class="pre">redirect_stdin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#redirect_stdin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.redirect_stdin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_RedirectStream</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.execution.reliability_guard">
+<span class="sig-prename descclassname"><span class="pre">src.execution.</span></span><span class="sig-name descname"><span class="pre">reliability_guard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maximum_memory_bytes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#reliability_guard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.reliability_guard" title="Link to this definition"></a></dt>
+<dd><p>This disables various destructive functions and prevents the generated code
+from interfering with the test (e.g. fork bomb, killing other processes,
+removing filesystem files, etc.)</p>
+<p>WARNING
+This function is NOT a security sandbox. Untrusted code, including, model-
+generated code, should not be blindly executed outside of one. See the
+Codex paper for more information about OpenAI’s code sandbox, and proceed
+with caution.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.execution.swallow_io">
+<span class="sig-prename descclassname"><span class="pre">src.execution.</span></span><span class="sig-name descname"><span class="pre">swallow_io</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#swallow_io"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.swallow_io" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.execution.time_limit">
+<span class="sig-prename descclassname"><span class="pre">src.execution.</span></span><span class="sig-name descname"><span class="pre">time_limit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/execution.html#time_limit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.execution.time_limit" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="src-interleave-base64-module">
 <h2>src.interleave_base64 module<a class="headerlink" href="#src-interleave-base64-module" title="Link to this heading"></a></h2>
@@ -182,20 +307,67 @@
 <section id="src-interleave-encoding-module">
 <h2>src.interleave_encoding module<a class="headerlink" href="#src-interleave-encoding-module" title="Link to this heading"></a></h2>
 </section>
-<section id="src-node-js-validation-module">
-<h2>src.node_js_validation module<a class="headerlink" href="#src-node-js-validation-module" title="Link to this heading"></a></h2>
+<section id="module-src.node_js_validation">
+<span id="src-node-js-validation-module"></span><h2>src.node_js_validation module<a class="headerlink" href="#module-src.node_js_validation" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.node_js_validation.check_js_syntax">
+<span class="sig-prename descclassname"><span class="pre">src.node_js_validation.</span></span><span class="sig-name descname"><span class="pre">check_js_syntax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">js_code</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/node_js_validation.html#check_js_syntax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.node_js_validation.check_js_syntax" title="Link to this definition"></a></dt>
+<dd><p>Check JavaScript code for syntax errors using Node.js</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>js_code</strong> (<em>str</em>) – JavaScript code to check</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(bool, str) - (is_valid, error_message)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.node_js_validation.test_js_syntax">
+<span class="sig-prename descclassname"><span class="pre">src.node_js_validation.</span></span><span class="sig-name descname"><span class="pre">test_js_syntax</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/node_js_validation.html#test_js_syntax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.node_js_validation.test_js_syntax" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="src-pipeline-module">
-<h2>src.pipeline module<a class="headerlink" href="#src-pipeline-module" title="Link to this heading"></a></h2>
+<section id="module-src.pipeline">
+<span id="src-pipeline-module"></span><h2>src.pipeline module<a class="headerlink" href="#module-src.pipeline" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.pipeline.get_hf_llm">
+<span class="sig-prename descclassname"><span class="pre">src.pipeline.</span></span><span class="sig-name descname"><span class="pre">get_hf_llm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Pipeline</span></span></span><a class="reference internal" href="_modules/src/pipeline.html#get_hf_llm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.pipeline.get_hf_llm" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.pipeline.get_llm">
+<span class="sig-prename descclassname"><span class="pre">src.pipeline.</span></span><span class="sig-name descname"><span class="pre">get_llm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">huggingface_or_vllm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'huggingface'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/pipeline.html#get_llm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.pipeline.get_llm" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.pipeline.get_vllm_llm">
+<span class="sig-prename descclassname"><span class="pre">src.pipeline.</span></span><span class="sig-name descname"><span class="pre">get_vllm_llm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Pipeline</span></span></span><a class="reference internal" href="_modules/src/pipeline.html#get_vllm_llm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.pipeline.get_vllm_llm" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="src-prompts-module">
-<h2>src.prompts module<a class="headerlink" href="#src-prompts-module" title="Link to this heading"></a></h2>
+<section id="module-src.prompts">
+<span id="src-prompts-module"></span><h2>src.prompts module<a class="headerlink" href="#module-src.prompts" title="Link to this heading"></a></h2>
 </section>
-<section id="src-slurm-utils-module">
-<h2>src.slurm_utils module<a class="headerlink" href="#src-slurm-utils-module" title="Link to this heading"></a></h2>
+<section id="module-src.slurm_utils">
+<span id="src-slurm-utils-module"></span><h2>src.slurm_utils module<a class="headerlink" href="#module-src.slurm_utils" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.slurm_utils.get_rank">
+<span class="sig-prename descclassname"><span class="pre">src.slurm_utils.</span></span><span class="sig-name descname"><span class="pre">get_rank</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/src/slurm_utils.html#get_rank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.slurm_utils.get_rank" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.slurm_utils.get_world_size">
+<span class="sig-prename descclassname"><span class="pre">src.slurm_utils.</span></span><span class="sig-name descname"><span class="pre">get_world_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/src/slurm_utils.html#get_world_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.slurm_utils.get_world_size" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="src-story-generation-module">
-<h2>src.story_generation module<a class="headerlink" href="#src-story-generation-module" title="Link to this heading"></a></h2>
+<section id="module-src.story_generation">
+<span id="src-story-generation-module"></span><h2>src.story_generation module<a class="headerlink" href="#module-src.story_generation" title="Link to this heading"></a></h2>
 </section>
 <section id="src-test-args-module">
 <h2>src.test_args module<a class="headerlink" href="#src-test-args-module" title="Link to this heading"></a></h2>
@@ -203,14 +375,19 @@
 <section id="src-translate-module">
 <h2>src.translate module<a class="headerlink" href="#src-translate-module" title="Link to this heading"></a></h2>
 </section>
-<section id="src-upload-to-hf-module">
-<h2>src.upload_to_hf module<a class="headerlink" href="#src-upload-to-hf-module" title="Link to this heading"></a></h2>
+<section id="module-src.upload_to_hf">
+<span id="src-upload-to-hf-module"></span><h2>src.upload_to_hf module<a class="headerlink" href="#module-src.upload_to_hf" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.upload_to_hf.check_completion">
+<span class="sig-prename descclassname"><span class="pre">src.upload_to_hf.</span></span><span class="sig-name descname"><span class="pre">check_completion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repo_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/upload_to_hf.html#check_completion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.upload_to_hf.check_completion" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="src-utils-module">
 <h2>src.utils module<a class="headerlink" href="#src-utils-module" title="Link to this heading"></a></h2>
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<section id="module-src">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src" title="Link to this heading"></a></h2>
 </section>
 </section>
 

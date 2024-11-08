@@ -1,0 +1,215 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.pipeline &mdash; AuroraM2 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AuroraM2
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AuroraM2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.pipeline</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForCausalLM</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">Pipeline</span>
+
+<div class="viewcode-block" id="get_llm">
+<a class="viewcode-back" href="../../src.html#src.pipeline.get_llm">[docs]</a>
+<span class="k">def</span> <span class="nf">get_llm</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tokenizer_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">huggingface_or_vllm</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s2">&quot;huggingface&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">huggingface_or_vllm</span> <span class="o">==</span> <span class="s2">&quot;huggingface&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_hf_llm</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">tokenizer_name</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">huggingface_or_vllm</span> <span class="o">==</span> <span class="s2">&quot;vllm&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_vllm_llm</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">tokenizer_name</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;huggingface_or_vllm must be either &#39;huggingface&#39; or &#39;vllm&#39;&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_hf_llm">
+<a class="viewcode-back" href="../../src.html#src.pipeline.get_hf_llm">[docs]</a>
+<span class="k">def</span> <span class="nf">get_hf_llm</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tokenizer_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pipeline</span><span class="p">:</span>
+    <span class="c1"># Load tokenizer and model</span>
+    <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">tokenizer_name</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span><span class="o">.</span><span class="n">half</span><span class="p">()</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+    <span class="c1"># Set up text generation pipeline</span>
+    <span class="n">pipe</span> <span class="o">=</span> <span class="n">pipeline</span><span class="p">(</span><span class="s2">&quot;text-generation&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">device_map</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pipe</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_full_text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_vllm_llm">
+<a class="viewcode-back" href="../../src.html#src.pipeline.get_vllm_llm">[docs]</a>
+<span class="k">def</span> <span class="nf">get_vllm_llm</span><span class="p">(</span><span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tokenizer_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pipeline</span><span class="p">:</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">vllm</span> <span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">SamplingParams</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;vllm must be installed to use vllm models&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tokenizer_name</span> <span class="o">==</span> <span class="n">model_name</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;vllm will ignore the tokenizer_name and use the same as model_name&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">batch_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;vllm does not need the batch_size parameters as it adjusts it dinamically&quot;</span><span class="p">)</span>
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">SamplingParams</span><span class="p">(</span>
+        <span class="n">max_tokens</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span>
+        <span class="n">min_tokens</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+        <span class="c1"># POSSIBLE PARAMS</span>
+        <span class="c1"># temperature=args.temperature if not args.use_beam_search else 0,</span>
+        <span class="c1"># top_p=args.top_p if not args.use_beam_search else 1,</span>
+        <span class="c1"># top_k=args.top_k if not args.use_beam_search else -1,        </span>
+        <span class="c1"># repetition_penalty=1.05,</span>
+        <span class="c1"># use_beam_search=args.use_beam_search,</span>
+        <span class="c1"># best_of=3 if args.use_beam_search else 1,</span>
+        <span class="c1"># skip_special_tokens=True,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># this is not the right way</span>
+    <span class="n">tensor_parallel_size</span> <span class="o">=</span> <span class="mi">4</span> <span class="k">if</span> <span class="s2">&quot;70&quot;</span> <span class="ow">in</span> <span class="n">model_name</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">llm</span> <span class="o">=</span> <span class="n">LLM</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+        <span class="n">tokenizer_mode</span><span class="o">=</span><span class="s2">&quot;slow&quot;</span><span class="p">,</span>
+        <span class="n">tensor_parallel_size</span><span class="o">=</span><span class="n">tensor_parallel_size</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">llm</span><span class="p">):</span>
+        <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">get_tokenizer</span><span class="p">()</span>
+        <span class="n">prompts</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span>
+            <span class="n">messages</span><span class="p">,</span> <span class="n">truncation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">prompts</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">batch_decode</span><span class="p">(</span><span class="n">prompts</span><span class="p">)</span>
+        <span class="c1"># print(prompts)</span>
+        <span class="k">return</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompts</span><span class="p">,</span> <span class="n">sampling_params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">generate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">llm</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">10</span>
+        <span class="n">raw_messages</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tell me a pirate joke&#39;</span><span class="p">,</span> <span class="s1">&#39;tell me a pirate joke&#39;</span><span class="p">]</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="p">[[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;tell me a pirate joke&quot;</span><span class="p">}]]</span><span class="o">*</span><span class="mi">2</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;HF Test&quot;</span><span class="p">)</span>
+        <span class="c1"># llm = get_hf_llm(&quot;facebook/opt-125m&quot;, &quot;facebook/opt-125m&quot;, 1)</span>
+        <span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;/leonardo_scratch/large/userexternal/gpuccett/models/hf_gemma/Gemma-2-9B-It-SPPO-Iter3&quot;</span>
+        <span class="n">tokenizer_name</span> <span class="o">=</span> <span class="s2">&quot;/leonardo_scratch/large/userexternal/gpuccett/models/hf_gemma/Gemma-2-9B-It-SPPO-Iter3&quot;</span>
+        <span class="n">llm</span> <span class="o">=</span> <span class="n">get_llm</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">tokenizer_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;huggingface&quot;</span><span class="p">)</span>
+    
+        <span class="n">output_text</span> <span class="o">=</span> <span class="n">llm</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_text</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="n">output_text</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">postprocess_results</span>
+        <span class="n">hf_out</span> <span class="o">=</span> <span class="n">postprocess_results</span><span class="p">(</span><span class="n">output_text</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">hf_out</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="n">output_text</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;generated_text&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">del</span> <span class="n">llm</span>
+        <span class="k">del</span> <span class="n">output_text</span>
+    
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;VLLM Test&quot;</span><span class="p">)</span>
+        <span class="c1"># llm = get_vllm_llm(&quot;facebook/opt-125m&quot;, &quot;facebook/opt-125m&quot;)</span>
+        <span class="n">llm</span> <span class="o">=</span> <span class="n">get_llm</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">tokenizer_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;vllm&quot;</span><span class="p">)</span>
+        <span class="n">output_text</span> <span class="o">=</span> <span class="n">llm</span><span class="p">(</span><span class="n">raw_messages</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_text</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="n">output_text</span><span class="p">)</span>
+        <span class="n">prompts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">output_text</span><span class="p">:</span>
+            <span class="n">prompt</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">prompt</span>
+            <span class="n">prompts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+            <span class="n">generated_text</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Prompt: </span><span class="si">{</span><span class="n">prompt</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Generated text: </span><span class="si">{</span><span class="n">generated_text</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">vllm_out</span> <span class="o">=</span> <span class="n">postprocess_results</span><span class="p">(</span><span class="n">output_text</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="n">vllm_out</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;HUGGINGFACE&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">hf_out</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;VLLM&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span> <span class="o">+</span> <span class="n">i</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">prompts</span><span class="p">,</span> <span class="n">vllm_out</span><span class="p">)])</span>
+
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Huu Nguyen, Harsh Raj.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

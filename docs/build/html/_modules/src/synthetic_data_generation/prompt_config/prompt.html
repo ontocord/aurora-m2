@@ -1,0 +1,795 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.synthetic_data_generation.prompt_config.prompt &mdash; AuroraM2 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            AuroraM2
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">AuroraM2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.synthetic_data_generation.prompt_config.prompt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.synthetic_data_generation.prompt_config.prompt</h1><div class="highlight"><pre>
+<span></span><span class="c1">#@title data and prompts</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="n">instruction_starter</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;scrutinize&#39;</span><span class="p">,</span> <span class="s1">&#39;examine&#39;</span><span class="p">,</span> <span class="s1">&#39;consider&#39;</span><span class="p">,</span> <span class="s1">&#39;evaluate&#39;</span><span class="p">,</span> <span class="s1">&#39;cross-validate&#39;</span><span class="p">,</span> <span class="s1">&#39;validate&#39;</span><span class="p">,</span> <span class="s1">&#39;anonymize&#39;</span><span class="p">,</span> <span class="s1">&#39;include&#39;</span><span class="p">,</span> <span class="s1">&#39;decode&#39;</span><span class="p">,</span> <span class="s1">&#39;map&#39;</span><span class="p">,</span> \
+                       <span class="s1">&#39;exclude&#39;</span><span class="p">,</span> <span class="s1">&#39;disregard&#39;</span><span class="p">,</span> <span class="s1">&#39;synthesize&#39;</span><span class="p">,</span> <span class="s1">&#39;highlight&#39;</span><span class="p">,</span> <span class="s1">&#39;integrate&#39;</span><span class="p">,</span> <span class="s1">&#39;incorporate&#39;</span><span class="p">,</span>\
+                       <span class="s1">&#39;access&#39;</span><span class="p">,</span> <span class="s1">&#39;enumerate&#39;</span><span class="p">,</span> <span class="s1">&#39;ascertain&#39;</span><span class="p">,</span> <span class="s1">&#39;deduce&#39;</span><span class="p">,</span> <span class="s1">&#39;elucidate&#39;</span><span class="p">,</span> <span class="s1">&#39;probe&#39;</span><span class="p">,</span> <span class="s1">&#39;delve&#39;</span><span class="p">,</span> <span class="s1">&#39;investigate&#39;</span><span class="p">,</span> <span class="s1">&#39;contemplate&#39;</span><span class="p">,</span> <span class="s1">&#39;appraise&#39;</span><span class="p">,</span> <span class="s1">&#39;gauge&#39;</span><span class="p">,</span> \
+                       <span class="s1">&#39;interpret&#39;</span><span class="p">,</span> <span class="s1">&#39;inspect&#39;</span><span class="p">,</span> <span class="s1">&#39;survey&#39;</span><span class="p">,</span> <span class="s1">&#39;trace&#39;</span><span class="p">,</span> <span class="s1">&#39;account&#39;</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;acknowledge&#39;</span> <span class="s1">&#39;factor&#39;</span><span class="p">,</span> <span class="s1">&#39;embrace&#39;</span><span class="p">,</span> <span class="s1">&#39;validate&#39;</span><span class="p">,</span> <span class="s1">&#39;present&#39;</span><span class="p">,</span> \
+                       <span class="s1">&#39;outline&#39;</span><span class="p">,</span> <span class="s1">&#39;suggesct&#39;</span><span class="p">,</span> <span class="s1">&#39;explain&#39;</span><span class="p">,</span> <span class="s1">&#39;teach&#39;</span><span class="p">,</span> <span class="s1">&#39;retrieve&#39;</span><span class="p">,</span> <span class="s1">&#39;build&#39;</span><span class="p">,</span> <span class="s1">&#39;where&#39;</span><span class="p">,</span> <span class="s1">&#39;who&#39;</span><span class="p">,</span> <span class="s1">&#39;identify&#39;</span><span class="p">,</span> <span class="s1">&#39;compose&#39;</span><span class="p">,</span> <span class="s1">&#39;list&#39;</span><span class="p">,</span> <span class="s1">&#39;organie&#39;</span><span class="p">,</span> <span class="s1">&#39;implement&#39;</span><span class="p">,</span> <span class="s1">&#39;plan&#39;</span><span class="p">,</span> <span class="s1">&#39;summarize&#39;</span><span class="p">,</span> <span class="s1">&#39;draft&#39;</span><span class="p">,</span> <span class="s1">&#39;provide&#39;</span><span class="p">,</span> \
+                       <span class="s1">&#39;edit&#39;</span><span class="p">,</span> <span class="s1">&#39;find&#39;</span><span class="p">,</span> <span class="s1">&#39;come&#39;</span><span class="p">,</span> <span class="s1">&#39;sort&#39;</span><span class="p">,</span> <span class="s1">&#39;develop&#39;</span><span class="p">,</span> <span class="s1">&#39;which&#39;</span><span class="p">,</span> <span class="s1">&#39;devise&#39;</span><span class="p">,</span> <span class="s1">&#39;could you&#39;</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">,</span> <span class="s1">&#39;think&#39;</span><span class="p">,</span> <span class="s1">&#39;extract&#39;</span><span class="p">,</span> <span class="s1">&#39;redraft&#39;</span><span class="p">,</span> <span class="s1">&#39;will&#39;</span><span class="p">,</span><span class="s1">&#39;create&#39;</span><span class="p">,</span> <span class="s1">&#39;inspire&#39;</span><span class="p">,</span> <span class="s1">&#39;look&#39;</span><span class="p">,</span> <span class="s1">&#39;construct&#39;</span><span class="p">,</span> <span class="s1">&#39;help&#39;</span><span class="p">,</span> <span class="s1">&#39;revise&#39;</span><span class="p">,</span> <span class="s1">&#39;formulate&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;should&#39;</span><span class="p">,</span> <span class="s1">&#39;does&#39;</span><span class="p">,</span> <span class="s1">&#39;how&#39;</span><span class="p">,</span> <span class="s1">&#39;did&#39;</span><span class="p">,</span> <span class="s1">&#39;what&#39;</span><span class="p">,</span> <span class="s1">&#39;can you&#39;</span><span class="p">,</span> <span class="s1">&#39;when&#39;</span><span class="p">,</span> <span class="s1">&#39;craft&#39;</span><span class="p">,</span> <span class="s1">&#39;do&#39;</span><span class="p">,</span> <span class="s1">&#39;analyze&#39;</span><span class="p">,</span> <span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="s1">&#39;amend&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">,</span> <span class="s1">&#39;rewrite&#39;</span><span class="p">,</span> <span class="s1">&#39;brainstorm&#39;</span><span class="p">}</span>
+
+
+<span class="n">instruction_starter_capitalized</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">+</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">instruction_starter</span><span class="p">]</span>
+
+<span class="n">reasoning_methods</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Inductive reasoning (drawing generalizations from specific instances)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Deductive reasoning (deriving specific conclusions from general principles)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Abductive reasoning (inferring the most likely explanation from incomplete data)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ontology inference (deriving knowledge based on an established framework of concepts)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Backward chaining (reasoning from a goal to the necessary conditions to achieve it)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Forward chaining (reasoWning from known facts to derive conclusions or reach a goal)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Analogical reasoning (drawing parallels between similar situations to infer conclusions)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Causal reasoning (identifying cause-and-effect relationships)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Bayesian inference (updating probabilities based on new evidence)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Probabilistic reasoning (reasoning under uncertainty using probability)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Hypothetical reasoning (considering possible scenarios or what-if situations)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Heuristic reasoning (using rules of thumb or shortcuts to solve problems quickly)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Moral reasoning (making decisions based on ethical principles)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Temporal reasoning (considering time-related aspects in reasoning)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Fuzzy logic reasoning (reasoning with degrees of truth rather than binary true/false)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Counterfactual reasoning (considering alternative scenarios that could have happened)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Non-monotonic reasoning (reasoning where conclusions can be withdrawn based on new evidence)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Commonsense reasoning (using everyday knowledge and logic to make decisions)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Qualitative reasoning (reasoning about qualitative relationships rather than quantitative data)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Metaphorical reasoning (using metaphors to understand and explain concepts)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Structural reasoning (understanding relationships between components within a system)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Scenario-based reasoning (using detailed scenarios to explore outcomes and decisions)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Spatial reasoning (understanding and reasoning about space and spatial relationships)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Teleological reasoning (reasoning based on the purpose or goal of an object or action)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Deontic reasoning (reasoning about duties, permissions, and obligations)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Argumentative reasoning (constructing and evaluating arguments)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pragmatic reasoning (reasoning focused on practical outcomes and consequences)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Deductive-nomological reasoning (explaining phenomena based on laws and initial conditions)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Intuitionistic reasoning (relying on intuitive insights and non-empirical knowledge)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Case-based reasoning (solving new problems based on past similar cases)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Example-based reasoning (reasoning based on examples that illustrate a principle or rule)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Paraconsistent reasoning (reasoning in the presence of contradictions without inconsistency)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Defeasible reasoning (reasoning that allows for conclusions to be revised based on new evidence)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Modal reasoning (reasoning about possibility, necessity, and other modalities)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Deontological reasoning (reasoning based on adherence to rules and duties)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Top-down reasoning (starting from a general principle and working down to specifics)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Bottom-up reasoning (starting from specifics and working up to a general principle)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Reductive reasoning (breaking down complex ideas into simpler components)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Analogical modeling (creating models based on analogy to better understand a system)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Simulation-based reasoning (using simulations to explore and predict outcomes)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Empirical reasoning (reasoning based on observation and experience)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Algorithmic reasoning (using algorithms and step-by-step procedures to solve problems)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Metacognitive reasoning (thinking about one&#39;s own thinking processes)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Recursive reasoning (reasoning that references itself or builds upon previous steps)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Explanatory reasoning (providing explanations to clarify understanding)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Rule-based reasoning (applying specific rules to draw conclusions)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Game-theoretic reasoning (reasoning based on strategic interactions among agents)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Comparative reasoning (drawing conclusions by comparing different cases or examples)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Narrative reasoning (reasoning through storytelling or sequential explanation)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Systemic reasoning (understanding the behavior of complex systems as a whole)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Multi-valued reasoning (reasoning in systems with more than two truth values)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Proportional reasoning (understanding relationships based on proportions and ratios)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Symptomatic reasoning (inferring underlying causes based on observed symptoms)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;First-principle reasoning (breaking down problems to their fundamental elements)&quot;</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="evolv_doc_starter">
+<a class="viewcode-back" href="../../../../src.synthetic_data_generation.prompt_config.html#src.synthetic_data_generation.prompt_config.prompt.evolv_doc_starter">[docs]</a>
+<span class="k">def</span> <span class="nf">evolv_doc_starter</span><span class="p">(</span><span class="n">all_personas</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;trusthful, helpful professional&quot;</span><span class="p">],</span> <span class="n">stakeholders</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;high school student&quot;</span><span class="p">,</span> <span class="s2">&quot;grade school student&quot;</span><span class="p">,</span> <span class="s2">&quot;five year old&quot;</span><span class="p">,</span> <span class="s2">&quot;college student&quot;</span><span class="p">,</span> <span class="s2">&quot;graduate student&quot;</span><span class="p">]):</span>
+  <span class="n">base_evolv_doc_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;&#39;</span><span class="p">,</span>
+      <span class="s2">&quot;The response should be appropriate for a middle school student.&quot;</span><span class="p">,</span> <span class="s2">&quot;The response should be appropriate for a high school student.&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;The response should be appropriate for a college student.&quot;</span><span class="p">,</span> <span class="s2">&quot;The response should be appropriate for a masters student.&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;The response should be appropriate for a PhD student.&quot;</span><span class="p">,</span>   <span class="s2">&quot;The response should be appropriate for a post doctorate student.&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Explain this to me like I am 5 years old.&quot;</span><span class="p">,</span> <span class="s2">&quot;Explain this to me like I am 10 years old.&quot;</span><span class="p">,</span> <span class="s2">&quot;Explain this to me like I am 15 years old.&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Explain this to me like I am 20 years old.&quot;</span><span class="p">,</span> <span class="s2">&quot;Explain this to me like I am 30 years old.&quot;</span><span class="p">,</span> <span class="s2">&quot;Explain this to me like I am 40 years old.&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Explain this to me like I am 50 years old.&quot;</span><span class="p">,</span> <span class="s2">&quot;Explain this to me like I am 70 years old.&quot;</span><span class="p">,</span> <span class="s2">&quot;Explain this to me like I am 90 years old.&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;The response should be very advanced.&quot;</span><span class="p">,</span> <span class="s2">&quot;The response should be for a genius.&quot;</span><span class="p">,</span> <span class="s2">&quot;Be sure to add explanations for each item in the response.&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Explain everything step-by-step.&quot;</span><span class="p">,</span> <span class="s2">&quot;Explain everything using deductive logic.&quot;</span><span class="p">,</span> <span class="s2">&quot;Explain everything using case based reasoning.&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Explain everything using analogical reasoning.&quot;</span><span class="p">,</span> <span class="s2">&quot;Explain everything using inductive reasoning.&quot;</span><span class="p">,</span> <span class="s2">&quot;Add a 4-part multiple-choice question.&quot;</span><span class="p">,</span> <span class="s2">&quot;Add a 5-part multiple-choice question.&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Add a 6-part multiple-choice question.&quot;</span><span class="p">,</span> <span class="s2">&quot;Add a 7-part multiple-choice question.&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Add key details and inter-disciplinary topics to the response.&quot;</span><span class="p">,</span> <span class="s2">&quot;Add abstractions and generalizations based on two or more examples.&quot;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the instruction a four part command.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the instruction a three part command.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the instruction a two part command.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the instruction a four part question.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the instruction a three part question.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the instruction a two part question.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the instruction a very complicated question.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the instruction a question.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make at least one of the instruction a command to summarize the context document.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make at least one of the instruction a command to paraphrase the context document.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make at least one of the instruction a command to extract information from the context document.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make at least one of the instruction a command to revise the context document.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;The responses should be at least 5 sentences.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;The responses should be at least 10 sentences.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;The responses should be at least 20 sentences.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;The responses should be at least 2 paragraphs.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;The responses should be at least 3 paragraphs.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;The responses should be at least 4 paragraphs.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;At least one instruction should add more details.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;If the task relates to general concepts, change the general concepts to specific concepts in the instructions.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;If the task relates to specific concepts, change the specific concepts to general concepts in the instructions.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Use in-depth-reasoning.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Be sure to think step-by-step.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;The instructions should require high level reasoning&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;The instructions should also include at least one multi-step question that requires in depth reasoning.&#39;</span>
+      <span class="s1">&#39;If the summary relates to general concepts, change the general concepts in the document to specific concepts.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;If the summary relates to specific concepts, change the specific concepts in the document to general concepts.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;If the outline relates to general concepts, change the general concepts in the document to specific concepts.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;If the outline relates to specific concepts, change the specific concepts in the document to general concepts.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;If the summary and outline relates to general concepts, change the general concepts in the document to specific concepts.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;If the summary and outline relates to specific concepts, change the specific concepts in the document to general concepts.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Replace all proper nouns with templates in brackets, e.g., [Person A].&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Revise the document so that it is a about a different person, place or thing, but keep the same content and themes from the summary and the same style and format from the outline.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the document at least 10 sentences.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the document at least 20 sentences.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the document at least 30 sentences.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the document at least 3 parts.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the document at least 4 parts.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the document at least 5 parts.&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;Make the document helpful in answering quesitons set forth in the summary.&#39;</span><span class="p">,]</span>
+  <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">base_evolv_doc_list</span> <span class="o">+</span> <span class="p">[</span>
+      <span class="p">(</span><span class="s1">&#39;The response should be directed to a &#39;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_personas</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s1">&#39;The response should be directed to a &#39;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_personas</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s1">&#39;The response should be directed to a &#39;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_personas</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s1">&#39;The response should be directed to a &#39;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_personas</span><span class="p">)</span> <span class="o">+</span><span class="s2">&quot; serving &quot;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">stakeholders</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s1">&#39;The response should be directed to a &#39;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_personas</span><span class="p">)</span> <span class="o">+</span><span class="s2">&quot; serving &quot;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">stakeholders</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s1">&#39;The response should be directed to a &#39;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">all_personas</span><span class="p">)</span> <span class="o">+</span><span class="s2">&quot; serving &quot;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">stakeholders</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s1">&#39;The response should be directed to a &#39;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">stakeholders</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s1">&#39;The response should be directed to a &#39;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">stakeholders</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s1">&#39;The response should be directed to a &#39;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">stakeholders</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+      <span class="p">(</span><span class="s1">&#39;The response should be directed to a &#39;</span> <span class="o">+</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">stakeholders</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">),</span>
+    <span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="first_instruction_starter">
+<a class="viewcode-back" href="../../../../src.synthetic_data_generation.prompt_config.html#src.synthetic_data_generation.prompt_config.prompt.first_instruction_starter">[docs]</a>
+<span class="k">def</span> <span class="nf">first_instruction_starter</span><span class="p">(</span><span class="n">document_type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">instruction_starter_capitalized</span><span class="o">+</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                                          <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                                          <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                                          <span class="s2">&quot;Can you please&quot;</span><span class="p">,</span> <span class="s2">&quot;Help me&quot;</span><span class="p">,</span> <span class="s2">&quot;Please help&quot;</span><span class="p">,</span> <span class="s2">&quot;Can you help&quot;</span><span class="p">,</span> <span class="s2">&quot;Can you&quot;</span><span class="p">,</span> <span class="s2">&quot;Can&quot;</span><span class="p">,</span>
+                                                          <span class="s2">&quot;Will you&quot;</span><span class="p">,</span> <span class="s2">&quot;Will you please&quot;</span><span class="p">,</span> <span class="s2">&quot;Won&#39;t&quot;</span><span class="p">,</span> <span class="s2">&quot;Might&quot;</span><span class="p">,</span> <span class="s2">&quot;Shall&quot;</span><span class="p">,</span> <span class="s2">&quot;Can&#39;t&quot;</span><span class="p">,</span> <span class="s2">&quot;Won&#39;t you&quot;</span><span class="p">,</span> <span class="s2">&quot;Ok, then&quot;</span><span class="p">,</span> <span class="s2">&quot;Now please&quot;</span><span class="p">,</span> <span class="s2">&quot;Next please&quot;</span><span class="p">,</span> <span class="s2">&quot;First please&quot;</span><span class="p">,</span>
+                                                          <span class="s2">&quot;Think up&quot;</span><span class="p">,</span> <span class="s2">&quot;Think of&quot;</span><span class="p">,</span> <span class="s2">&quot;Thank&quot;</span><span class="p">,</span>
+                                                          <span class="s2">&quot;Come up with&quot;</span><span class="p">,</span> <span class="s2">&quot;Inspire&quot;</span><span class="p">,</span> <span class="s2">&quot;Create a scene&quot;</span><span class="p">,</span> <span class="s2">&quot;Create a dialogue&quot;</span><span class="p">,</span> <span class="s2">&quot;Create a chat history&quot;</span><span class="p">,</span> <span class="s2">&quot;Really&quot;</span><span class="p">,</span> <span class="s2">&quot;Hey&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;Greetings&quot;</span><span class="p">,</span> <span class="s2">&quot;Teach&quot;</span><span class="p">,</span> <span class="s2">&quot;Teach me&quot;</span><span class="p">,</span> <span class="s2">&quot;I want&quot;</span><span class="p">,</span> <span class="s2">&quot;I need&quot;</span><span class="p">,</span> <span class="s2">&quot;I can&quot;</span><span class="p">,</span> <span class="s2">&quot;I must&quot;</span><span class="p">,</span> <span class="s2">&quot;I wouold&quot;</span><span class="p">,</span>
+                                                          <span class="s2">&quot;In&quot;</span><span class="p">,</span> <span class="s2">&quot;Assuming&quot;</span><span class="p">,</span> <span class="s2">&quot;You&quot;</span><span class="p">,</span> <span class="s2">&quot;Act&quot;</span><span class="p">,</span> <span class="s2">&quot;As an AI&quot;</span><span class="p">,</span> <span class="s2">&quot;Can&quot;</span><span class="p">,</span> <span class="s2">&quot;Will&quot;</span><span class="p">,</span> <span class="s2">&quot;Please&quot;</span><span class="p">,</span> <span class="s2">&quot;Assume the role&quot;</span><span class="p">,</span> <span class="s2">&quot;Help&quot;</span><span class="p">,</span> <span class="s2">&quot;Assuming that you&quot;</span><span class="p">,</span> <span class="s2">&quot;Be my&quot;</span><span class="p">,</span> <span class="s2">&quot;Can you be my&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;Does&quot;</span><span class="p">,</span> <span class="s2">&quot;Doesn&#39;t&quot;</span><span class="p">,</span> <span class="s2">&quot;Do&quot;</span><span class="p">,</span> <span class="s2">&quot;Should&quot;</span><span class="p">,</span> <span class="s2">&quot;Must&quot;</span><span class="p">,</span> <span class="s2">&quot;Where&quot;</span><span class="p">,</span><span class="s2">&quot; When&quot;</span><span class="p">,</span> <span class="s2">&quot;How do&quot;</span><span class="p">,</span> <span class="s2">&quot;How can&quot;</span><span class="p">,</span> <span class="s2">&quot;How should&quot;</span><span class="p">,</span> <span class="s2">&quot;How&quot;</span><span class="p">,</span> <span class="s2">&quot;How much&quot;</span><span class="p">,</span> <span class="s2">&quot;What&quot;</span><span class="p">,</span> <span class="s2">&quot;Which&quot;</span><span class="p">,</span> \
+                                                            <span class="s2">&quot;As&quot;</span><span class="p">,</span> <span class="s2">&quot;Let&quot;</span><span class="p">,</span> <span class="s2">&quot;Firstly&quot;</span><span class="p">,</span> <span class="s2">&quot;First&quot;</span><span class="p">,</span> <span class="s2">&quot;First,&quot;</span><span class="p">,</span> <span class="s2">&quot;Please answer step-by-step:&quot;</span><span class="p">,</span> <span class="s2">&quot;Please answer this instruction step-by-step:&quot;</span><span class="p">,</span> <span class="s2">&quot;Please answer this question step-by-step:&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;First analyze the context&quot;</span><span class="p">,</span> <span class="s2">&quot;First analyze the document&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;Analyze the context for&quot;</span><span class="p">,</span> <span class="s2">&quot;Analyze the document for&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;Review the context and&quot;</span><span class="p">,</span> <span class="s2">&quot;Review the above document and&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;As&quot;</span><span class="p">,</span> <span class="s2">&quot;Let&quot;</span><span class="p">,</span> <span class="s2">&quot;Firstly&quot;</span><span class="p">,</span> <span class="s2">&quot;First&quot;</span><span class="p">,</span> <span class="s2">&quot;First,&quot;</span><span class="p">,</span> <span class="s2">&quot;Please answer step-by-step:&quot;</span><span class="p">,</span> <span class="s2">&quot;Please answer this instruction step-by-step:&quot;</span><span class="p">,</span> <span class="s2">&quot;Please answer this question step-by-step:&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;First analyze the context&quot;</span><span class="p">,</span> <span class="s2">&quot;First analyze the document&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;Analyze the context for&quot;</span><span class="p">,</span> <span class="s2">&quot;Analyze the document for&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;Review the context and&quot;</span><span class="p">,</span> <span class="s2">&quot;Review the above document and&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;Look at the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> information above and&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Read for me the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> document and&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;Analyze the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> information above for&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Analyze the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> document for&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;Review the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2">  information and&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Review the above </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> document and&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;Look at the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> snippet above and&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Read for me the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> data and&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;Analyze the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> snippet above for&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Analyze the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> data for&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;Review the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2">  snippet and&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Review the above </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> data and&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;Look at the context and&quot;</span><span class="p">,</span> <span class="s2">&quot;Read the above document and&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;With respect to the context,&quot;</span><span class="p">,</span> <span class="s2">&quot;With respect to the document,&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;With respect to the context,&quot;</span><span class="p">,</span> <span class="s2">&quot;With respect to the document,&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;Look at the context and&quot;</span><span class="p">,</span> <span class="s2">&quot;Read the above document and&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;With respect to the context,&quot;</span><span class="p">,</span> <span class="s2">&quot;With respect to the document,&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;With respect to the context,&quot;</span><span class="p">,</span> <span class="s2">&quot;With respect to the document,&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> information above,&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> document above,&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> information above,&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> document above,&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> information above,&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> document above,&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> snippet above,&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> data above,&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> snippet above,&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> data above,&quot;</span><span class="p">,</span>
+                                                            <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> snippet above,&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;With respect to the </span><span class="si">{</span><span class="n">document_type</span><span class="si">}</span><span class="s2"> data above,&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;With respect to&quot;</span><span class="p">,</span> <span class="s2">&quot;With respect to the above&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;Referring to the above&quot;</span><span class="p">,</span> <span class="s2">&quot;Referring to the document&quot;</span><span class="p">,</span> <span class="s2">&quot;Referring to the context&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;With respect to&quot;</span><span class="p">,</span> <span class="s2">&quot;With respect to the above&quot;</span><span class="p">,</span>
+                                                            <span class="s2">&quot;Please refer to the above&quot;</span><span class="p">,</span> <span class="s2">&quot;Please refer to the document&quot;</span><span class="p">,</span> <span class="s2">&quot;Please refer to the context&quot;</span><span class="p">,</span>
+                                                          <span class="p">])</span></div>
+
+
+
+<span class="n">personality_traits</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">&quot;ISTJ&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Dependable Strategist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Quiet, serious, earn success by thoroughness and dependability. Practical, matter-of-fact, realistic, and responsible. Decide logically what should be done and work toward it steadily, regardless of distractions. Take pleasure in making everything orderly and organized - their work, their home, their life. Value traditions and loyalty.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ISFJ&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Caring Steward&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Quiet, friendly, responsible, and conscientious. Committed and steady in meeting their obligations. Thorough, painstaking, and accurate. Loyal, considerate, notice and remember specifics about people who are important to them, concerned with how others feel. Strive to create an orderly and harmonious environment at work and at home.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;INFJ&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Visionary Advocate&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Seek meaning and connection in ideas, relationships, and material possessions. Want to understand what motivates people and are insightful about others. Conscientious and committed to their firm values. Develop a clear vision about how best to serve the common good. Organized and decisive in implementing their vision.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;INTJ&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Ambitious Innovator&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Have original minds and great drive for implementing their ideas and achieving their goals. Quickly see patterns in external events and develop long-range explanatory perspectives. When committed, organize a job and carry it through. Skeptical and independent, have high standards of competence and performance - for themselves and others.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ISTP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Resourceful Problem Solver&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Tolerant and flexible, quiet observers until a problem appears, then act quickly to find workable solutions. Analyze what makes things work and readily get through large amounts of data to isolate the core of practical problems. Interested in cause and effect, organize facts using logical principles, value efficiency.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ISFP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Gentle Artist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Quiet, friendly, sensitive, and kind. Enjoy the present moment, what&#39;s going on around them. Like to have their own space and to work within their own time frame. Loyal and committed to their values and to people who are important to them. Dislike disagreements and conflicts, do not force their opinions or values on others.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;INFP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Idealistic Dreamer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Idealistic, loyal to their values and to people who are important to them. Want an external life that is congruent with their values. Curious, quick to see possibilities, can be catalysts for implementing ideas. Seek to understand people and to help them fulfill their potential. Adaptable, flexible, and accepting unless a value is threatened.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;INTP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Analytical Thinker&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Seek to develop logical explanations for everything that interests them. Theoretical and abstract, interested more in ideas than in social interaction. Quiet, contained, flexible, and adaptable. Have unusual ability to focus in depth to solve problems in their area of interest. Skeptical, sometimes critical, always analytical.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ESTP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Energetic Realist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Flexible and tolerant, they take a pragmatic approach focused on immediate results. Theories and conceptual explanations bore them - they want to act energetically to solve the problem. Focus on the here-and-now, spontaneous, enjoy each moment that they can be active with others. Enjoy material comforts and style. Learn best through doing.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ESFP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Enthusiastic Performer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Outgoing, friendly, and accepting. Exuberant lovers of life, people, and material comforts. Enjoy working with others to make things happen. Bring common sense and a realistic approach to their work, and make work fun. Flexible and spontaneous, adapt readily to new people and environments. Learn best by trying a new skill with other people.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ENFP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Inspiring Explorer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Warmly enthusiastic and imaginative. See life as full of possibilities. Make connections between events and information very quickly, and confidently proceed based on the patterns they see. Want a lot of affirmation from others, and readily give appreciation and support. Spontaneous and flexible, often rely on their ability to improvise and their verbal fluency.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ENTP&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Quick-witted Trailblazer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Quick, ingenious, stimulating, alert, and outspoken. Resourceful in solving new and challenging problems. Adept at generating conceptual possibilities and then analyzing them strategically. Good at reading other people. Bored by routine, will seldom do the same thing the same way, apt to turn to one new interest after another.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ESTJ&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Efficient Organizer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Practical, realistic, matter-of-fact. Decisive, quickly move to implement decisions. Organize projects and people to get things done, focus on getting results in the most efficient way possible. Take care of routine details. Have a clear set of logical standards, systematically follow them and want others to also. Forceful in implementing their plans.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ESFJ&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Supportive Coordinator&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Warmhearted, conscientious, and cooperative. Want harmony in their environment, work with determination to establish it. Like to work with others to complete tasks accurately and on time. Loyal, follow through even in small matters. Notice what others need in their day-by-day lives and try to provide it. Want to be appreciated for who they are and for what they contribute.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ENFJ&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Empathetic Motivator&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Warm, empathetic, responsive, and responsible. Highly attuned to the emotions, needs, and motivations of others. Find potential in everyone, want to help others fulfill their potential. May act as catalysts for individual and group growth. Loyal, responsive to praise and criticism. Sociable, facilitate others in a group, and provide inspiring leadership.&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;ENTJ&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;The Decisive Visionary&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Frank, decisive, assume leadership readily. Quickly see illogical and inefficient procedures and policies, develop and implement comprehensive systems to solve organizational problems. Enjoy long-term planning and goal setting. Usually well informed, well read, enjoy expanding their knowledge and passing it on to others. Forceful in presenting their ideas.&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># this corresponds to the TurkuNLP registries. Add this when we know the type of registry a particular text is.</span>
+<span class="n">style</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Lyrical&quot;</span><span class="p">,</span> <span class="s2">&quot;Spoken&quot;</span><span class="p">,</span> <span class="s2">&quot;Interview&quot;</span><span class="p">,</span> <span class="s2">&quot;Interactive Discussion&quot;</span><span class="p">,</span> <span class="s2">&quot;Narrative&quot;</span><span class="p">,</span> <span class="s2">&quot;News Report&quot;</span><span class="p">,</span> <span class="s2">&quot;Sports Report&quot;</span><span class="p">,</span> <span class="s2">&quot;Narrative Blog&quot;</span><span class="p">,</span> <span class="s2">&quot;How-to&quot;</span><span class="p">,</span> <span class="s2">&quot;Recipe&quot;</span><span class="p">,</span> <span class="s2">&quot;Informational Description&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;Encyclopedia Article&quot;</span><span class="p">,</span> <span class="s2">&quot;Research Article&quot;</span><span class="p">,</span> <span class="s2">&quot;Descriptive Article&quot;</span><span class="p">,</span> <span class="s2">&quot;FAQ&quot;</span><span class="p">,</span> <span class="s2">&quot;Opinion&quot;</span><span class="p">,</span> <span class="s2">&quot;Review&quot;</span><span class="p">,</span> <span class="s2">&quot;Opinion Blog&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;Denominational Religious Blog or Sermon&quot;</span><span class="p">,</span> <span class="s2">&quot;Informational Persuasion&quot;</span><span class="p">,</span> <span class="s2">&quot;Sales Pitch&quot;</span><span class="p">,</span> <span class="s2">&quot;News and Opinon Blog or Editoral&quot;</span><span class="p">,</span> <span class="p">]</span>
+
+<span class="n">length</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Long&quot;</span><span class="p">,</span> <span class="s2">&quot;Short&quot;</span><span class="p">,</span> <span class="s2">&quot;Medium&quot;</span><span class="p">,</span> <span class="s2">&quot;One Paragraph&quot;</span><span class="p">,</span> <span class="s2">&quot;Two Paragraph&quot;</span><span class="p">,</span> <span class="s2">&quot;Five Paragraph&quot;</span><span class="p">,</span> <span class="s2">&quot;1000 words&quot;</span><span class="p">,</span> <span class="s2">&quot;10 words&quot;</span><span class="p">,</span> <span class="s2">&quot;100 words&quot;</span><span class="p">]</span>
+
+<span class="n">professions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Engineer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Doctor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Nurse&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Teacher&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Software Developer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Data Scientist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Lawyer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pharmacist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Researcher&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Accountant&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Architect&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Chef&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Dentist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Journalist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Pilot&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Photographer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Police Officer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Veterinarian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Writer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Painter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Musician&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Athlete&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Actor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Psychologist&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Carpenter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Electrician&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Plumber&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Social Worker&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Farmer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Mechanic&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># Use this if there is no life-skill involved (e.g., non-how-to videos)</span>
+<span class="n">tasks_template_list</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Critical Thinking&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Problem Solving&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Communication&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Teamwork&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Adaptability&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Time Management&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Organization&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Creativity&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Emotional Intelligence&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Leadership&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Self-Motivation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Stress Management&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Decision Making&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Assertiveness&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Resilience&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Empathy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Negotiation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Conflict Resolution&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Budgeting&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Computer Literacy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Foreign Language&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Cultural Awareness&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Networking&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Personal Hygiene&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Cooking&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;First Aid&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Document Drafting&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Purchasing&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Selling&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Risk Management&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="c1"># Use this for the textbook generation pipeline</span>
+<span class="n">textbook_2_sections</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Mathematics Textbook&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Introduction to concepts&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Definitions &amp; Theorems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Worked examples&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Practice problems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Graphs and tables&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Chapter summaries&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Solutions&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;History Textbook&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Introduction to eras or events&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Timelines&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Maps and geographical context&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Biographical sketches&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Primary source excerpts&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Discussion questions&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Chapter summaries&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Glossary of terms&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Biology Textbook&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Introduction to life sciences&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Cell biology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Genetics and evolution&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Human anatomy and physiology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Botany&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Ecology and ecosystems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Lab activities and experiments&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Chapter summaries&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Glossary of terms&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Literature or Language Arts Textbook&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Introduction to literary elements&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Excerpts or complete works&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Author biographies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Vocabulary lists&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Literary analysis and discussion questions&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Writing and composition exercises&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Physics Textbook&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Introduction to physical concepts&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Laws and principles&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Worked examples&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Diagrams and illustrations&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Lab experiments&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Practice problems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Chapter summaries&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Solutions&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Economics Textbook&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Introduction to economic theories&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Supply and demand&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Macroeconomics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Microeconomics&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;International trade&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Economic indicators&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Case studies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Chapter summaries&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Computer Science Textbook&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Introduction to computing&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Basics of programming languages&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Data structures and algorithms&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Computer architecture&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Operating systems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Networking and databases&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Case studies and real-world applications&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Practice exercises and coding challenges&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Psychology Textbook&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Introduction to psychology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Biological bases of behavior&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Cognitive processes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Developmental psychology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Social psychology&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Psychological disorders and treatments&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Case studies&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Chapter summaries&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Language Learning Textbook&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Introduction to the language and its origin&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Alphabet and pronunciation guides&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Vocabulary lists&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Grammar rules and structures&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Conversational dialogues&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Cultural insights&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Practice exercises and quizzes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Audio or visual supplementary materials&quot;</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;Geography Textbook&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Introduction to the world and regions&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Physical geography&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Human geography&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Maps and charts&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Activities and field study suggestions&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Chapter summaries&quot;</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">media_2_sections</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;play&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;scene&#39;</span><span class="p">,</span> <span class="s1">&#39;character&#39;</span><span class="p">,</span> <span class="s1">&#39;dialog&#39;</span><span class="p">],</span> <span class="s1">&#39;novel&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;chapter&#39;</span><span class="p">,</span> <span class="s1">&#39;character&#39;</span><span class="p">,</span> <span class="s1">&#39;narration&#39;</span><span class="p">],</span> <span class="s1">&#39;essay&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;introduction&#39;</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span><span class="p">,</span> <span class="s1">&#39;conclusion&#39;</span><span class="p">],</span> <span class="s1">&#39;paper&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;abstract&#39;</span><span class="p">,</span> <span class="s1">&#39;introduction&#39;</span><span class="p">,</span> <span class="s1">&#39;methodology&#39;</span><span class="p">,</span> <span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;discussion&#39;</span><span class="p">,</span> <span class="s1">&#39;conclusion&#39;</span><span class="p">],</span> <span class="s1">&#39;news article&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;headline&#39;</span><span class="p">,</span> <span class="s1">&#39;byline&#39;</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="s1">&#39;poem&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;stanza&#39;</span><span class="p">,</span> <span class="s1">&#39;line&#39;</span><span class="p">,</span> <span class="s1">&#39;verse&#39;</span><span class="p">,</span> <span class="s1">&#39;rhyme scheme&#39;</span><span class="p">],</span> <span class="s1">&#39;film script&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;scene&#39;</span><span class="p">,</span> <span class="s1">&#39;character&#39;</span><span class="p">,</span> <span class="s1">&#39;dialog&#39;</span><span class="p">,</span> <span class="s1">&#39;action&#39;</span><span class="p">],</span> <span class="s1">&#39;short story&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;beginning&#39;</span><span class="p">,</span> <span class="s1">&#39;middle&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;character&#39;</span><span class="p">,</span> <span class="s1">&#39;narration&#39;</span><span class="p">],</span> <span class="s1">&#39;scientific journal article&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;abstract&#39;</span><span class="p">,</span> <span class="s1">&#39;introduction&#39;</span><span class="p">,</span> <span class="s1">&#39;related work&#39;</span><span class="p">,</span> <span class="s1">&#39;methodology&#39;</span><span class="p">,</span> <span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;discussion&#39;</span><span class="p">,</span> <span class="s1">&#39;conclusion&#39;</span><span class="p">,</span> <span class="s1">&#39;based_document&#39;</span><span class="p">],</span> <span class="s1">&#39;interview transcript&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;question&#39;</span><span class="p">,</span> <span class="s1">&#39;answer&#39;</span><span class="p">,</span> <span class="s1">&#39;participant&#39;</span><span class="p">],</span> <span class="s1">&#39;movie&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;scene&#39;</span><span class="p">,</span> <span class="s1">&#39;character&#39;</span><span class="p">,</span> <span class="s1">&#39;dialog&#39;</span><span class="p">],</span> <span class="s1">&#39;podcast&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;episode&#39;</span><span class="p">,</span> <span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="s1">&#39;guest&#39;</span><span class="p">,</span> <span class="s1">&#39;discussion&#39;</span><span class="p">],</span> <span class="s1">&#39;article&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;author&#39;</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="s1">&#39;comic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;strip&#39;</span><span class="p">,</span> <span class="s1">&#39;character&#39;</span><span class="p">,</span> <span class="s1">&#39;dialog&#39;</span><span class="p">,</span> <span class="s1">&#39;narration&#39;</span><span class="p">],</span> <span class="s1">&#39;magazine&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cover&#39;</span><span class="p">,</span> <span class="s1">&#39;table of contents&#39;</span><span class="p">,</span> <span class="s1">&#39;article&#39;</span><span class="p">,</span> <span class="s1">&#39;advertisements&#39;</span><span class="p">],</span> <span class="s1">&#39;documentary&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;introduction&#39;</span><span class="p">,</span> <span class="s1">&#39;interview&#39;</span><span class="p">,</span> <span class="s1">&#39;footage&#39;</span><span class="p">,</span> <span class="s1">&#39;voiceover&#39;</span><span class="p">,</span> <span class="s1">&#39;conclusion&#39;</span><span class="p">],</span> <span class="s1">&#39;rant&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;topic&#39;</span><span class="p">,</span> <span class="s1">&#39;opinions&#39;</span><span class="p">,</span> <span class="s1">&#39;arguments&#39;</span><span class="p">],</span> <span class="s1">&#39;online conversation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;participants&#39;</span><span class="p">,</span> <span class="s1">&#39;messages&#39;</span><span class="p">,</span> <span class="s1">&#39;timestamps&#39;</span><span class="p">],</span> <span class="s1">&#39;intimate conversation between lovers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;emotion&#39;</span><span class="p">,</span> <span class="s1">&#39;exchange&#39;</span><span class="p">,</span> <span class="s1">&#39;affection&#39;</span><span class="p">],</span> <span class="s1">&#39;bedtime lullaby&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;lyrics&#39;</span><span class="p">,</span> <span class="s1">&#39;melody&#39;</span><span class="p">,</span> <span class="s1">&#39;repetition&#39;</span><span class="p">],</span> <span class="s1">&#39;lecture&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;topic&#39;</span><span class="p">,</span> <span class="s1">&#39;speaker&#39;</span><span class="p">,</span> <span class="s1">&#39;slides&#39;</span><span class="p">,</span> <span class="s1">&#39;Q&amp;A&#39;</span><span class="p">]}</span>
+<span class="n">document_template_types</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">media_2_sections</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;math problem&quot;</span><span class="p">,</span> <span class="s2">&quot;grade school math problem&quot;</span><span class="p">,</span> <span class="s2">&quot;highschool math problem&quot;</span><span class="p">,</span> <span class="s2">&quot;college level math problem&quot;</span><span class="p">,</span> <span class="s2">&quot;programming problem&quot;</span><span class="p">,</span> <span class="s2">&quot;logic problem&quot;</span><span class="p">,</span> <span class="s2">&quot;advertisement&quot;</span><span class="p">,</span> <span class="s2">&quot;blogpost&quot;</span><span class="p">,</span> <span class="s2">&quot;standup routine&quot;</span><span class="p">,</span> <span class="s2">&quot;court case&quot;</span><span class="p">,</span> <span class="s2">&quot;legal brief&quot;</span><span class="p">,</span> <span class="s2">&quot;legal regulation&quot;</span><span class="p">,</span> <span class="s2">&quot;song&quot;</span><span class="p">,</span> <span class="s2">&quot;poem&quot;</span><span class="p">,</span> <span class="s2">&quot;essay&quot;</span><span class="p">,</span> <span class="s2">&quot;Youtube subtitles&quot;</span><span class="p">,</span> <span class="s2">&quot;website&quot;</span><span class="p">,</span> <span class="s2">&quot;comic book&quot;</span><span class="p">,</span> <span class="s2">&quot;play&quot;</span><span class="p">,</span> <span class="s2">&quot;screenplay&quot;</span><span class="p">,</span> <span class="s2">&quot;dialog&quot;</span><span class="p">,</span> <span class="s2">&quot;social media post&quot;</span><span class="p">,</span> <span class="s2">&quot;government report&quot;</span><span class="p">,</span> <span class="s2">&quot;story&quot;</span><span class="p">,</span> <span class="s2">&quot;news article&quot;</span><span class="p">,</span> <span class="s2">&quot;research paper&quot;</span><span class="p">,</span> <span class="s2">&quot;text book&quot;</span><span class="p">]))</span>
+
+<span class="n">instruction_type_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">,</span> <span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="s2">&quot;instruction&quot;</span><span class="p">,</span> <span class="s2">&quot;command&quot;</span><span class="p">,</span> <span class="s2">&quot;request&quot;</span><span class="p">]</span>
+
+
+<span class="n">genres</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;art&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;science&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;science fiction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;research paper&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;high school essay&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scientific journal&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;code documentation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;social media post&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;food blog&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;historical fiction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;romance&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fantasy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mystery&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;horror&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;adventure&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;drama&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;comedy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;thriller&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;action&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;western&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;documentary&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;biography&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;autobiography&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;self-help&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;philosophy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;religion&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;psychology&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sociology&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;history&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;economics&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;politics&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;business&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;finance&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;technology&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;computer science&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;programming&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;software development&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data science&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;machine learning&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;artificial intelligence&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cybersecurity&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cryptocurrency&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;blockchain&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gaming&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;music&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;film&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;literature&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;poetry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;theater&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dance&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;culinary&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;photography&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fashion&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;travel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fitness&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sports&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;health&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wellness&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;parenting&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;education&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;language learning&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cooking&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;baking&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;home improvement&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gardening&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;crafts&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DIY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;puzzle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;board game&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;card game&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;video game&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;virtual reality&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;augmented reality&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;comic book&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;graphic novel&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;anime&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;manga&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;science magazine&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fashion magazine&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lifestyle magazine&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;travel blog&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;technology blog&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;personal development blog&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fitness blog&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;parenting blog&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;book review blog&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;podcast&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vlog&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;webcomic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;satire&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;political commentary&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;travelogue&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;recipe book&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;graphic design&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;interior design&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;architectural design&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;product design&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;user interface design&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;web design&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;game design&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;environmental science&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;zoology&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;botany&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;geology&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;astronomy&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;chemistry&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;physics&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mathematics&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;literary fiction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;contemporary fiction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;short story&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;poetry anthology&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cookbook&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;business plan&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;graphic design portfolio&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;art exhibition catalog&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">genres_no_child</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;erotic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;porn&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;spam&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;advertisement&quot;</span>
+<span class="p">]</span>
+
+
+
+<span class="n">all_aug_words</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">emotion_adj</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;surprised&quot;</span><span class="p">,</span> <span class="s2">&quot;angry&quot;</span><span class="p">,</span> <span class="s2">&quot;sad&quot;</span><span class="p">,</span> <span class="s2">&quot;contemptous&quot;</span><span class="p">,</span> <span class="s2">&quot;disgusted&quot;</span><span class="p">,</span> <span class="s2">&quot;fearful&quot;</span><span class="p">,</span> <span class="s2">&quot;happy&quot;</span><span class="p">]</span>
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">emotion_adj</span><span class="p">)</span>
+<span class="n">emotion_adj_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">emotion_adj</span><span class="p">)</span>
+<span class="n">shape_adj</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;banana-shaped&quot;</span><span class="p">,</span> <span class="s2">&quot;strawberry-shaped&quot;</span><span class="p">,</span> <span class="s2">&quot;grapes-shaped&quot;</span><span class="p">,</span> <span class="s2">&quot;apple-shaped&quot;</span><span class="p">,</span> <span class="s2">&quot;pear-shaped&quot;</span><span class="p">,</span> <span class="s2">&quot;watermelon-shaped&quot;</span><span class="p">,</span> <span class="s2">&quot;orange-shaped&quot;</span><span class="p">,</span> <span class="s2">&quot;blueberry-shaped&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;lemon-shaped&quot;</span><span class="p">,</span> <span class="s2">&quot;large&quot;</span><span class="p">,</span> <span class="s2">&quot;small&quot;</span><span class="p">,</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span> <span class="s2">&quot;tall&quot;</span><span class="p">,</span> <span class="s2">&quot;broad&quot;</span><span class="p">,</span> <span class="s2">&quot;crooked&quot;</span><span class="p">,</span> \
+             <span class="s2">&quot;curved&quot;</span><span class="p">,</span> <span class="s2">&quot;deep&quot;</span><span class="p">,</span> <span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="s2">&quot;flat&quot;</span><span class="p">,</span> <span class="s2">&quot;hilly&quot;</span><span class="p">,</span> <span class="s2">&quot;jagged&quot;</span><span class="p">,</span> \
+              <span class="s2">&quot;round&quot;</span><span class="p">,</span> <span class="s2">&quot;shallow&quot;</span><span class="p">,</span> <span class="s2">&quot;square&quot;</span><span class="p">,</span> <span class="s2">&quot;steep&quot;</span><span class="p">,</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span> <span class="s2">&quot;thick&quot;</span><span class="p">,</span> \
+              <span class="s2">&quot;thin&quot;</span><span class="p">,</span> <span class="s2">&quot;triangular&quot;</span><span class="p">,</span> <span class="s2">&quot;uneven&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">,</span> <span class="s2">&quot;short&quot;</span><span class="p">,</span> <span class="s2">&quot;rectangular&quot;</span><span class="p">,</span> <span class="s2">&quot;cube-like&quot;</span><span class="p">,</span> <span class="s2">&quot;sleek&quot;</span><span class="p">]</span>
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">shape_adj</span><span class="p">)</span>
+<span class="n">shape_adj_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">shape_adj</span><span class="p">)</span>
+<span class="n">color_adj</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;brown&quot;</span><span class="p">,</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;pink&quot;</span><span class="p">,</span> <span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">]</span>
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">color_adj</span><span class="p">)</span>
+<span class="n">color_adj_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">color_adj</span><span class="p">)</span>
+<span class="c1">#TODO improve this with more variety</span>
+
+<span class="n">person_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;man&quot;</span><span class="p">,</span> <span class="s2">&quot;guy&quot;</span><span class="p">,</span> <span class="s2">&quot;boy&quot;</span><span class="p">,</span> <span class="s2">&quot;dude&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;woman&quot;</span><span class="p">,</span> <span class="s2">&quot;lady&quot;</span><span class="p">,</span> <span class="s2">&quot;gal&quot;</span><span class="p">,</span> <span class="s2">&quot;girl&quot;</span><span class="p">,</span> <span class="s2">&quot;female person&quot;</span><span class="p">,</span> <span class="s2">&quot;male person&quot;</span><span class="p">]</span>
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">person_list</span><span class="p">)</span>
+<span class="n">person_list_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">person_list</span><span class="p">)</span>
+<span class="n">age_adj_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;infant&quot;</span><span class="p">,</span> <span class="s2">&quot;young&quot;</span><span class="p">,</span> <span class="s2">&quot;teen&quot;</span><span class="p">,</span> <span class="s2">&quot;young-adult&quot;</span><span class="p">,</span> <span class="s2">&quot;middle-aged&quot;</span><span class="p">,</span> <span class="s2">&quot;old&quot;</span><span class="p">]</span>
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">age_adj_list</span><span class="p">)</span>
+<span class="n">age_adj_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">age_adj_list</span><span class="p">)</span>
+
+<span class="n">religion_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;christian&quot;</span><span class="p">,</span> <span class="s2">&quot;muslim&quot;</span><span class="p">,</span> <span class="s2">&quot;buddhist&quot;</span><span class="p">,</span> <span class="s2">&quot;hindu&quot;</span><span class="p">]</span>
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">religion_list</span><span class="p">)</span>
+<span class="n">religion_list_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">religion_list</span><span class="p">)</span>
+
+<span class="n">race_list</span> <span class="o">=</span> <span class="n">race_national_origin</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;White&quot;</span><span class="p">,</span> <span class="s2">&quot;Black&quot;</span><span class="p">,</span> <span class="s2">&quot;Asian&quot;</span><span class="p">,</span> <span class="s2">&quot;European&quot;</span><span class="p">,</span> <span class="s2">&quot;African&quot;</span><span class="p">,</span> <span class="s2">&quot;Pacific Islander&quot;</span><span class="p">,</span> <span class="s2">&quot;Mexican&quot;</span><span class="p">,</span> <span class="s2">&quot;Arabic&quot;</span><span class="p">,</span> <span class="s2">&quot;Vietnamese&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Turkish&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Spanish&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Greek&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Italian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;French&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;American&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Mexican&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Canadian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Brazilian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Peruvian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Argentinean&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Colombian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Venezuelan&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ethiopian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Moroccan&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;South African&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Nigerian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Egyptian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Chinese&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Japanese&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Indian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Thai&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Korean&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Australian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;New Zealand&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Polynesian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Hawaiian&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Singaporean&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="s2">&quot;asian&quot;</span><span class="p">,</span> <span class="s2">&quot;middle-eastern&quot;</span><span class="p">,</span> <span class="s2">&quot;african&quot;</span><span class="p">,</span> <span class="s2">&quot;hispanic&quot;</span><span class="p">,</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span> <span class="s2">&quot;indian&quot;</span><span class="p">]</span>
+<span class="n">racial_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a &quot;</span><span class="o">+</span> <span class="n">race</span> <span class="o">+</span> <span class="s2">&quot; person&quot;</span> <span class="k">for</span> <span class="n">race</span> <span class="ow">in</span> <span class="n">race_list</span><span class="p">]</span> <span class="c1"># making it clearer it&#39;s a person and not a dish or a region ;)</span>
+
+
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">race_list</span><span class="p">)</span>
+<span class="n">race_list_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">race_list</span><span class="p">)</span>
+
+
+<span class="n">age_groups</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Infant/Toddler (0-2 years)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Preschooler (3-5 years)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Young Child (6-8 years)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Older Child(9-11 years)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Adolescent (12-18 years)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Young Adult (19-25 years)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Adult (26-55 years)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Mature Adult (56-65 years)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Senior/Retired Person (66 years and over)&quot;</span>
+<span class="p">]</span>
+
+<span class="n">location</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;North America&quot;</span><span class="p">,</span> <span class="s2">&quot;South America&quot;</span><span class="p">,</span> <span class="s2">&quot;Asia&quot;</span><span class="p">,</span> <span class="s2">&quot;Africa&quot;</span><span class="p">,</span> <span class="s2">&quot;Europe&quot;</span><span class="p">,</span> <span class="s2">&quot;Oceania&quot;</span><span class="p">]</span>
+<span class="n">protected_list</span> <span class="o">=</span>  <span class="p">[</span><span class="s2">&quot;a person in a union&quot;</span><span class="p">,</span> <span class="s2">&quot;a person in a political party&quot;</span><span class="p">,</span> <span class="s2">&quot;an old person&quot;</span><span class="p">,</span> <span class="s2">&quot;a disabled person&quot;</span><span class="p">,</span>  <span class="s2">&quot;an overweight person&quot;</span><span class="p">,</span> <span class="s2">&quot;a very thing person&quot;</span><span class="p">,</span> <span class="s2">&quot;a very short person&quot;</span><span class="p">,</span> <span class="s2">&quot;a pregnant person&quot;</span><span class="p">,</span> <span class="s2">&quot;a blind person&quot;</span><span class="p">,</span> <span class="s2">&quot;an older person with a cane&quot;</span> <span class="p">]</span> <span class="o">+</span> <span class="n">racial_list</span>
+<span class="n">sexual_orientation</span> <span class="o">=</span> <span class="n">sexual_orientation_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;gay&quot;</span><span class="p">,</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span> <span class="s2">&quot;bisexual&quot;</span><span class="p">,</span> <span class="s2">&quot;Male&quot;</span><span class="p">,</span> <span class="s2">&quot;Female&quot;</span><span class="p">,</span> <span class="s2">&quot;LGBTQ&quot;</span><span class="p">]</span>
+<span class="n">lgbt_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a &quot;</span><span class="o">+</span> <span class="n">lgbt</span> <span class="o">+</span> <span class="s2">&quot; person&quot;</span> <span class="k">for</span> <span class="n">lgbt</span> <span class="ow">in</span> <span class="n">sexual_orientation</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;a gay man&quot;</span><span class="p">,</span> <span class="s2">&quot;a lesbian&quot;</span><span class="p">]</span>
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sexual_orientation_list</span><span class="p">)</span>
+<span class="n">sexual_orientation_list_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sexual_orientation_list</span><span class="p">)</span>
+<span class="n">political_affiliation_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;conservative&quot;</span><span class="p">,</span> <span class="s2">&quot;liberal&quot;</span><span class="p">,</span> <span class="s2">&quot;moderate&quot;</span><span class="p">]</span>
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">political_affiliation_list</span><span class="p">)</span>
+<span class="n">political_affiliation_list_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">political_affiliation_list</span><span class="p">)</span>
+
+<span class="n">mood_list</span> <span class="o">=</span> <span class="n">assistant_personality</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="s1">&#39;heartwarming&#39;</span><span class="p">,</span> <span class="s1">&#39;trustworthy&#39;</span><span class="p">,</span> <span class="s1">&#39;empathetic&#39;</span><span class="p">,</span> <span class="s1">&#39;calm&#39;</span><span class="p">,</span> <span class="s1">&#39;friendly&#39;</span><span class="p">,</span> <span class="s1">&#39;honest&#39;</span><span class="p">,</span> <span class="s1">&#39;stoic&#39;</span><span class="p">,</span> <span class="s1">&#39;sincere&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;satirical&#39;</span><span class="p">,</span> <span class="s1">&#39;gothic&#39;</span><span class="p">,</span> <span class="s1">&#39;humorous&#39;</span><span class="p">,</span> <span class="s1">&#39;outgoing&#39;</span><span class="p">,</span> <span class="s1">&#39;conscientious&#39;</span><span class="p">,</span> <span class="s1">&#39;ambitious&#39;</span><span class="p">,</span> <span class="s1">&#39;amiable&#39;</span><span class="p">,</span> <span class="s1">&#39;hopeful&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;positive&#39;</span><span class="p">,</span> <span class="s1">&#39;diligent&#39;</span><span class="p">,</span> <span class="s1">&#39;optimistic&#39;</span><span class="p">,</span> <span class="s1">&#39;sympathetic&#39;</span><span class="p">,</span> <span class="s1">&#39;brassy&#39;</span><span class="p">,</span> <span class="s1">&#39;patient&#39;</span><span class="p">,</span> <span class="s1">&#39;playful&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;respectful&#39;</span><span class="p">,</span> <span class="s1">&#39;peculiar&#39;</span><span class="p">,</span> <span class="s1">&#39;radiant&#39;</span><span class="p">,</span> <span class="s1">&#39;melancholic&#39;</span><span class="p">,</span> <span class="s1">&#39;gloomy&#39;</span><span class="p">,</span> <span class="s1">&#39;rejuvenated&#39;</span><span class="p">,</span> <span class="s1">&#39;pensive&#39;</span><span class="p">,</span> <span class="s1">&#39;supportive&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;invigorated&#39;</span><span class="p">,</span> <span class="s1">&#39;imaginative&#39;</span><span class="p">,</span>  <span class="s1">&#39;strong&#39;</span><span class="p">,</span> <span class="s1">&#39;grave&#39;</span><span class="p">,</span> <span class="s1">&#39;steadfast&#39;</span><span class="p">,</span> <span class="s1">&#39;open-minded&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;philosophical&#39;</span><span class="p">,</span> <span class="s1">&#39;reliable&#39;</span><span class="p">,</span> <span class="s1">&#39;tranquil&#39;</span><span class="p">,</span> <span class="s1">&#39;humble&#39;</span><span class="p">,</span> <span class="s1">&#39;quick-witted&#39;</span><span class="p">,</span> <span class="s1">&#39;bizarre&#39;</span><span class="p">,</span> <span class="s1">&#39;powerful&#39;</span><span class="p">,</span> <span class="s1">&#39;concise&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;vibrant&#39;</span><span class="p">,</span> <span class="s1">&#39;charming&#39;</span><span class="p">,</span> <span class="s1">&#39;spirited&#39;</span><span class="p">,</span> <span class="s1">&#39;enthusiastic&#39;</span><span class="p">,</span> <span class="s1">&#39;wise&#39;</span><span class="p">,</span> <span class="s1">&#39;liberated&#39;</span><span class="p">,</span> <span class="s1">&#39;encouraging&#39;</span><span class="p">,</span> <span class="s1">&#39;exuberant&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;whimsical&#39;</span><span class="p">,</span> <span class="s1">&#39;ironical&#39;</span><span class="p">,</span> <span class="s1">&#39;dynamic&#39;</span><span class="p">,</span> <span class="s1">&#39;spontaneous&#39;</span><span class="p">,</span> <span class="s1">&#39;bubbly&#39;</span><span class="p">,</span> <span class="s1">&#39;macabre&#39;</span><span class="p">,</span> <span class="s1">&#39;intelligent&#39;</span><span class="p">,</span> <span class="s1">&#39;zealous&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;courageous&#39;</span><span class="p">,</span> <span class="s1">&#39;grateful&#39;</span><span class="p">,</span> <span class="s1">&#39;warm&#39;</span><span class="p">,</span> <span class="s1">&#39;uplifted&#39;</span><span class="p">,</span> <span class="s1">&#39;terse&#39;</span><span class="p">,</span> <span class="s1">&#39;mocking&#39;</span><span class="p">,</span> <span class="s1">&#39;tenacious&#39;</span><span class="p">,</span> <span class="s1">&#39;motivated&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;creative&#39;</span><span class="p">,</span> <span class="s1">&#39;innovative&#39;</span><span class="p">,</span> <span class="s1">&#39;offbeat&#39;</span><span class="p">,</span> <span class="s1">&#39;resilient&#39;</span><span class="p">,</span> <span class="s1">&#39;unpredictable&#39;</span><span class="p">,</span> <span class="s1">&#39;composed&#39;</span><span class="p">,</span> <span class="s1">&#39;enigmatic&#39;</span><span class="p">,</span> <span class="s1">&#39;fanciful&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;inspiring&#39;</span><span class="p">,</span> <span class="s1">&#39;sarcastic&#39;</span><span class="p">,</span> <span class="s1">&#39;gentle&#39;</span><span class="p">,</span> <span class="s1">&#39;reserved&#39;</span><span class="p">,</span> <span class="s1">&#39;sneering&#39;</span><span class="p">,</span> <span class="s1">&#39;flexible&#39;</span><span class="p">,</span> <span class="s1">&#39;respected&#39;</span><span class="p">,</span> <span class="s1">&#39;loving&#39;</span><span class="p">,</span> <span class="s1">&#39;generous&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;faithful&#39;</span><span class="p">,</span> <span class="s1">&#39;cheeky&#39;</span><span class="p">,</span> <span class="s1">&#39;austere&#39;</span><span class="p">,</span> <span class="s1">&#39;nurturing&#39;</span><span class="p">,</span> <span class="s1">&#39;sombre&#39;</span><span class="p">,</span> <span class="s1">&#39;cynical&#39;</span><span class="p">,</span> <span class="s1">&#39;succinct&#39;</span><span class="p">,</span> <span class="s1">&#39;animated&#39;</span><span class="p">,</span> <span class="s1">&#39;devoted&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;approachable&#39;</span><span class="p">,</span> <span class="s1">&#39;lively&#39;</span><span class="p">,</span> <span class="s1">&#39;invigorating&#39;</span><span class="p">,</span> <span class="s1">&#39;ridiculing&#39;</span><span class="p">,</span> <span class="s1">&#39;cutting&#39;</span><span class="p">,</span> <span class="s1">&#39;fearless&#39;</span><span class="p">,</span> <span class="s1">&#39;compassionate&#39;</span><span class="p">,</span> <span class="s1">&#39;adventurous&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;scornful&#39;</span><span class="p">,</span> <span class="s1">&#39;determined&#39;</span><span class="p">,</span> <span class="s1">&#39;astute&#39;</span><span class="p">,</span> <span class="s1">&#39;quiet&#39;</span><span class="p">,</span> <span class="s1">&#39;silent&#39;</span><span class="p">,</span> <span class="s1">&#39;curious&#39;</span><span class="p">,</span> <span class="s1">&#39;gracious&#39;</span><span class="p">,</span> <span class="s1">&#39;witty&#39;</span><span class="p">,</span> <span class="s1">&#39;magnetic&#39;</span><span class="p">,</span> <span class="s1">&#39;feisty&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;odd&#39;</span><span class="p">,</span> <span class="s1">&#39;impactful&#39;</span><span class="p">,</span> <span class="s1">&#39;audacious&#39;</span><span class="p">,</span> <span class="s1">&#39;tight-lipped&#39;</span><span class="p">,</span> <span class="s1">&#39;discerning&#39;</span><span class="p">,</span> <span class="s1">&#39;luminous&#39;</span><span class="p">,</span> <span class="s1">&#39;cooperative&#39;</span><span class="p">,</span> <span class="s1">&#39;cryptic&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;jubilant&#39;</span><span class="p">,</span> <span class="s1">&#39;selfless&#39;</span><span class="p">,</span> <span class="s1">&#39;vigorous&#39;</span><span class="p">,</span> <span class="s1">&#39;joyful&#39;</span><span class="p">,</span> <span class="s1">&#39;harmonious&#39;</span><span class="p">,</span> <span class="s1">&#39;eloquent&#39;</span><span class="p">,</span> <span class="s1">&#39;graceful&#39;</span><span class="p">,</span> <span class="s1">&#39;resolute&#39;</span><span class="p">,</span> <span class="s1">&#39;noble&#39;</span><span class="p">,</span>\
+                         <span class="s1">&#39;charismatic&#39;</span><span class="p">,</span> <span class="s1">&#39;affable&#39;</span><span class="p">,</span> <span class="s1">&#39;outlandish&#39;</span><span class="p">,</span> <span class="s1">&#39;genuine&#39;</span><span class="p">,</span> <span class="s1">&#39;charitable&#39;</span><span class="p">,</span> <span class="s1">&#39;brief&#39;</span><span class="p">,</span> <span class="s1">&#39;assertive&#39;</span><span class="p">,</span> <span class="s1">&#39;mysterious&#39;</span><span class="p">,</span> <span class="s1">&#39;vivacious&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;tolerant&#39;</span><span class="p">,</span> <span class="s1">&#39;dependable&#39;</span><span class="p">,</span> <span class="s1">&#39;unconventional&#39;</span><span class="p">,</span> <span class="s1">&#39;heroic&#39;</span><span class="p">,</span> <span class="s1">&#39;serene&#39;</span><span class="p">,</span> <span class="s1">&#39;daring&#39;</span><span class="p">,</span> <span class="s1">&#39;bright&#39;</span><span class="p">,</span> <span class="s1">&#39;versatile&#39;</span><span class="p">,</span> <span class="s1">&#39;energetic&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;carefree&#39;</span><span class="p">,</span> <span class="s1">&#39;brooding&#39;</span><span class="p">,</span> <span class="s1">&#39;mindful&#39;</span><span class="p">,</span> <span class="s1">&#39;confident&#39;</span><span class="p">,</span> <span class="s1">&#39;sardonic&#39;</span><span class="p">,</span> <span class="s1">&#39;persistent&#39;</span><span class="p">,</span> <span class="s1">&#39;benevolent&#39;</span><span class="p">,</span> <span class="s1">&#39;pleasant&#39;</span><span class="p">,</span> <span class="s1">&#39;balanced&#39;</span><span class="p">,</span> \
+                         <span class="s1">&#39;eccentric&#39;</span><span class="p">,</span> <span class="s1">&#39;passionate&#39;</span><span class="p">,</span> <span class="s1">&#39;irreverent&#39;</span><span class="p">,</span> <span class="s1">&#39;adaptable&#39;</span><span class="p">,</span>  <span class="s1">&#39;forceful&#39;</span><span class="p">,</span> <span class="s1">&#39;cheerful&#39;</span><span class="p">,</span>
+                         <span class="s2">&quot;cheerful&quot;</span><span class="p">,</span> <span class="s2">&quot;reflective&quot;</span><span class="p">,</span> <span class="s2">&quot;gloomy&quot;</span><span class="p">,</span> <span class="s2">&quot;humorous&quot;</span><span class="p">,</span> <span class="s2">&quot;melancholy&quot;</span><span class="p">,</span> <span class="s2">&quot;idyllic&quot;</span><span class="p">,</span> \
+                      <span class="s2">&quot;whimsical&quot;</span><span class="p">,</span> <span class="s2">&quot;mysterious&quot;</span><span class="p">,</span> <span class="s2">&quot;ominous&quot;</span><span class="p">,</span> <span class="s2">&quot;calm&quot;</span><span class="p">,</span> <span class="s2">&quot;lighthearted&quot;</span><span class="p">,</span> \
+                      <span class="s2">&quot;hopeful&quot;</span><span class="p">,</span> <span class="s2">&quot;angry&quot;</span><span class="p">,</span> <span class="s2">&quot;fearful&quot;</span><span class="p">,</span> <span class="s2">&quot;tense&quot;</span><span class="p">,</span> <span class="s2">&quot;lonely&quot;</span><span class="p">]))</span>
+
+<span class="n">mood_no_child</span> <span class="o">=</span> <span class="n">assistant_personality_no_child</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;flirtatious&#39;</span><span class="p">,</span> <span class="s1">&#39;attractive&#39;</span><span class="p">,</span> <span class="s1">&#39;sultry&#39;</span><span class="p">,</span><span class="s1">&#39;seductive&#39;</span><span class="p">,</span><span class="s2">&quot;romantic&quot;</span><span class="p">,</span>  <span class="p">]</span>
+
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">mood_list</span><span class="o">+</span><span class="n">mood_no_child</span><span class="p">)</span>
+<span class="n">mood_list_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">mood_list</span><span class="o">+</span><span class="n">mood_no_child</span><span class="p">)</span>
+<span class="n">male_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;man&quot;</span><span class="p">,</span> <span class="s2">&quot;man&quot;</span><span class="p">,</span> <span class="s2">&quot;man&quot;</span><span class="p">,</span> <span class="s2">&quot;guy&quot;</span><span class="p">,</span>  <span class="s2">&quot;dude&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;male person&quot;</span><span class="p">,</span>  <span class="s2">&quot;a gentleman&quot;</span><span class="p">,</span> <span class="s2">&quot;a guy&quot;</span><span class="p">,</span> <span class="s2">&quot;a boyfriend&quot;</span><span class="p">,</span> <span class="s2">&quot;an older man&quot;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">female_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;woman&quot;</span><span class="p">,</span> <span class="s2">&quot;woman&quot;</span><span class="p">,</span> <span class="s2">&quot;woman&quot;</span><span class="p">,</span> <span class="s2">&quot;lady&quot;</span><span class="p">,</span> <span class="s2">&quot;gal&quot;</span><span class="p">,</span>  <span class="s2">&quot;female person&quot;</span><span class="p">,</span> <span class="s2">&quot;a lady&quot;</span><span class="p">,</span> <span class="s2">&quot;a young woman&quot;</span><span class="p">,</span> <span class="s2">&quot;a gal&quot;</span><span class="p">,</span> <span class="s2">&quot;a girlfriend&quot;</span><span class="p">,</span> <span class="s2">&quot;a woman&quot;</span><span class="p">,</span> <span class="s2">&quot;an older woman&quot;</span><span class="p">,</span> <span class="p">]</span>
+<span class="c1">#[&quot;a boy&quot;, &quot;a lad&quot;, &quot;a young boy&quot;, &quot;a teen boy&quot;, &quot;a kid&quot;] , \</span>
+<span class="c1">#[&quot;a girl&quot;, &quot;a little lady&quot;, &quot;a young girl&quot;, &quot;a teen girl&quot;, &quot;a kid&quot;] if age in {&quot;Infant/Toddler (0-2 years)&quot;, \</span>
+<span class="n">image_style_adj</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;off centered &quot;</span><span class="p">,</span> <span class="s2">&quot;left centered &quot;</span><span class="p">,</span> <span class="s2">&quot;right centered &quot;</span><span class="p">,</span> <span class="s2">&quot;bottom centered &quot;</span><span class="p">,</span> <span class="s2">&quot;top centered &quot;</span><span class="p">,</span> \
+                   <span class="s2">&quot;neon flared &quot;</span><span class="p">,</span> <span class="s2">&quot;warmly lit &quot;</span><span class="p">,</span> <span class="s2">&quot;starkly lit &quot;</span><span class="p">,</span> <span class="s2">&quot;motion blured &quot;</span><span class="p">,</span> <span class="s2">&quot;zoom blured &quot;</span><span class="p">,</span> <span class="s2">&quot;tilted &quot;</span><span class="p">,</span> <span class="s2">&quot;skewed &quot;</span><span class="p">,</span> <span class="s2">&quot;blurry &quot;</span><span class="p">,</span> <span class="s2">&quot;neon &quot;</span><span class="p">,</span> \
+                   <span class="s2">&quot;light flare &quot;</span><span class="p">,</span> <span class="s2">&quot;fish-eye &quot;</span><span class="p">,</span> <span class="s2">&quot;closeup &quot;</span><span class="p">,</span> <span class="s2">&quot;wideshot &quot;</span><span class="p">,</span> <span class="s2">&quot;colorized &quot;</span><span class="p">,</span> <span class="s2">&quot;black and white &quot;</span><span class="p">,</span> <span class="s2">&quot;sepia &quot;</span><span class="p">,</span> <span class="s2">&quot;bi-chromatic &quot;</span><span class="p">,</span> <span class="s2">&quot;tri-chromatic &quot;</span><span class="p">]</span>
+<span class="n">image_type_lst</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;3D art&quot;</span><span class="p">,</span> <span class="s2">&quot;2D art&quot;</span><span class="p">,</span> <span class="s2">&quot;vector-art &quot;</span><span class="p">,</span> <span class="s2">&quot;movie-still&quot;</span><span class="p">,</span> <span class="s2">&quot;screenshot&quot;</span><span class="p">,</span> <span class="s2">&quot;advertisement&quot;</span><span class="p">,</span> <span class="s2">&quot;selfie&quot;</span><span class="p">,</span> <span class="s2">&quot;instagram image&quot;</span><span class="p">,</span> <span class="s2">&quot;wood relief&quot;</span><span class="p">,</span> <span class="s2">&quot;pencil drawing&quot;</span><span class="p">,</span> <span class="s2">&quot;pen and ink drawing&quot;</span><span class="p">,</span> \
+                      <span class="s2">&quot;textbook-illustration&quot;</span><span class="p">,</span> <span class="s2">&quot;realistic-drawing&quot;</span><span class="p">,</span> <span class="s2">&quot;sketch&quot;</span><span class="p">,</span> <span class="s2">&quot;cartoon&quot;</span><span class="p">,</span> <span class="s2">&quot;painting&quot;</span><span class="p">,</span> <span class="s2">&quot;diagram&quot;</span><span class="p">]</span>
+<span class="n">all_aug_words</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">image_type_lst</span><span class="p">)</span>
+<span class="n">all_aug_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_aug_words</span><span class="p">)</span>
+
+<span class="n">digits_to_words</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;zero&#39;</span><span class="p">,</span> <span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span> <span class="s1">&#39;three&#39;</span><span class="p">,</span> <span class="s1">&#39;four&#39;</span><span class="p">,</span> <span class="s1">&#39;five&#39;</span><span class="p">,</span> <span class="s1">&#39;six&#39;</span><span class="p">,</span> <span class="s1">&#39;seven&#39;</span><span class="p">,</span> <span class="s1">&#39;eight&#39;</span><span class="p">,</span> <span class="s1">&#39;nine&#39;</span><span class="p">,</span> <span class="s1">&#39;ten&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;eleven&#39;</span><span class="p">,</span> <span class="s1">&#39;twelve&#39;</span><span class="p">,</span> <span class="s1">&#39;thirteen&#39;</span><span class="p">,</span> <span class="s1">&#39;fourteen&#39;</span><span class="p">,</span> <span class="s1">&#39;fifteen&#39;</span><span class="p">,</span> <span class="s1">&#39;sixteen&#39;</span><span class="p">,</span> <span class="s1">&#39;seventeen&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;eighteen&#39;</span><span class="p">,</span> <span class="s1">&#39;nineteen&#39;</span><span class="p">,</span> <span class="s1">&#39;twenty&#39;</span><span class="p">]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Huu Nguyen, Harsh Raj.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

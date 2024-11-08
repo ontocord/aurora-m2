@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.execution &mdash; AuroraM2 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            AuroraM2
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AuroraM2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.execution</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.execution</h1><div class="highlight"><pre>
+<span></span><span class="c1">#from https://github.com/openai/human-eval/blob/master/human_eval/execution.py which is under MIT license</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">faulthandler</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">signal</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+
+<div class="viewcode-block" id="check_correctness">
+<a class="viewcode-back" href="../../src.html#src.execution.check_correctness">[docs]</a>
+<span class="k">def</span> <span class="nf">check_correctness</span><span class="p">(</span><span class="n">problem</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">completion</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                      <span class="n">completion_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Evaluates the functional correctness of a completion by running the test</span>
+<span class="sd">    suite provided in the problem. </span>
+
+<span class="sd">    :param completion_id: an optional completion ID so we can match</span>
+<span class="sd">        the results later even if execution finishes asynchronously.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">unsafe_execute</span><span class="p">():</span>
+
+        <span class="k">with</span> <span class="n">create_tempdir</span><span class="p">():</span>
+
+            <span class="c1"># These system calls are needed when cleaning up tempdir.</span>
+            <span class="kn">import</span> <span class="nn">os</span>
+            <span class="kn">import</span> <span class="nn">shutil</span>
+            <span class="n">rmtree</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span>
+            <span class="n">rmdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span>
+            <span class="n">chdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">chdir</span>
+
+            <span class="c1"># Disable functionalities that can make destructive changes to the test.</span>
+            <span class="n">reliability_guard</span><span class="p">()</span>
+
+            <span class="c1"># Construct the check program and run it.</span>
+            <span class="n">check_program</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">problem</span><span class="p">[</span><span class="s2">&quot;prompt&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">completion</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                <span class="n">problem</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span>
+                <span class="sa">f</span><span class="s2">&quot;check(</span><span class="si">{</span><span class="n">problem</span><span class="p">[</span><span class="s1">&#39;entry_point&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">exec_globals</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">with</span> <span class="n">swallow_io</span><span class="p">():</span>
+                    <span class="k">with</span> <span class="n">time_limit</span><span class="p">(</span><span class="n">timeout</span><span class="p">):</span>
+<span class="c1"># WARNING</span>
+<span class="c1"># This program exists to execute untrusted model-generated code. Although</span>
+<span class="c1"># it is highly unlikely that model-generated code will do something overtly</span>
+<span class="c1"># malicious in response to this test suite, model-generated code may act</span>
+<span class="c1"># destructively due to a lack of model capability or alignment.</span>
+<span class="c1"># Users are strongly encouraged to sandbox this evaluation suite so that it </span>
+<span class="c1"># does not perform destructive actions on their host or network. For more </span>
+<span class="c1"># information on how OpenAI sandboxes its code, see the accompanying paper.</span>
+<span class="c1"># Once you have read this disclaimer and taken appropriate precautions, </span>
+<span class="c1"># uncomment the following line and proceed at your own risk:</span>
+                         <span class="n">exec</span><span class="p">(</span><span class="n">check_program</span><span class="p">,</span> <span class="n">exec_globals</span><span class="p">)</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;passed&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">TimeoutException</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;timed out&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Needed for cleaning up.</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span> <span class="o">=</span> <span class="n">rmtree</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span> <span class="o">=</span> <span class="n">rmdir</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span> <span class="o">=</span> <span class="n">chdir</span>
+
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Manager</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">unsafe_execute</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;timed out&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">task_id</span><span class="o">=</span><span class="n">problem</span><span class="p">[</span><span class="s2">&quot;task_id&quot;</span><span class="p">],</span>
+        <span class="n">passed</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;passed&quot;</span><span class="p">,</span>
+        <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">completion_id</span><span class="o">=</span><span class="n">completion_id</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="time_limit">
+<a class="viewcode-back" href="../../src.html#src.execution.time_limit">[docs]</a>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">time_limit</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">signal_handler</span><span class="p">(</span><span class="n">signum</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">TimeoutException</span><span class="p">(</span><span class="s2">&quot;Timed out!&quot;</span><span class="p">)</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">setitimer</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">ITIMER_REAL</span><span class="p">,</span> <span class="n">seconds</span><span class="p">)</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGALRM</span><span class="p">,</span> <span class="n">signal_handler</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">signal</span><span class="o">.</span><span class="n">setitimer</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">ITIMER_REAL</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="swallow_io">
+<a class="viewcode-back" href="../../src.html#src.execution.swallow_io">[docs]</a>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">swallow_io</span><span class="p">():</span>
+    <span class="n">stream</span> <span class="o">=</span> <span class="n">WriteOnlyStringIO</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stderr</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">redirect_stdin</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
+                <span class="k">yield</span></div>
+
+
+
+<div class="viewcode-block" id="create_tempdir">
+<a class="viewcode-back" href="../../src.html#src.execution.create_tempdir">[docs]</a>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">create_tempdir</span><span class="p">():</span>
+    <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">dirname</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">chdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">dirname</span></div>
+
+
+
+<div class="viewcode-block" id="TimeoutException">
+<a class="viewcode-back" href="../../src.html#src.execution.TimeoutException">[docs]</a>
+<span class="k">class</span> <span class="nc">TimeoutException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="WriteOnlyStringIO">
+<a class="viewcode-back" href="../../src.html#src.execution.WriteOnlyStringIO">[docs]</a>
+<span class="k">class</span> <span class="nc">WriteOnlyStringIO</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; StringIO that throws an exception when it&#39;s read from &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="WriteOnlyStringIO.read">
+<a class="viewcode-back" href="../../src.html#src.execution.WriteOnlyStringIO.read">[docs]</a>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IOError</span></div>
+
+
+<div class="viewcode-block" id="WriteOnlyStringIO.readline">
+<a class="viewcode-back" href="../../src.html#src.execution.WriteOnlyStringIO.readline">[docs]</a>
+    <span class="k">def</span> <span class="nf">readline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IOError</span></div>
+
+
+<div class="viewcode-block" id="WriteOnlyStringIO.readlines">
+<a class="viewcode-back" href="../../src.html#src.execution.WriteOnlyStringIO.readlines">[docs]</a>
+    <span class="k">def</span> <span class="nf">readlines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IOError</span></div>
+
+
+<div class="viewcode-block" id="WriteOnlyStringIO.readable">
+<a class="viewcode-back" href="../../src.html#src.execution.WriteOnlyStringIO.readable">[docs]</a>
+    <span class="k">def</span> <span class="nf">readable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns True if the IO object can be read. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="redirect_stdin">
+<a class="viewcode-back" href="../../src.html#src.execution.redirect_stdin">[docs]</a>
+<span class="k">class</span> <span class="nc">redirect_stdin</span><span class="p">(</span><span class="n">contextlib</span><span class="o">.</span><span class="n">_RedirectStream</span><span class="p">):</span>  <span class="c1"># type: ignore</span>
+    <span class="n">_stream</span> <span class="o">=</span> <span class="s1">&#39;stdin&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="chdir">
+<a class="viewcode-back" href="../../src.html#src.execution.chdir">[docs]</a>
+<span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
+<span class="k">def</span> <span class="nf">chdir</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span>
+        <span class="k">yield</span>
+        <span class="k">return</span>
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+    <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">exc</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">cwd</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="reliability_guard">
+<a class="viewcode-back" href="../../src.html#src.execution.reliability_guard">[docs]</a>
+<span class="k">def</span> <span class="nf">reliability_guard</span><span class="p">(</span><span class="n">maximum_memory_bytes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This disables various destructive functions and prevents the generated code</span>
+<span class="sd">    from interfering with the test (e.g. fork bomb, killing other processes,</span>
+<span class="sd">    removing filesystem files, etc.)</span>
+
+<span class="sd">    WARNING</span>
+<span class="sd">    This function is NOT a security sandbox. Untrusted code, including, model-</span>
+<span class="sd">    generated code, should not be blindly executed outside of one. See the </span>
+<span class="sd">    Codex paper for more information about OpenAI&#39;s code sandbox, and proceed</span>
+<span class="sd">    with caution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">maximum_memory_bytes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">resource</span>
+        <span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_AS</span><span class="p">,</span> <span class="p">(</span><span class="n">maximum_memory_bytes</span><span class="p">,</span> <span class="n">maximum_memory_bytes</span><span class="p">))</span>
+        <span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_DATA</span><span class="p">,</span> <span class="p">(</span><span class="n">maximum_memory_bytes</span><span class="p">,</span> <span class="n">maximum_memory_bytes</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">platform</span><span class="o">.</span><span class="n">uname</span><span class="p">()</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s1">&#39;Darwin&#39;</span><span class="p">:</span>
+            <span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_STACK</span><span class="p">,</span> <span class="p">(</span><span class="n">maximum_memory_bytes</span><span class="p">,</span> <span class="n">maximum_memory_bytes</span><span class="p">))</span>
+
+    <span class="n">faulthandler</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+
+    <span class="kn">import</span> <span class="nn">builtins</span>
+    <span class="n">builtins</span><span class="o">.</span><span class="n">exit</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">builtins</span><span class="o">.</span><span class="n">quit</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OMP_NUM_THREADS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">kill</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">putenv</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">removedirs</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">fchdir</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">setuid</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">fork</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">forkpty</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">killpg</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">rename</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">renames</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">truncate</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">replace</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">fchmod</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">fchown</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chmod</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chown</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chroot</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">fchdir</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">lchflags</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">lchmod</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">lchown</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="kn">import</span> <span class="nn">shutil</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">move</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">chown</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="kn">import</span> <span class="nn">subprocess</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: ignore</span>
+
+    <span class="n">__builtins__</span><span class="p">[</span><span class="s1">&#39;help&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;ipdb&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;joblib&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;resource&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;psutil&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;tkinter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Huu Nguyen, Harsh Raj.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
