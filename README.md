@@ -7,6 +7,7 @@
 - 1 Billion Personas - [Scaling Synthetic Data Creation with 1,000,000,000 Personas](https://arxiv.org/pdf/2406.20094v1) [Code](https://github.com/tencent-ailab/persona-hub)
 - SAT - [SATLM: Satisfiability-Aided Language Models Using Declarative Prompting](https://arxiv.org/pdf/2305.09656)
 - [Arena Learning: Build Data Flywheel for LLMs Post-training via Simulated Chatbot Arena](https://arxiv.org/pdf/2407.10627)
+- [Magpie](https://github.com/magpie-align/magpie) - [Alignment Data Synthesis from Scratch by Prompting Aligned LLMs with Nothing](https://arxiv.org/abs/2406.08464)
 
 
 ## Tools/ Library
