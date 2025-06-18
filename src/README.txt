@@ -1,0 +1,3 @@
+- create_seed_data - this is the initial generation of data for mixture-vitae, using various sources such as the OLC dataset
+- mixture-vitae-pipeline - this is the map reduce model based data dedup and cleaning process used to create the final mixture vitae dataset
+- purpleteam - this is the data generation for alignment with the EU AI Act
