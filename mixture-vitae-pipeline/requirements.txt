@@ -1,0 +1,12 @@
+langid
+nltk
+numpy
+fasttext
+transformers
+datasets
+spacy
+ctranslate2
+huggingface_hub
+python-stdnum
+commonregex
+Faker
