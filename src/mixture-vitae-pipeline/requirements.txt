@@ -10,3 +10,7 @@ huggingface_hub
 python-stdnum
 commonregex
 Faker
+wget
+date_detector
+Pillow
+
